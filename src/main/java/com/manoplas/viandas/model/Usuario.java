@@ -16,6 +16,9 @@ public class Usuario {
 
 	private String email;
 
+	@Column(unique = true, nullable = false)
+	private String telefono;
+
 	private String contraseña;
 
 	private String rol;
