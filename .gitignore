@@ -1,4 +1,6 @@
-# Maven
+############################
+# Backend (Java / Maven)
+############################
 /target
 *.log
 
@@ -12,4 +14,25 @@
 # OS
 .DS_Store
 Thumbs.db
+
+############################
+# Frontend (Angular)
+############################
+/frontend/dist
+/frontend/.angular
+/frontend/out-tsc
+/frontend/node_modules
+/frontend/tmp
+/frontend/coverage
+
+# IDE/editor configs
+/frontend/.vscode/
+/frontend/.idea/
+
+# Logs
+/frontend/*.log
+
+# Env files
+/frontend/*.env
+/frontend/*.local.env
 
