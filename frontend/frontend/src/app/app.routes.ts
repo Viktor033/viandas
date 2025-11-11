@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // Redirige la raíz a /login
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Redirige la raíz a /login-celular (podés cambiarlo a 'login' si preferís el clásico)
+  { path: '', redirectTo: 'login-celular', pathMatch: 'full' },
 
   // Rutas de autenticación con componentes standalone
   {
@@ -15,8 +15,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./auth/registro/registro.component').then(m => m.RegistroComponent)
   },
+  {
+    path: 'login-celular',
+    loadComponent: () =>
+      import('./auth/login-celular/login-celular.component').then(m => m.LoginCelularComponent)
+  },
 
   // Ruta comodín (404)
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'login-celular' }
 ];
-

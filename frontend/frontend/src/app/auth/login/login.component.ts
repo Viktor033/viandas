@@ -12,19 +12,30 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent {
   form!: FormGroup;
+  showPassword = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.form = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: [localStorage.getItem('rememberedUser') || '', Validators.required],
+      password: ['', Validators.required],
+      rememberMe: [false]
     });
   }
 
-  onSubmit() {
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  onSubmit(): void {
     if (this.form.invalid) return;
 
-    const username = this.form.get('username')?.value;
-    const password = this.form.get('password')?.value;
+    const { username, password, rememberMe } = this.form.value;
+
+    if (rememberMe) {
+      localStorage.setItem('rememberedUser', username);
+    } else {
+      localStorage.removeItem('rememberedUser');
+    }
 
     this.authService.login(username, password).subscribe({
       next: res => {
