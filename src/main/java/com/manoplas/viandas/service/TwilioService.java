@@ -26,14 +26,15 @@ public class TwilioService {
 	}
 
 	public void enviarOtp(String telefono) {
-		Verification.creator(verifySid, "+549" + telefono, "sms").create();
+		Verification.creator(verifySid, telefono, "sms").create();
 	}
 
 	public boolean verificarOtp(String telefono, String codigo) {
-		VerificationCheck check = VerificationCheck.creator(verifySid)
-				.setTo("+549" + telefono)
-				.setCode(codigo)
-				.create();
+		VerificationCheck check = VerificationCheck.creator(
+				verifySid,
+				codigo
+		).setTo("+549" + telefono).create();
+
 		return "approved".equals(check.getStatus());
 	}
 }
