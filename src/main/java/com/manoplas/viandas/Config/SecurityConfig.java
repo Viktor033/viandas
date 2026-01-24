@@ -24,9 +24,13 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						// Endpoints públicos (OTP y registro)
 						.requestMatchers("/api/auth/**").permitAll()
+						// Swagger UI & OpenAPI
+						.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+						// Static resources & Home
+						.requestMatchers("/", "/index.html", "/static/**", "/css/**", "/js/**", "/images/**")
+						.permitAll()
 						// Todo lo demás requiere autenticación
-						.anyRequest().authenticated()
-				)
+						.anyRequest().authenticated())
 				// Agregamos el filtro JWT antes del filtro de login por usuario/contraseña
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();

@@ -1,0 +1,1 @@
+ALTER TABLE cadetes MODIFY dni VARCHAR(20);
