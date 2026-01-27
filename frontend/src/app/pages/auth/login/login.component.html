@@ -1,0 +1,35 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="card-glow"></div>
+    <div class="card-content">
+      <div class="logo">
+        <i class="fas fa-utensils"></i>
+        <h2>Manoplas</h2>
+      </div>
+      
+      <h3>Acceso al Sistema</h3>
+      <p class="subtitle">Ingresá tu celular para continuar</p>
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="input-group">
+          <i class="fas fa-phone-alt input-icon"></i>
+          <input 
+            type="tel" 
+            [(ngModel)]="phone" 
+            name="phone"
+            placeholder="Ej: 11 1234 5678" 
+            required
+            autocomplete="tel"
+          >
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="loading">
+          <span *ngIf="!loading">INGRESAR</span>
+          <span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i> Procesando...</span>
+        </button>
+      </form>
+
+      <p class="footer-text">Acceso exclusivo para clientes</p>
+    </div>
+  </div>
+</div>
