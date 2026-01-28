@@ -1,0 +1,162 @@
+:host {
+    display: block;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    background: rgba(20, 20, 20, 0.85); // Dark background
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(237, 177, 16, 0.2); // Mustard border
+    padding: 0.8rem 2rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+
+    .nav-logo {
+        height: 50px;
+        width: auto;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    .brand-name {
+        color: #f8edda; // Cream
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+    margin: 0;
+    padding: 0;
+
+    li {
+        a {
+            text-decoration: none;
+            color: rgba(248, 237, 218, 0.7); // Cream opaco
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: #edb110; // Mustard
+                transition: width 0.3s ease;
+            }
+
+            &:hover,
+            &.active {
+                color: #edb110; // Mustard highlight
+
+                &::after {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 2rem;
+    border-left: 1px solid rgba(248, 237, 218, 0.1);
+
+    .cart-trigger {
+        position: relative;
+        margin-right: 1.5rem;
+        color: #f8edda;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+
+        &:hover {
+            transform: scale(1.1);
+            color: #edb110;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #edb110;
+            color: #0a332e;
+            font-size: 0.7rem;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        line-height: 1.2;
+
+        .greeting {
+            font-size: 0.75rem;
+            color: rgba(248, 237, 218, 0.5);
+        }
+
+        .username {
+            color: #f8edda;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+    }
+
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(237, 177, 16, 0.2);
+        border: 1px solid #edb110;
+        color: #edb110;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.05);
+            background: #edb110;
+            color: #0a332e;
+        }
+    }
+}

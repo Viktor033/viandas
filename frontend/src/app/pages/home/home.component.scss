@@ -1,11 +1,32 @@
 .home-container {
+    min-height: 100vh;
+    padding-top: 100px;
+    /* Space for fixed navbar */
+    background-image: url('/assets/images/login-bg.png');
+    /* Reuse login bg for consistency or use a color */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f5f5f5;
-    font-family: 'Segoe UI', sendMessage, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
+    color: #f8edda;
+
+    &::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7); // Darker overlay than login
+        z-index: 0;
+    }
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 header {

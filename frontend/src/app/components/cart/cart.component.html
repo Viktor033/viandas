@@ -1,0 +1,39 @@
+<div class="modal-overlay" (click)="closeRequest()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeRequest()">&times;</button>
+        
+        <h2>Tu Carrito</h2>
+        
+        <div class="cart-items" *ngIf="(cartItems$ | async) as items">
+            <div *ngIf="items.length === 0" class="empty-cart">
+                <p>No tienes productos en el carrito.</p>
+            </div>
+
+            <div *ngFor="let item of items" class="cart-item">
+                <div class="item-info">
+                    <span class="item-name">{{ item.producto.nombre }}</span>
+                    <span class="item-price">$ {{ item.producto.precio }}</span>
+                </div>
+                <div class="item-controls">
+                    <span class="qty">x {{ item.cantidad }}</span>
+                    <button class="btn-remove" (click)="removeItem(item.producto.id!)">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart-footer" *ngIf="items.length > 0">
+                <div class="total-row">
+                    <span>Total:</span>
+                    <span class="total-amount">$ {{ total | number:'1.0-0' }}</span>
+                </div>
+                <button 
+                    class="btn-confirm" 
+                    [disabled]="isProcessing"
+                    (click)="confirmOrder(items)">
+                    {{ isProcessing ? 'Procesando...' : 'Confirmar Pedido' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

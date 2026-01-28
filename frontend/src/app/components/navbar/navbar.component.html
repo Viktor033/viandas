@@ -1,0 +1,34 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="logo-section">
+      <img src="/assets/images/logonew.png" alt="Manoplas Logo" class="nav-logo">
+      <span class="brand-name">MANOPLAS</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a routerLink="/home" routerLinkActive="active">Inicio</a></li>
+      <li><a routerLink="/menu" routerLinkActive="active">Menú de la semana</a></li>
+      <li *ngIf="!isAdmin"><a routerLink="/mis-pedidos" routerLinkActive="active">Mis pedidos</a></li>
+      <li><a routerLink="/contacto" routerLinkActive="active">Contactanos</a></li>
+    </ul>
+
+    <div class="user-section">
+      <!-- Cart Trigger (User only) -->
+      <div class="cart-trigger" *ngIf="!isAdmin" (click)="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="badge" *ngIf="(cartService.cart$ | async)?.length as count">{{ count }}</span>
+      </div>
+
+      <div class="user-info">
+        <span class="greeting">Hola,</span>
+        <span class="username">{{ userName }}</span>
+      </div>
+      <div class="avatar-circle">
+        {{ userName.charAt(0) }}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Cart Modal -->
+<app-cart *ngIf="showCart"></app-cart>

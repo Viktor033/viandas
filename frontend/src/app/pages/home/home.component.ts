@@ -2,10 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
+import { NavbarComponent } from '../../components/navbar/navbar.component';
+
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, NavbarComponent],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })

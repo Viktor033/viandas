@@ -1,7 +1,7 @@
 :host {
     display: block;
     min-height: 100vh;
-    background-image: url('/hero_bodegon.png');
+    background-image: url('/assets/images/login-bg.png');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -10,8 +10,8 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.75); // Dark overlay
-        backdrop-filter: blur(8px); // Blur background for focus on modal
+        background: rgba(0, 0, 0, 0.5); // Neutral dark overlay
+        backdrop-filter: blur(3px);
     }
 }
 
@@ -25,137 +25,129 @@
     padding: 1rem;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 .login-card {
     position: relative;
     width: 100%;
-    max-width: 400px;
-    background: rgba(30, 30, 30, 0.9);
-    border-radius: 20px;
-    padding: 3px; // Space for the glowing border
+    max-width: 420px;
+    background: rgba(80, 80, 80, 0.4); // Grey transparency
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(237, 177, 16, 0.3); // Mustard border
+    border-radius: 24px;
+    padding: 3px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-}
-
-.card-glow {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(transparent,
-            transparent,
-            transparent,
-            #00ff88, // Neon Green
-            transparent);
-    animation: rotate 4s linear infinite;
-}
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
+    margin: 0 auto; // Ensure centering if flex fails
 }
 
 .card-content {
     position: relative;
-    background: #1a1a1a;
-    border-radius: 18px; // Slightly less than card
-    padding: 2.5rem 2rem;
+    background: transparent;
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
     text-align: center;
-    color: white;
+    color: #f8edda; // Cream text
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    form {
+        width: 100%;
+    }
 }
 
 .logo {
-    margin-bottom: 2rem;
+    margin-bottom: 0rem; // Removed margin to bring closer to text
+    display: flex;
+    justify-content: center;
+    width: 100%;
 
-    i {
-        font-size: 2.5rem;
-        color: #00ff88;
-        margin-bottom: 0.5rem;
-    }
-
-    h2 {
-        margin: 0;
-        font-size: 1.8rem;
-        font-weight: 700;
-        letter-spacing: 1px;
+    img {
+        // Adjust height if needed for new logo proportions
+        height: 180px;
+        width: auto;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
     }
 }
 
 h3 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+    font-weight: 500;
     margin-bottom: 0.5rem;
+    color: #f8edda; // Cream
 }
 
 .subtitle {
-    color: #888;
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
+    color: rgba(248, 237, 218, 0.7); // Cream with opacity
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
 }
 
 .input-group {
     position: relative;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
+    width: 100%;
 
     .input-icon {
         position: absolute;
-        left: 15px;
+        left: 18px;
         top: 50%;
         transform: translateY(-50%);
-        color: #666;
-        font-size: 1.1rem;
-        transition: color 0.3s;
+        color: #edb110; // Mustard
+        font-size: 1.2rem;
+        opacity: 0.9;
+        z-index: 2;
     }
 
     input {
         width: 100%;
-        padding: 1rem 1rem 1rem 3rem; // Space for icon
-        background: #333;
-        border: 2px solid transparent;
-        border-radius: 12px;
-        color: white;
+        padding: 1.1rem 1.1rem 1.1rem 3.5rem;
+        background: #ffffff; // Blanco puro
+        border: 2px solid rgba(237, 177, 16, 0.4); // Borde más visible
+        border-radius: 14px;
+        color: #000000; // Negro puro
         font-size: 1rem;
         outline: none;
-        transition: all 0.3s;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
 
         &::placeholder {
-            color: #666;
+            color: rgba(0, 0, 0, 0.5); // Placeholder oscuro
         }
 
         &:focus {
-            border-color: #00ff88;
-            background: #222;
-
-            &+.input-icon {
-                color: #00ff88;
-            }
+            background: #fff; // Blanco puro al enfocar
+            border-color: #edb110;
+            box-shadow: 0 0 0 3px rgba(237, 177, 16, 0.2);
         }
     }
 }
 
 .btn-login {
     width: 100%;
-    padding: 1rem;
-    background: #00ff88;
-    color: #000;
+    padding: 1.1rem;
+    background: #edb110; // Mustard Solid
+    color: #0a332e; // Dark Green text for contrast
     border: none;
-    border-radius: 12px;
-    font-size: 1rem;
+    border-radius: 14px;
+    font-size: 1.05rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    margin-top: 1rem;
+    box-shadow: 0 4px 15px rgba(237, 177, 16, 0.3);
 
     &:hover {
-        background: #00cc6a;
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        box-shadow: 0 8px 25px rgba(237, 177, 16, 0.4);
+        filter: brightness(1.1);
     }
 
     &:disabled {
@@ -168,7 +160,9 @@ h3 {
 }
 
 .footer-text {
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    color: #555;
+    margin-top: 2.5rem;
+    font-size: 0.85rem;
+    color: rgba(248, 237, 218, 0.4);
+    border-top: 1px solid rgba(248, 237, 218, 0.1);
+    padding-top: 1.5rem;
 }

@@ -10,15 +10,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.manoplas.viandas.repository.UsuarioRepository usuarioRepository;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity in this phase
+                .csrf(csrf -> csrf.disable())
+                .cors(org.springframework.security.config.Customizer.withDefaults()) // Enable CORS
+                .addFilterBefore(new PhoneAuthFilter(usuarioRepository),
+                        org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Allow auth endpoints
-                        .requestMatchers("/api/**").authenticated() // Protect other API endpoints
-                        .anyRequest().permitAll() // Allow everything else (Frontend routes, static files, etc.)
-                );
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/upload/**").permitAll() // Allow uploads explicitly if needed, or protect
+                                                                       // them
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll());
         return http.build();
     }
 }
