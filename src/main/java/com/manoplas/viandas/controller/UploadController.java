@@ -21,28 +21,21 @@ import java.util.UUID;
 @CrossOrigin(origins = "http://localhost:4200")
 public class UploadController {
 
-    // Guarda en la carpeta static del backend para ser servido
-    // NOTA: En desarrollo, puede requerir reinicio o configurar un path externo.
-    // Para simplificar, intentaremos guardar en target y src.
-
-    private final String UPLOAD_DIR_SRC = "src/main/resources/static/images/productos/";
-    private final String UPLOAD_DIR_TARGET = "target/classes/static/images/productos/";
+    // Carpeta en la raíz del proyecto
+    private final String UPLOAD_DIR = "uploads";
 
     @PostMapping
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            // Generar nombre único para evitar colisiones
+            // Generar nombre único
             String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
 
-            // Guardar en SRC (para persistencia)
-            saveFile(UPLOAD_DIR_SRC, uniqueFileName, file);
+            // Guardar en la carpeta externa
+            saveFile(UPLOAD_DIR, uniqueFileName, file);
 
-            // Guardar en TARGET (para disponibilidad inmediata en dev)
-            saveFile(UPLOAD_DIR_TARGET, uniqueFileName, file);
-
-            // URL relativa de acceso
-            String fileUrl = "/images/productos/" + uniqueFileName;
+            // La URL ahora es servida por WebConfig mapeando /images/** a ./uploads/
+            String fileUrl = "/images/" + uniqueFileName;
 
             return ResponseEntity.ok(Collections.singletonMap("url", fileUrl));
 

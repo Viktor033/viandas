@@ -8,6 +8,7 @@ import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 
 import { UploadService } from '../../services/upload.service';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-menu',
@@ -55,7 +56,21 @@ export class MenuComponent {
 
     addToCart(producto: Producto) {
         this.cartService.addToCart(producto);
-        alert('Producto agregado al carrito'); // Feedback temporal
+        Swal.fire({
+            title: '¡Agregado!',
+            text: `${producto.nombre} se agregó al carrito`,
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            background: '#1a1a1a',
+            color: '#f8edda',
+            iconColor: '#edb110',
+            customClass: {
+                popup: 'swal-custom-toast'
+            }
+        });
     }
 
     deleteProduct(id: number) {

@@ -1,87 +1,231 @@
+// Variables (match project theme)
+$primary-gold: #edb110;
+$bg-dark: #0a332e;
+$text-light: #f8edda;
+$danger: #ff6b6b;
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end; // Slide from right
+    // Or center: justify-content: center; align-items: center;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: rgba(20, 20, 20, 0.95);
+    border-left: 1px solid rgba($primary-gold, 0.3);
+    width: 100%;
+    max-width: 450px;
+    height: 100%;
+    padding: 2rem;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    animation: slideIn 0.3s forwards;
+    position: relative;
+    color: $text-light;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateX(0);
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: rgba($text-light, 0.6);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+        color: $primary-gold;
+    }
+}
+
+h2 {
+    color: $primary-gold;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba($primary-gold, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+.cart-items {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+
+    // Scrollbar styling
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba($primary-gold, 0.3);
+        border-radius: 3px;
+    }
+}
+
 .cart-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba($primary-gold, 0.2);
+    }
 
     .item-info {
         display: flex;
         flex-direction: column;
+        gap: 0.3rem;
 
         .item-name {
             font-weight: 600;
-            color: #f8edda;
+            font-size: 1.1rem;
+            color: $text-light;
         }
 
         .item-price {
-            color: #edb110;
-            font-size: 0.9rem;
+            color: $primary-gold;
+            font-size: 0.95rem;
         }
     }
 
     .item-controls {
         display: flex;
-        align-items: center;
-        gap: 1rem;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
 
         .qty {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
+            background: rgba($primary-gold, 0.2);
+            color: $primary-gold;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
         }
 
         .btn-remove {
             background: none;
             border: none;
-            color: #ff6b6b;
+            color: darken($danger, 10%);
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.2s;
 
             &:hover {
-                text-decoration: underline;
+                color: $danger;
+            }
+
+            i {
+                font-size: 0.8rem;
             }
         }
     }
 }
 
 .cart-footer {
-    margin-top: 2rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: inherit; // Ensure it stays on top of scroll if needed, though flex handles it
 
     .total-row {
         display: flex;
         justify-content: space-between;
-        font-size: 1.2rem;
-        font-weight: bold;
+        align-items: center;
         margin-bottom: 1.5rem;
-        color: #edb110;
+
+        span:first-child {
+            font-size: 1.2rem;
+            color: rgba($text-light, 0.8);
+        }
+
+        .total-amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: $primary-gold;
+        }
     }
 
     .btn-confirm {
         width: 100%;
         padding: 1rem;
-        background: #edb110;
-        color: #0a332e;
+        background: linear-gradient(45deg, $primary-gold, lighten($primary-gold, 10%));
+        color: #000;
         border: none;
-        border-radius: 8px;
-        font-weight: bold;
+        border-radius: 50px;
+        font-weight: 800;
         font-size: 1.1rem;
         cursor: pointer;
-        transition: filter 0.2s;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba($primary-gold, 0.3);
 
         &:hover {
-            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba($primary-gold, 0.4);
+        }
+
+        &:active {
+            transform: translateY(0);
         }
 
         &:disabled {
-            background: #666;
+            background: #444;
+            color: #888;
             cursor: not-allowed;
+            box-shadow: none;
         }
     }
 }
 
 .empty-cart {
-    text-align: center;
-    padding: 3rem 0;
-    color: rgba(248, 237, 218, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: rgba($text-light, 0.4);
+
+    i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
 }

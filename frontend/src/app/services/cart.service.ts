@@ -27,6 +27,20 @@ export class CartService {
         console.log('Carrito actualizado:', this.cartItems.value);
     }
 
+    decreaseQuantity(productoId: number) {
+        const currentItems = this.cartItems.value;
+        const existingItem = currentItems.find(item => item.producto.id === productoId);
+
+        if (existingItem) {
+            if (existingItem.cantidad > 1) {
+                existingItem.cantidad--;
+                this.cartItems.next([...currentItems]);
+            } else {
+                this.removeFromCart(productoId);
+            }
+        }
+    }
+
     removeFromCart(productoId: number) {
         const currentItems = this.cartItems.value.filter(item => item.producto.id !== productoId);
         this.cartItems.next(currentItems);

@@ -6,6 +6,7 @@
         
         <div class="cart-items" *ngIf="(cartItems$ | async) as items">
             <div *ngIf="items.length === 0" class="empty-cart">
+                <i class="fas fa-shopping-basket"></i>
                 <p>No tienes productos en el carrito.</p>
             </div>
 
@@ -16,7 +17,7 @@
                 </div>
                 <div class="item-controls">
                     <span class="qty">x {{ item.cantidad }}</span>
-                    <button class="btn-remove" (click)="removeItem(item.producto.id!)">
+                    <button class="btn-remove" (click)="removeItem(item)">
                         <i class="fas fa-trash"></i> Eliminar
                     </button>
                 </div>

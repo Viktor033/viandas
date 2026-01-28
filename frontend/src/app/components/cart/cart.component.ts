@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CartService, CartItem } from '../../services/cart.service';
 import { PedidoService } from '../../services/pedido.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-cart',
@@ -31,8 +32,51 @@ export class CartComponent {
         // Por simplicidad, usaremos un output o controlaremos la visibilidad desde Navbar
     }
 
-    removeItem(id: number) {
-        if (id) this.cartService.removeFromCart(id);
+    removeItem(item: CartItem) {
+        if (item.cantidad > 1) {
+            Swal.fire({
+                title: '¿Qué deseas hacer?',
+                text: `Tienes ${item.cantidad} unidades de ${item.producto.nombre}`,
+                icon: 'question',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Quitar solo 1',
+                denyButtonText: 'Eliminar todo',
+                cancelButtonText: 'Cancelar',
+                background: '#1a1a1a',
+                color: '#f8edda',
+                confirmButtonColor: '#edb110', // Dorado -> Reducir
+                denyButtonColor: '#ff6b6b',    // Rojo -> Eliminar todo
+                cancelButtonColor: '#6c757d',
+                customClass: {
+                    actions: 'swal-custom-actions' // Optional for layout adjustments
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.cartService.decreaseQuantity(item.producto.id!);
+                } else if (result.isDenied) {
+                    this.cartService.removeFromCart(item.producto.id!);
+                }
+            });
+        } else {
+            // Solo 1 unidad, confirmar eliminación simple
+            Swal.fire({
+                title: '¿Eliminar producto?',
+                text: `¿Seguro que quieres sacar ${item.producto.nombre} del carrito?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                background: '#1a1a1a',
+                color: '#f8edda',
+                confirmButtonColor: '#ff6b6b',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.cartService.removeFromCart(item.producto.id!);
+                }
+            });
+        }
     }
 
     confirmOrder(items: CartItem[]) {
@@ -46,16 +90,34 @@ export class CartComponent {
 
         this.pedidoService.crearPedido(itemsDto).subscribe({
             next: (res) => {
-                alert('¡Pedido confirmado!');
+                Swal.fire({
+                    title: '¡Pedido Confirmado!',
+                    text: 'Tu pedido ha sido realizado con éxito.',
+                    icon: 'success',
+                    background: '#1a1a1a',
+                    color: '#f8edda',
+                    confirmButtonColor: '#edb110',
+                    confirmButtonText: 'Genial',
+                    customClass: {
+                        popup: 'swal-custom-popup'
+                    }
+                });
+
                 this.cartService.clearCart();
                 this.isProcessing = false;
-                // Cerrar modal y navegar
                 this.closeModal();
                 this.router.navigate(['/mis-pedidos']);
             },
             error: (err) => {
                 console.error(err);
-                alert('Error al confirmar pedido');
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al procesar tu pedido.',
+                    icon: 'error',
+                    background: '#1a1a1a',
+                    color: '#f8edda',
+                    confirmButtonColor: '#ff6b6b'
+                });
                 this.isProcessing = false;
             }
         });
