@@ -8,7 +8,10 @@
     <ul class="nav-links">
       <li><a routerLink="/home" routerLinkActive="active">Inicio</a></li>
       <li><a routerLink="/menu" routerLinkActive="active">Menú de la semana</a></li>
-      <li *ngIf="isAdmin"><a routerLink="/admin/cadetes" routerLinkActive="active">Cadetes</a></li>
+      <li *ngIf="isAdmin">
+        <a routerLink="/admin/cadetes" routerLinkActive="active">Cadetes</a>
+        <a routerLink="/admin/clientes" routerLinkActive="active" style="margin-left: 15px;">Clientes</a>
+      </li>
       <li *ngIf="!isAdmin"><a routerLink="/mis-pedidos" routerLinkActive="active">Mis pedidos</a></li>
       <li><a routerLink="/contacto" routerLinkActive="active">Contactanos</a></li>
     </ul>

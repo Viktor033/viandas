@@ -23,8 +23,8 @@ export class PedidoService {
     private http = inject(HttpClient);
     private apiUrl = '/api/pedidos';
 
-    crearPedido(items: { productoId: number, cantidad: number }[]): Observable<any> {
-        return this.http.post(this.apiUrl, { items });
+    crearPedido(data: { items: { productoId: number, cantidad: number }[], metodoPago: string }): Observable<any> {
+        return this.http.post(this.apiUrl, data);
     }
 
     getMisPedidos(): Observable<Pedido[]> {

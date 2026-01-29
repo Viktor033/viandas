@@ -28,14 +28,24 @@ public class PedidoService {
 
     @Transactional
     public Pedido crearPedido(PedidoRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario usuario = usuarioRepository.findByEmail(email)
+        String telefono = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepository.findByTelefono(telefono)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
         pedido.setFecha(LocalDateTime.now());
         pedido.setEstado(EstadoPedido.PENDIENTE);
+
+        try {
+            if (request.getMetodoPago() != null && !request.getMetodoPago().isEmpty()) {
+                pedido.setMetodoPago(MetodoPago.valueOf(request.getMetodoPago().toUpperCase()));
+            } else {
+                pedido.setMetodoPago(MetodoPago.EFECTIVO);
+            }
+        } catch (IllegalArgumentException e) {
+            pedido.setMetodoPago(MetodoPago.EFECTIVO);
+        }
 
         double total = 0;
 
@@ -57,8 +67,8 @@ public class PedidoService {
     }
 
     public List<Pedido> misPedidos() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario usuario = usuarioRepository.findByEmail(email)
+        String telefono = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepository.findByTelefono(telefono)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         return pedidoRepository.findByUsuarioOrderByFechaDesc(usuario);

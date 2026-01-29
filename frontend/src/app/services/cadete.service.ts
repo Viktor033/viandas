@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 export interface Cadete {
     id?: number;
     nombre: string;
+    apellido: string;
     vehiculo: string;
     telefono: string;
     activo: boolean;

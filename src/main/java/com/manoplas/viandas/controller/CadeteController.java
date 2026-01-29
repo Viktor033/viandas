@@ -40,6 +40,7 @@ public class CadeteController {
         return cadeteService.findById(id)
                 .map(cadete -> {
                     cadete.setNombre(cadeteDetails.getNombre());
+                    cadete.setApellido(cadeteDetails.getApellido());
                     cadete.setVehiculo(cadeteDetails.getVehiculo());
                     cadete.setTelefono(cadeteDetails.getTelefono());
                     cadete.setActivo(cadeteDetails.getActivo());

@@ -15,6 +15,7 @@ public class Cadete {
     private Long id;
 
     private String nombre;
+    private String apellido;
     private String vehiculo;
     private String telefono;
     private Boolean activo = true;
@@ -22,8 +23,9 @@ public class Cadete {
     public Cadete() {
     }
 
-    public Cadete(String nombre, String vehiculo, String telefono) {
+    public Cadete(String nombre, String apellido, String vehiculo, String telefono) {
         this.nombre = nombre;
+        this.apellido = apellido;
         this.vehiculo = vehiculo;
         this.telefono = telefono;
     }
@@ -42,6 +44,14 @@ public class Cadete {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public String getVehiculo() {

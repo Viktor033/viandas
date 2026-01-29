@@ -30,6 +30,10 @@ public class Pedido {
     @Column(nullable = false)
     private EstadoPedido estado;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "metodo_pago")
+    private MetodoPago metodoPago;
+
     @Column(nullable = false)
     private Double total;
 

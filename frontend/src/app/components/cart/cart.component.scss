@@ -184,6 +184,72 @@ h2 {
         }
     }
 
+    .payment-methods {
+        margin-bottom: 1.5rem;
+
+        h3 {
+            color: $text-light;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .method-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+
+            input {
+                position: absolute;
+                opacity: 0;
+            }
+
+            i {
+                font-size: 1.2rem;
+                color: rgba($text-light, 0.6);
+                transition: color 0.2s;
+            }
+
+            span {
+                font-size: 0.8rem;
+                color: rgba($text-light, 0.8);
+            }
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            &.selected {
+                border-color: $primary-gold;
+                background: rgba($primary-gold, 0.1);
+
+                i {
+                    color: $primary-gold;
+                }
+
+                span {
+                    color: $primary-gold;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+
     .btn-confirm {
         width: 100%;
         padding: 1rem;

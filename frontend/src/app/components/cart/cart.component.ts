@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CartService, CartItem } from '../../services/cart.service';
 import { PedidoService } from '../../services/pedido.service';
 import { Router } from '@angular/router';
@@ -8,7 +9,7 @@ import Swal from 'sweetalert2';
 @Component({
     selector: 'app-cart',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     templateUrl: './cart.component.html',
     styleUrls: ['./cart.component.scss']
 })
@@ -20,6 +21,7 @@ export class CartComponent {
     cartItems$ = this.cartService.cart$;
     total: number = 0;
     isProcessing: boolean = false;
+    selectedPaymentMethod: string = 'EFECTIVO';
 
     ngOnInit() {
         this.cartItems$.subscribe(items => {
@@ -83,10 +85,13 @@ export class CartComponent {
         if (items.length === 0) return;
 
         this.isProcessing = true;
-        const itemsDto = items.map(item => ({
-            productoId: item.producto.id!,
-            cantidad: item.cantidad
-        }));
+        const itemsDto = {
+            items: items.map(item => ({
+                productoId: item.producto.id!,
+                cantidad: item.cantidad
+            })),
+            metodoPago: this.selectedPaymentMethod
+        };
 
         this.pedidoService.crearPedido(itemsDto).subscribe({
             next: (res) => {

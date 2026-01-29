@@ -13,6 +13,7 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Apellido</th>
                     <th>Vehículo</th>
                     <th>Teléfono</th>
                     <th>Estado</th>
@@ -22,6 +23,7 @@
             <tbody>
                 <tr *ngFor="let cadete of cadetes">
                     <td>{{ cadete.nombre }}</td>
+                    <td>{{ cadete.apellido }}</td>
                     <td>{{ cadete.vehiculo }}</td>
                     <td>{{ cadete.telefono }}</td>
                     <td>
@@ -39,7 +41,7 @@
                     </td>
                 </tr>
                 <tr *ngIf="cadetes.length === 0">
-                    <td colspan="5" class="empty-message">No hay cadetes registrados</td>
+                    <td colspan="6" class="empty-message">No hay cadetes registrados</td>
                 </tr>
             </tbody>
         </table>
@@ -54,8 +56,13 @@
         
         <form (ngSubmit)="saveCadete()">
             <div class="form-group">
-                <label>Nombre Completo</label>
-                <input [(ngModel)]="currentCadete.nombre" name="nombre" required placeholder="Nombre del chofer">
+                <label>Nombre</label>
+                <input [(ngModel)]="currentCadete.nombre" name="nombre" required placeholder="Nombre">
+            </div>
+
+            <div class="form-group">
+                <label>Apellido</label>
+                <input [(ngModel)]="currentCadete.apellido" name="apellido" required placeholder="Apellido">
             </div>
 
             <div class="form-group">

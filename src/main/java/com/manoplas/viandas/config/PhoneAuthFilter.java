@@ -40,7 +40,7 @@ public class PhoneAuthFilter extends OncePerRequestFilter {
                 String rol = "ROLE_" + (user.getRol() != null ? user.getRol() : "USER");
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        user.getEmail(), // Principal (usamos email para compatibilidad con PedidoService)
+                        user.getTelefono(), // Principal (usamos telefono como ID)
                         null,
                         Collections.singletonList(new SimpleGrantedAuthority(rol)));
 

@@ -21,6 +21,7 @@ export class AdminCadetesComponent {
 
   currentCadete: Cadete = {
     nombre: '',
+    apellido: '',
     vehiculo: '',
     telefono: '',
     activo: true
@@ -55,6 +56,7 @@ export class AdminCadetesComponent {
   resetForm() {
     this.currentCadete = {
       nombre: '',
+      apellido: '',
       vehiculo: '',
       telefono: '',
       activo: true
@@ -78,7 +80,12 @@ export class AdminCadetesComponent {
           this.loadCadetes();
           this.closeModal();
         },
-        error: () => this.showError('Error al crear cadete')
+        error: (err) => {
+          console.error('Error creating cadete:', err);
+          const errorMsg = err.error?.message || err.message || 'Error desconocido';
+          const status = err.status || 'N/A';
+          this.showError(`Error al crear cadete (${status}): ${errorMsg}`);
+        }
       });
     }
   }

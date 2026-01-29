@@ -8,5 +8,6 @@ export const routes: Routes = [
     { path: 'menu', loadComponent: () => import('./pages/menu/menu.component').then(m => m.MenuComponent) },
     { path: 'mis-pedidos', loadComponent: () => import('./pages/mis-pedidos/mis-pedidos.component').then(m => m.MisPedidosComponent) },
     { path: 'admin/cadetes', loadComponent: () => import('./pages/admin-cadetes/admin-cadetes.component').then(m => m.AdminCadetesComponent) },
+    { path: 'admin/clientes', loadComponent: () => import('./pages/admin-clientes/admin-clientes.component').then(m => m.AdminClientesComponent) },
     { path: '**', redirectTo: 'login' }
 ];
