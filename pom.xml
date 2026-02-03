@@ -122,14 +122,14 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm run build</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>run build -- --output-path=../src/main/resources/static --base-href=/</arguments>
-						</configuration>
-					</execution>
+					<id>npm run build</id>
+					<goals>
+						<goal>npm</goal>
+					</goals>
+					<configuration>
+						<arguments>run build</arguments>
+					</configuration>
+				</execution>
 				</executions>
 			</plugin>
 
@@ -141,21 +141,24 @@
 			</plugin>
 
 			<!-- Fix for Angular Structure: Move files from static/browser to static -->
+			<!-- Copy Frontend Assets to Target Classes -->
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
+				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 					<execution>
-						<phase>generate-resources</phase>
-						<configuration>
-							<target>
-								<move todir="${project.basedir}/src/main/resources/static">
-									<fileset dir="${project.basedir}/src/main/resources/static/browser"/>
-								</move>
-							</target>
-						</configuration>
+						<id>copy-frontend-resources</id>
+						<phase>prepare-package</phase>
 						<goals>
-							<goal>run</goal>
+							<goal>copy-resources</goal>
 						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes/static</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/frontend-staging/browser</directory>
+								</resource>
+							</resources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

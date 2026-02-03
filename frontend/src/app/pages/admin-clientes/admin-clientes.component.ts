@@ -47,7 +47,7 @@ export class AdminClientesComponent {
   openModal(cliente?: Cliente) {
     if (cliente) {
       this.isEditing = true;
-      this.currentCliente = JSON.parse(JSON.stringify(cliente)); // Deep copy simple
+      this.currentCliente = JSON.parse(JSON.stringify(cliente)); // Copia profunda simple
       // Asegurar referencia de cadete para selected option
       if (this.currentCliente.cadete) {
         const found = this.cadetes.find(c => c.id === this.currentCliente.cadete?.id);
@@ -83,7 +83,7 @@ export class AdminClientesComponent {
   }
 
   printFicha(cliente: Cliente) {
-    // Generate simple print view
+    // Generar vista de impresión simple
     const printWindow = window.open('', '', 'height=600,width=800');
     if (printWindow) {
       printWindow.document.write('<html><head><title>Ficha de Cliente</title>');

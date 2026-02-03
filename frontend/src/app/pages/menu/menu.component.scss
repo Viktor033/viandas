@@ -1,18 +1,21 @@
 .menu-container {
     padding-top: 100px;
     min-height: 100vh;
-    background-image: url('/assets/images/login-bg.png');
+    // background-image: url('/assets/images/login-bg.png'); // Consider removing or making theme-dependent
+    background-color: var(--bg-color);
     background-size: cover;
     background-attachment: fixed;
     font-family: 'Segoe UI', sans-serif;
-    color: #f8edda;
+    color: var(--text-color);
 
     &::before {
         content: '';
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.85); // Very dark overlay
+        background: var(--bg-color); // Use variable for overlay adaptation
+        opacity: 0.85;
         z-index: 0;
+        transition: background-color 0.3s ease;
     }
 }
 
@@ -33,20 +36,20 @@
 
     h1 {
         font-size: 2.5rem;
-        color: #edb110;
+        color: var(--primary-color);
         margin-bottom: 0.5rem;
     }
 
     p {
-        color: rgba(248, 237, 218, 0.8);
+        color: var(--text-muted);
         font-size: 1.1rem;
     }
 
     .btn-create {
         margin-top: 1.5rem;
         padding: 0.8rem 1.5rem;
-        background: #edb110;
-        color: #0a332e;
+        background: var(--primary-color);
+        color: var(--bg-card);
         border: none;
         border-radius: 8px;
         font-weight: bold;
@@ -73,7 +76,7 @@
 
     h3 {
         text-align: center;
-        color: #edb110;
+        color: var(--primary-color);
         margin-bottom: 1.5rem;
     }
 
@@ -84,22 +87,23 @@
             display: block;
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
+            color: var(--text-color);
         }
 
         input,
         textarea {
             width: 100%;
             padding: 0.8rem;
-            background: rgba(147, 145, 145, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--bg-card); // Use card variable
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            color: white;
+            color: var(--text-color);
             box-sizing: border-box;
 
             &:focus {
                 outline: none;
-                border-color: #edb110;
-                background: rgba(255, 255, 255, 0.15);
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 2px rgba(237, 177, 16, 0.2);
             }
         }
 
@@ -112,8 +116,8 @@
     .btn-submit {
         width: 100%;
         padding: 1rem;
-        background: #edb110;
-        color: #0a332e;
+        background: var(--primary-color);
+        color: var(--bg-color); // Contrast
         border: none;
         border-radius: 8px;
         font-weight: bold;
@@ -130,6 +134,8 @@
 .no-products {
     text-align: center;
     padding: 3rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
+    color: var(--text-color);
 }

@@ -18,6 +18,7 @@ public class DetallePedido {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Pedido pedido;
 
     @ManyToOne

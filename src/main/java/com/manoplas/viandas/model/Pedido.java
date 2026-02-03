@@ -27,7 +27,7 @@ public class Pedido {
     private LocalDateTime fecha;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private EstadoPedido estado;
 
     @Enumerated(EnumType.STRING)

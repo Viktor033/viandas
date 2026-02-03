@@ -95,18 +95,44 @@ export class CartComponent {
 
         this.pedidoService.crearPedido(itemsDto).subscribe({
             next: (res) => {
-                Swal.fire({
-                    title: '¡Pedido Confirmado!',
-                    text: 'Tu pedido ha sido realizado con éxito.',
-                    icon: 'success',
-                    background: '#1a1a1a',
-                    color: '#f8edda',
-                    confirmButtonColor: '#edb110',
-                    confirmButtonText: 'Genial',
-                    customClass: {
-                        popup: 'swal-custom-popup'
-                    }
-                });
+                if (this.selectedPaymentMethod === 'TRANSFERENCIA') {
+                    Swal.fire({
+                        title: '¡Pedido Confirmado!',
+                        html: `
+                            <p style="margin-bottom: 15px;">Tu pedido ha sido registrado. Para finalizar, realiza la transferencia a:</p>
+                            <div style="background: #333; padding: 10px; border-radius: 8px; text-align: left; font-size: 0.9em; color: #fff;">
+                                <p><strong>Alias:</strong> VIANDAS.MANOPLAS</p>
+                                <p><strong>CBU:</strong> 0000003100000000000000</p>
+                                <p><strong>Banco:</strong> Banco Provincia</p>
+                                <p><strong>Titular:</strong> Juan Manoplas</p>
+                            </div>
+                            <p style="margin-top: 15px; font-size: 0.9em; color: #edb110;">
+                                <i class="fab fa-whatsapp"></i> Compartí el comprobante por WhatsApp y se procederá con su pedido.
+                            </p>
+                        `,
+                        icon: 'info',
+                        background: '#1a1a1a',
+                        color: '#f8edda',
+                        confirmButtonColor: '#25D366',
+                        confirmButtonText: 'Entendido, enviar comprobante',
+                        customClass: {
+                            popup: 'swal-custom-popup'
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: '¡Pedido Confirmado!',
+                        text: 'Tu pedido ha sido realizado con éxito.',
+                        icon: 'success',
+                        background: '#1a1a1a',
+                        color: '#f8edda',
+                        confirmButtonColor: '#edb110',
+                        confirmButtonText: 'Genial',
+                        customClass: {
+                            popup: 'swal-custom-popup'
+                        }
+                    });
+                }
 
                 this.cartService.clearCart();
                 this.isProcessing = false;

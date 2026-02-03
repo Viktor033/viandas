@@ -10,7 +10,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5); // Neutral dark overlay
+        background: rgba(0, 0, 0, 0.5); // Neutral dark overlay - keep generic
         backdrop-filter: blur(3px);
     }
 }
@@ -33,15 +33,16 @@
     position: relative;
     width: 100%;
     max-width: 420px;
-    background: rgba(80, 80, 80, 0.4); // Grey transparency
+    background: var(--modal-bg); // Use modal bg for consistency
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(237, 177, 16, 0.3); // Mustard border
+    border: 1px solid var(--primary-color);
     border-radius: 24px;
     padding: 3px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    box-shadow: var(--card-shadow);
     overflow: hidden;
-    margin: 0 auto; // Ensure centering if flex fails
+    margin: 0 auto;
+    color: var(--text-color);
 }
 
 .card-content {
@@ -50,7 +51,7 @@
     border-radius: 20px;
     padding: 3rem 2.5rem;
     text-align: center;
-    color: #f8edda; // Cream text
+    color: var(--text-color);
     z-index: 1;
     display: flex;
     flex-direction: column;
@@ -62,13 +63,12 @@
 }
 
 .logo {
-    margin-bottom: 0rem; // Removed margin to bring closer to text
+    margin-bottom: 0rem;
     display: flex;
     justify-content: center;
     width: 100%;
 
     img {
-        // Adjust height if needed for new logo proportions
         height: 180px;
         width: auto;
         filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
@@ -79,11 +79,11 @@ h3 {
     font-size: 1.2rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: #f8edda; // Cream
+    color: var(--text-color);
 }
 
 .subtitle {
-    color: rgba(248, 237, 218, 0.7); // Cream with opacity
+    color: var(--text-muted);
     font-size: 0.95rem;
     margin-bottom: 2.5rem;
     line-height: 1.5;
@@ -99,7 +99,7 @@ h3 {
         left: 18px;
         top: 50%;
         transform: translateY(-50%);
-        color: #edb110; // Mustard
+        color: var(--primary-color);
         font-size: 1.2rem;
         opacity: 0.9;
         z-index: 2;
@@ -108,23 +108,26 @@ h3 {
     input {
         width: 100%;
         padding: 1.1rem 1.1rem 1.1rem 3.5rem;
-        background: #ffffff; // Blanco puro
-        border: 2px solid rgba(237, 177, 16, 0.4); // Borde más visible
+        background: var(--bg-card); // Use card bg (white in design, dark in default)
+        border: 2px solid rgba(237, 177, 16, 0.4); // Keep generic or use var
+        border-color: var(--primary-color); // Use var
         border-radius: 14px;
-        color: #000000; // Negro puro
+        color: var(--text-color); // Adapt text color
         font-size: 1rem;
         outline: none;
         transition: all 0.3s ease;
         box-sizing: border-box;
 
         &::placeholder {
-            color: rgba(0, 0, 0, 0.5); // Placeholder oscuro
+            color: var(--text-muted);
+            opacity: 0.7;
         }
 
         &:focus {
-            background: #fff; // Blanco puro al enfocar
-            border-color: #edb110;
+            background: var(--bg-card);
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(237, 177, 16, 0.2);
+            filter: brightness(1.1);
         }
     }
 }
@@ -132,8 +135,8 @@ h3 {
 .btn-login {
     width: 100%;
     padding: 1.1rem;
-    background: #edb110; // Mustard Solid
-    color: #0a332e; // Dark Green text for contrast
+    background: var(--primary-color);
+    color: var(--bg-color); // Contrast
     border: none;
     border-radius: 14px;
     font-size: 1.05rem;
@@ -162,7 +165,7 @@ h3 {
 .footer-text {
     margin-top: 2.5rem;
     font-size: 0.85rem;
-    color: rgba(248, 237, 218, 0.4);
-    border-top: 1px solid rgba(248, 237, 218, 0.1);
+    color: var(--text-muted);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 1.5rem;
 }

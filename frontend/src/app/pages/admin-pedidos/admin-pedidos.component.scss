@@ -1,0 +1,666 @@
+// Variables - Now mapping to CSS variables
+$primary-gold: var(--primary-color);
+$bg-dark: var(--bg-color);
+$text-light: var(--text-color);
+$danger: #dc3545;
+$table-bg: var(--bg-card);
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$secondary: #6c757d;
+
+.dashboard-container {
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: var(--bg-color);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--text-color);
+    position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    /* Removed overlay as it's not needed for light theme */
+
+    /* Wrapper */
+    >* {
+        position: relative;
+        z-index: 1;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h1 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    p {
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+    }
+}
+
+.table-responsive {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+.pedidos-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+
+    th,
+    td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        color: var(--text-color);
+    }
+
+    th {
+        color: var(--primary-color);
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    td {
+        font-size: 0.95rem;
+        vertical-align: middle;
+
+        .small-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+
+            strong {
+                color: var(--text-color);
+            }
+        }
+    }
+
+    .badge-payment {
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-muted);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .status-select {
+        background: var(--bg-color);
+        color: var(--text-color);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 0.4rem;
+        border-radius: 6px;
+        outline: none;
+        cursor: pointer;
+
+        &:focus {
+            border-color: var(--primary-color);
+        }
+
+        option {
+            background: var(--bg-card);
+            color: var(--text-color);
+        }
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: background 0.2s;
+        color: var(--primary-color);
+
+        i {
+            font-size: 1.1rem;
+        }
+
+        &:hover {
+            background: rgba(237, 177, 16, 0.1);
+        }
+    }
+}
+
+// Modal Styles
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Lighter overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--card-shadow);
+
+    .close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: var(--text-color);
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    h2 {
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 1rem;
+    }
+
+    .details-section {
+        margin-bottom: 1.5rem;
+
+        h3 {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 0.2rem;
+        }
+    }
+
+    .product-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+
+    .total-row {
+        margin-top: 1rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        text-align: right;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-submit {
+        display: block; // Change from margin-top: 1rem to match
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+
+        &:hover {
+            filter: brightness(1.1);
+        }
+    }
+}
+
+// Estilos para botón primario en header
+.btn-primary {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+
+    i {
+        font-size: 1.1rem;
+    }
+
+    &:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(237, 177, 16, 0.3);
+    }
+}
+
+.btn-danger {
+    @extend .btn-primary;
+    background: $danger;
+    color: white;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba($danger, 0.3);
+    }
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+// ============================================
+// ESTILOS PARA VISTA DE IMPRESIÓN
+// ============================================
+
+.print-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 9999;
+    overflow-y: auto;
+    color: #000;
+    padding: 2rem;
+
+    .btn-close-print {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        background: $danger;
+        color: white;
+        border: none;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            filter: brightness(1.1);
+            background: $danger; // Mantener color base
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba($danger, 0.4);
+        }
+    }
+
+    .informe-cadete {
+        max-width: 210mm; // Ancho A4
+        margin: 0 auto 2rem;
+        background: white;
+        padding: 20mm;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-informe {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 3px solid #edb110; // Keep hardcoded gold for print
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+
+        .logo-section {
+            h1 {
+                font-size: 2rem;
+                color: #edb110; // Keep hardcoded gold for print
+                margin: 0;
+            }
+
+            .subtitle {
+                color: #666;
+                margin: 0.5rem 0 0;
+            }
+        }
+
+        .fecha-section {
+            text-align: right;
+
+            p {
+                margin: 0.25rem 0;
+                color: #333;
+            }
+        }
+    }
+
+    .info-cadete {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #edb110; // Keep hardcoded gold for print
+
+        h2 {
+            margin: 0 0 1rem;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .cadete-datos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+
+            p {
+                margin: 0.25rem 0;
+                color: #555;
+
+                strong {
+                    color: #000;
+                }
+            }
+        }
+    }
+
+    .lista-entregas {
+        h3 {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    .entrega-item {
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        page-break-inside: avoid;
+
+        .entrega-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+
+            .numero-entrega {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #edb110; // Keep hardcoded gold for print
+            }
+
+            .pedido-id {
+                color: #666;
+            }
+
+            .estado-badge {
+                padding: 0.3rem 0.8rem;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: bold;
+
+                &.en_preparacion {
+                    background: #fff3cd;
+                    color: #856404;
+                }
+
+                &.en_camino {
+                    background: #d1ecf1;
+                    color: #0c5460;
+                }
+
+                &.pendiente {
+                    background: #f8d7da;
+                    color: #721c24;
+                }
+            }
+        }
+
+        .cliente-info,
+        .productos-info,
+        .pago-info {
+            margin-bottom: 1.5rem;
+
+            h4 {
+                color: #333;
+                margin: 0 0 1rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+
+            .info-item {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+
+                &.full-width {
+                    grid-column: 1 / -1;
+                }
+
+                strong {
+                    color: #666;
+                    font-size: 0.9rem;
+                }
+
+                span {
+                    color: #000;
+                    font-size: 1rem;
+
+                    &.destacado {
+                        font-weight: bold;
+                        color: #edb110; // Keep hardcoded gold for print
+                    }
+
+                    &.observaciones {
+                        background: #fff3cd;
+                        padding: 0.5rem;
+                        border-radius: 4px;
+                        border-left: 3px solid #ffc107;
+                    }
+                }
+            }
+        }
+
+        .productos-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+
+            th,
+            td {
+                padding: 0.8rem;
+                text-align: left;
+                border: 1px solid #ddd;
+            }
+
+            th {
+                background: #f8f9fa;
+                color: #333;
+                font-weight: bold;
+            }
+
+            td {
+                color: #555;
+
+                &.text-center {
+                    text-align: center;
+                }
+
+                &.text-right {
+                    text-align: right;
+                }
+            }
+
+            tbody tr:nth-child(even) {
+                background: #f8f9fa;
+            }
+        }
+
+        .pago-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+
+            .pago-item {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                strong {
+                    color: #666;
+                }
+
+                .total-destacado {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    color: #edb110; // Keep hardcoded gold for print
+                }
+
+                .metodo-pago {
+                    font-weight: bold;
+                    color: #333;
+                }
+            }
+        }
+
+        .firma-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed #ddd;
+
+            .firma-box {
+                p {
+                    margin: 0 0 0.5rem;
+                    color: #666;
+                    font-size: 0.9rem;
+                }
+
+                .firma-linea {
+                    border-bottom: 2px solid #333;
+                    height: 40px;
+                }
+            }
+        }
+    }
+
+    .footer-informe {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid #ddd;
+        color: #999;
+        font-size: 0.85rem;
+
+        p {
+            margin: 0.25rem 0;
+        }
+    }
+
+    .page-break {
+        page-break-after: always;
+    }
+}
+
+// ============================================
+// MEDIA QUERIES PARA IMPRESIÓN
+// ============================================
+
+@media print {
+
+    // Ocultar elementos que no deben imprimirse
+    .no-print,
+    app-navbar,
+    .dashboard-container,
+    .btn-close-print {
+        display: none !important;
+    }
+
+    // Ajustar la vista de impresión
+    .print-view {
+        position: static;
+        padding: 0;
+        background: white;
+
+        .informe-cadete {
+            box-shadow: none;
+            padding: 15mm;
+            margin: 0;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .entrega-item {
+            page-break-inside: avoid;
+        }
+    }
+
+    // Configuración de página
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    // Asegurar que los colores se impriman
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

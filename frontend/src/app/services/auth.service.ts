@@ -17,9 +17,10 @@ export class AuthService {
         localStorage.removeItem(this.tokenKey);
         // Opcional: Limpiar otros datos de sesión
         console.log('Sesión cerrada');
-        this.router.navigate(['/']);
-        // Aquí podrías mostrar un toast o alerta
-        alert('Has cerrado sesión correctamente');
+        // Opcional: Limpiar otros datos de sesión
+        console.log('Sesión cerrada');
+        this.router.navigate(['/login']);
+        // alert eliminado para usar UI más limpia
     }
 
     // Login con teléfono

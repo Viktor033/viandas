@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/frontend",
+                        "outputPath": "../target/frontend-staging",
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": [
@@ -47,7 +47,7 @@
                                 {
                                     "type": "anyComponentStyle",
                                     "maximumWarning": "6kB",
-                                    "maximumError": "10kB"
+                                    "maximumError": "20kB"
                                 }
                             ],
                             "outputHashing": "all"

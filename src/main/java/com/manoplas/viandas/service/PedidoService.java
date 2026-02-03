@@ -73,4 +73,57 @@ public class PedidoService {
 
         return pedidoRepository.findByUsuarioOrderByFechaDesc(usuario);
     }
+
+    public List<Pedido> getAllPedidos() {
+        // Traer todos pero filtrar los ARCHIVADOS en memoria o query
+        // Mejor hacer query nativa, pero para simplificar y mantener compatibilidad con
+        // lo existente:
+        List<Pedido> all = pedidoRepository.findAll();
+        // removeIf es mutable
+        all.removeIf(p -> p.getEstado() == EstadoPedido.ARCHIVADO);
+        // Ordenar por fecha descendente ya que estamos
+        all.sort((a, b) -> b.getFecha().compareTo(a.getFecha()));
+        return all;
+    }
+
+    public Pedido actualizarEstadoPedido(Long id, String estado) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        try {
+            pedido.setEstado(EstadoPedido.valueOf(estado));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Estado inválido: " + estado);
+        }
+
+        return pedidoRepository.save(pedido);
+    }
+
+    // Obtener pedidos por cadete (usando la relación usuario-cadete)
+    public List<Pedido> getPedidosByCadete(Long cadeteId) {
+        // Primero buscamos el cadete
+        Cadete cadete = new Cadete();
+        cadete.setId(cadeteId);
+
+        return pedidoRepository.findByUsuarioCadeteOrderByFechaDesc(cadete);
+    }
+
+    @Transactional
+    public int archivarPedidosEntregados() {
+        return pedidoRepository.archivarPedidosEntregados();
+    }
+
+    public List<com.manoplas.viandas.dto.ReporteVentasDTO> obtenerReporteVentas() {
+        return pedidoRepository.generarReporteVentas();
+    }
+
+    public com.manoplas.viandas.dto.ReporteDiarioCompletoDTO obtenerReporteDiario() {
+        List<com.manoplas.viandas.dto.ReporteDiarioDTO> pagos = pedidoRepository.obtenerReporteDiario();
+        List<com.manoplas.viandas.dto.ReporteProductoDiaDTO> productos = pedidoRepository.obtenerProductosVendidosHoy();
+
+        double total = pagos.stream().mapToDouble(com.manoplas.viandas.dto.ReporteDiarioDTO::getTotalVentas).sum();
+        int cantidad = pagos.stream().mapToInt(p -> p.getCantidadPedidos().intValue()).sum();
+
+        return new com.manoplas.viandas.dto.ReporteDiarioCompletoDTO(pagos, productos, total, cantidad);
+    }
 }

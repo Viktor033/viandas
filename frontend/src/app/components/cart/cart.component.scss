@@ -1,7 +1,7 @@
 // Variables (match project theme)
-$primary-gold: #edb110;
-$bg-dark: #0a332e;
-$text-light: #f8edda;
+$primary-gold: var(--primary-color);
+$bg-dark: var(--bg-color);
+$text-light: var(--text-color);
 $danger: #ff6b6b;
 
 .modal-overlay {
@@ -27,7 +27,7 @@ $danger: #ff6b6b;
 }
 
 .modal-content {
-    background: rgba(20, 20, 20, 0.95);
+    background: var(--modal-bg);
     border-left: 1px solid rgba($primary-gold, 0.3);
     width: 100%;
     max-width: 450px;
@@ -91,7 +91,7 @@ h2 {
 }
 
 .cart-item {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-card);
     border-radius: 12px;
     padding: 1rem;
     margin-bottom: 1rem;
@@ -253,8 +253,10 @@ h2 {
     .btn-confirm {
         width: 100%;
         padding: 1rem;
-        background: linear-gradient(45deg, $primary-gold, lighten($primary-gold, 10%));
-        color: #000;
+        // background: linear-gradient(45deg, var(--primary-color), color-mix(in srgb, var(--primary-color), white 20%)); // Modern CSS
+        background: var(--primary-color); // Fallback safe
+        background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); // Use established variables
+        color: var(--bg-color); // Contrast
         border: none;
         border-radius: 50px;
         font-weight: 800;

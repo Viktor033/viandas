@@ -89,7 +89,28 @@
     align-items: center;
     gap: 1rem;
     padding-left: 2rem;
-    border-left: 1px solid rgba(248, 237, 218, 0.1);
+    border-left: 1px solid var(--text-color); // Usar variable si es posible, o dejar hardcoded transparente
+
+    .theme-btn {
+        background: transparent;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-right: 1rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: var(--primary-color);
+            color: var(--bg-color); // Contraste inverso
+            transform: rotate(15deg);
+        }
+    }
 
     .cart-trigger {
         position: relative;

@@ -11,12 +11,18 @@
       <li *ngIf="isAdmin">
         <a routerLink="/admin/cadetes" routerLinkActive="active">Cadetes</a>
         <a routerLink="/admin/clientes" routerLinkActive="active" style="margin-left: 15px;">Clientes</a>
+        <a routerLink="/admin/pedidos" routerLinkActive="active" style="margin-left: 15px;">Pedidos</a>
       </li>
       <li *ngIf="!isAdmin"><a routerLink="/mis-pedidos" routerLinkActive="active">Mis pedidos</a></li>
       <li><a routerLink="/contacto" routerLinkActive="active">Contactanos</a></li>
     </ul>
 
     <div class="user-section">
+      <!-- Theme Switcher -->
+      <button class="theme-btn" (click)="toggleTheme()" title="Cambiar Tema">
+          <i class="fas" [ngClass]="isDesignTheme ? 'fa-paint-roller' : 'fa-palette'"></i>
+      </button>
+
       <!-- Cart Trigger (User only) -->
       <div class="cart-trigger" *ngIf="!isAdmin" (click)="toggleCart()">
         <i class="fas fa-shopping-cart"></i>

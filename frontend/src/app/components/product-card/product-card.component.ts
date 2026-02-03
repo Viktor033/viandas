@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Producto } from '../../services/producto.service';
 
 @Component({
-    selector: 'app-product-card',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-product-card',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="product-card">
       <div class="image-container">
         <img [src]="product.imagenUrl || '/assets/images/placeholder-food.png'" [alt]="product.nombre">
@@ -28,7 +28,7 @@ import { Producto } from '../../services/producto.service';
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     .product-card {
       background: white; /* Glassmorphism if preferred, but white for readability on cards is good */
       background: rgba(40, 40, 40, 0.6);
@@ -111,10 +111,11 @@ import { Producto } from '../../services/producto.service';
             }
 
             &.btn-delete {
-              background: rgba(220, 53, 69, 0.2);
-              color: #ff6b6b;
-              border: 1px solid rgba(220, 53, 69, 0.4);
-              &:hover { background: rgba(220, 53, 69, 0.4); }
+              background: #dc3545 !important;
+              color: #ffffff !important;
+              border: none;
+              opacity: 1 !important;
+              &:hover { background: #c82333 !important; transform: scale(1.05); }
             }
           }
         }
@@ -123,18 +124,18 @@ import { Producto } from '../../services/producto.service';
   `]
 })
 export class ProductCardComponent {
-    @Input() product!: Producto;
-    @Input() isAdmin: boolean = false;
-    @Output() addToCart = new EventEmitter<Producto>();
-    @Output() deleteProduct = new EventEmitter<number>();
+  @Input() product!: Producto;
+  @Input() isAdmin: boolean = false;
+  @Output() addToCart = new EventEmitter<Producto>();
+  @Output() deleteProduct = new EventEmitter<number>();
 
-    onAdd() {
-        this.addToCart.emit(this.product);
-    }
+  onAdd() {
+    this.addToCart.emit(this.product);
+  }
 
-    onDelete() {
-        if (this.product.id) {
-            this.deleteProduct.emit(this.product.id);
-        }
+  onDelete() {
+    if (this.product.id) {
+      this.deleteProduct.emit(this.product.id);
     }
+  }
 }

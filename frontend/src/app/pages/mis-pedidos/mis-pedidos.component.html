@@ -23,6 +23,10 @@
             </div>
 
             <div class="pedido-footer">
+                <div class="payment-info" *ngIf="pedido.metodoPago">
+                    <span class="payment-label">Pago:</span>
+                    <span class="payment-value">{{ pedido.metodoPago }}</span>
+                </div>
                 <span class="total-label">Total:</span>
                 <span class="total-amount">${{ pedido.total }}</span>
             </div>
