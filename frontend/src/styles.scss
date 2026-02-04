@@ -1,16 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-    /* DEFAULT (DARK MODE) */
+    /* LIGHT MODE */
     --primary-color: #edb110;
-    --bg-color: #1a1a1a;
-    --bg-card: #2c2c2c;
-    --text-color: #f8edda;
-    --text-muted: #aaaaaa;
+    --bg-color: #f4f7f6;
+    --bg-card: #ffffff;
+    --text-color: #333333;
+    --text-muted: #666666;
     --accent-color: #edb110;
-    --modal-bg: rgba(30, 30, 30, 0.95);
+    --modal-bg: rgba(255, 255, 255, 0.95);
     --border-color: #edb110;
-    --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -101,4 +101,11 @@ app-root {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* SweetAlert Overrides */
+.swal2-select {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid var(--primary-color) !important;
 }

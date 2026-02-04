@@ -15,9 +15,11 @@ import Swal from 'sweetalert2';
 export class HomeComponent {
     private authService = inject(AuthService);
     userRole: string | null = '';
+    userName: string = '';
 
     ngOnInit() {
         this.userRole = this.authService.getUserRole();
+        this.userName = this.authService.getCurrentUser();
     }
 
     logout() {

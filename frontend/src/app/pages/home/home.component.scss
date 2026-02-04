@@ -2,22 +2,22 @@
     min-height: 100vh;
     padding-top: 100px;
     /* Space for fixed navbar */
-    background-image: url('/assets/images/login-bg.png');
-    /* Reuse login bg for consistency or use a color */
+    // background-image: url('/assets/images/login-bg.png');
+    background-color: var(--bg-color);
     background-size: cover;
-    background-position: center;
     background-attachment: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: 'Segoe UI', sans-serif;
-    color: #f8edda;
+    color: var(--text-color);
 
     &::before {
         content: '';
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.7); // Darker overlay than login
+        background: var(--bg-color);
+        opacity: 0.85;
         z-index: 0;
     }
 }
@@ -99,7 +99,8 @@
     position: relative;
     z-index: 1;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 4rem;
+    padding: 2rem 0;
 }
 
 header {
@@ -117,11 +118,9 @@ header {
 }
 
 .welcome-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #f8edda;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);

@@ -14,7 +14,7 @@
                 <i class="fas fa-chart-line"></i> Reporte Ventas
             </button>
             <button class="btn-primary" (click)="verReporteDiario()">
-                <i class="fas fa-calendar-day"></i> Ventas Hoy
+                <i class="fas fa-cash-register"></i> Cerrar Caja
             </button>
             <button class="btn-danger" (click)="limpiarEntregados()">
                 <i class="fas fa-archive"></i> Limpiar Entregados
@@ -219,13 +219,16 @@
             </div>
         </div>
 
-        <div class="modal-footer" style="margin-top: 1.5rem; text-align: right;">
+        <div class="modal-footer" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: flex-end; gap: 20px;">
             <button class="btn-submit" (click)="closeReporteDiarioModal()">Cerrar</button>
+            <button class="btn-primary" (click)="imprimirReporteDiario()">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
         </div>
     </div>
 </div>
 
-<!-- Vista de Impresión -->
+<!-- Vista de Impresión: Hoja de Ruta Cadetes -->
 <div class="print-view" *ngIf="modoImpresion">
     <button class="btn-close-print no-print" (click)="cerrarImpresion()">
         <i class="fas fa-times"></i> Cerrar Vista de Impresión
@@ -350,5 +353,103 @@
 
         <!-- Salto de página entre cadetes -->
         <div *ngIf="!isLast" class="page-break"></div>
+    </div>
+</div>
+
+<!-- Vista de Impresión: Informe Diario (Contable) -->
+<div class="print-view" *ngIf="modoImpresionDiario && reporteDiario">
+    <button class="btn-close-print no-print" (click)="cerrarImpresionDiario()">
+        <i class="fas fa-times"></i> Cerrar Vista de Impresión
+    </button>
+
+    <div class="informe-contable">
+        <div class="header-informe">
+            <div class="logo-section">
+                <h1>🍱 Manoplas</h1>
+                <p class="subtitle">Informe Estadístico Diario</p>
+            </div>
+            <div class="fecha-section">
+                <p><strong>Fecha Impresión:</strong> {{ fechaImpresion | date:'dd/MM/yyyy HH:mm' }}</p>
+                <div class="report-id">REF: {{ fechaImpresion | date:'yyyyMMdd' }}-D</div>
+            </div>
+        </div>
+
+        <div class="resumen-ejecutivo">
+            <h2>Resumen General</h2>
+            <div class="resumen-grid">
+                <div class="kpi-box">
+                    <span class="kpi-label">Total Pedidos</span>
+                    <span class="kpi-value">{{ reporteDiario.cantidadPedidos }}</span>
+                </div>
+                <div class="kpi-box main">
+                    <span class="kpi-label">Ingresos Totales</span>
+                    <span class="kpi-value">${{ reporteDiario.totalGeneral | number:'1.2-2' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <h3>Detalle por Método de Pago</h3>
+            <table class="productos-table strict-table">
+                <thead>
+                    <tr>
+                        <th>Método de Pago</th>
+                        <th class="text-right">Monto Recaudado</th>
+                        <th class="text-right">% del Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reporteDiario.resumenPagos">
+                        <td>{{ item.metodoPago }}</td>
+                        <td class="text-right">${{ item.totalVentas | number:'1.2-2' }}</td>
+                        <td class="text-right">
+                            {{ (item.totalVentas / reporteDiario.totalGeneral) | percent:'1.1-1' }}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                     <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td class="text-right"><strong>${{ reporteDiario.totalGeneral | number:'1.2-2' }}</strong></td>
+                        <td class="text-right"><strong>100%</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="section-container">
+            <h3>Ranking de Productos (Top Ventas)</h3>
+            <table class="productos-table strict-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let prod of reporteDiario.rankingProductos">
+                        <td>{{ prod.nombre }}</td>
+                        <td class="text-center">{{ prod.cantidad }}</td>
+                        <td class="text-right">${{ prod.subtotal | number:'1.2-2' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer-contable">
+            <div class="signature-box">
+                <div class="line"></div>
+                <span>Firma Responsable</span>
+            </div>
+            <div class="signature-box">
+                <div class="line"></div>
+                <span>Firma Contador/Admin</span>
+            </div>
+        </div>
+        
+        <div class="footer-informe">
+            <p>Documento interno para uso administrativo y contable.</p>
+        </div>
     </div>
 </div>

@@ -1,0 +1,145 @@
+.pedidos-container {
+    padding-top: 100px;
+    min-height: 100vh;
+    background-image: url('/assets/images/login-bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: 'Segoe UI', sans-serif;
+    color: #f8edda;
+
+    &::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 0;
+    }
+}
+
+.header,
+.pedidos-list {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h1 {
+        color: #edb110;
+    }
+
+    p {
+        color: rgba(248, 237, 218, 0.7);
+    }
+}
+
+.pedido-card {
+    background: rgba(40, 40, 40, 0.8);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(237, 177, 16, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s;
+
+    &:hover {
+        border-color: #edb110;
+        transform: translateY(-2px);
+    }
+}
+
+.pedido-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+
+    .fecha {
+        font-weight: bold;
+    }
+
+    .estado {
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+
+        &.PENDIENTE {
+            background: #ffc107;
+            color: #000;
+        }
+
+        &.EN_PREPARACION {
+            background: #17a2b8;
+            color: #fff;
+        }
+
+        &.ENTREGADO {
+            background: #28a745;
+            color: #fff;
+        }
+
+        &.CANCELADO {
+            background: #dc3545;
+            color: #fff;
+        }
+    }
+}
+
+.pedido-body {
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin-bottom: 0.5rem;
+            color: rgba(248, 237, 218, 0.9);
+
+            .price {
+                color: #edb110;
+                font-size: 0.9rem;
+                margin-left: 0.5rem;
+            }
+        }
+    }
+}
+
+.pedido-footer {
+    margin-top: 1rem;
+    text-align: right;
+    font-size: 1.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 0.5rem;
+
+    .total-amount {
+        color: #edb110;
+        font-weight: bold;
+        margin-left: 0.5rem;
+    }
+}
+
+.no-pedidos {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+
+    .btn-shop {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.8rem 1.5rem;
+        background: #edb110;
+        color: #0a332e;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+}

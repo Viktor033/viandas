@@ -1,0 +1,354 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard-container">
+    <div class="header-section">
+        <div>
+            <h1>Gestión de Pedidos</h1>
+            <p>Administración y seguimiento de pedidos</p>
+        </div>
+        <div class="actions">
+            <button class="btn-primary" (click)="generarInformes()">
+                <i class="fas fa-print"></i> Generar Informes
+            </button>
+            <button class="btn-primary" (click)="verReporteVentas()">
+                <i class="fas fa-chart-line"></i> Reporte Ventas
+            </button>
+            <button class="btn-primary" (click)="verReporteDiario()">
+                <i class="fas fa-calendar-day"></i> Ventas Hoy
+            </button>
+            <button class="btn-danger" (click)="limpiarEntregados()">
+                <i class="fas fa-archive"></i> Limpiar Entregados
+            </button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="pedidos-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Total</th>
+                    <th>Método Pago</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let pedido of pedidos">
+                    <td>
+                        <span style="color: #edb110; font-weight: bold;">#{{ pedido.id }}</span>
+                    </td>
+                    <td>
+                        {{ pedido.fecha | date:'dd/MM/yyyy' }}
+                        <span class="small-text">{{ pedido.fecha | date:'HH:mm' }}</span>
+                    </td>
+                    <td>
+                        <div class="user-info" *ngIf="pedido.usuario">
+                            <strong>{{ pedido.usuario.nombre }} {{ pedido.usuario.apellido }}</strong>
+                            <span class="small-text">{{ pedido.usuario.direccion || 'Sin dirección' }}</span>
+                            <span class="small-text">{{ pedido.usuario.telefono }}</span>
+                        </div>
+                        <div *ngIf="!pedido.usuario" class="small-text">Desconocido</div>
+                    </td>
+                    <td style="font-weight: bold; color: #edb110;">
+                        ${{ pedido.total }}
+                    </td>
+                    <td>
+                        <span class="badge-payment">{{ pedido.metodoPago || 'N/A' }}</span>
+                    </td>
+                    <td>
+                        <select [ngModel]="pedido.estado" (change)="cambiarEstado(pedido, $event)" class="status-select">
+                            <option *ngFor="let est of estadosPosibles" [value]="est">{{ est }}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn-icon" (click)="verDetalles(pedido)" title="Ver Detalles">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="pedidos.length === 0">
+                    <td colspan="7" style="text-align: center; padding: 2rem; opacity: 0.6;">
+                        No hay pedidos registrados
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Custom Modal for Details -->
+<div class="modal-overlay" *ngIf="selectedPedido">
+    <div class="modal-content">
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <h2>Detalles del Pedido #{{ selectedPedido.id }}</h2>
+
+        <div class="details-section">
+            <h3>Productos</h3>
+            <ul class="product-list">
+                <li *ngFor="let d of selectedPedido.detalles">
+                    <span>
+                        {{ d.producto ? d.producto.nombre : 'Producto' }} 
+                        <span style="color: #edb110;">x {{ d.cantidad }}</span>
+                    </span>
+                    <span>${{ d.precioUnitario * d.cantidad }}</span>
+                </li>
+            </ul>
+            <div class="total-row">
+                Total: ${{ selectedPedido.total }}
+            </div>
+        </div>
+
+        <div class="details-section" *ngIf="selectedPedido.usuario">
+            <h3>Cliente</h3>
+            <p>
+                <strong>{{ selectedPedido.usuario.nombre }} {{ selectedPedido.usuario.apellido }}</strong><br>
+                <span style="opacity: 0.8;">{{ selectedPedido.usuario.direccion || 'Dirección no especificada' }}</span><br>
+                <span style="opacity: 0.8;">Tel: {{ selectedPedido.usuario.telefono }}</span>
+            </p>
+        </div>
+
+        <button class="btn-submit" (click)="closeModal()">Cerrar</button>
+    </div>
+</div>
+
+<!-- Modal Reporte Ventas -->
+<div class="modal-overlay" *ngIf="showReporteModal">
+    <div class="modal-content" style="max-width: 800px;">
+        <button class="close-btn" (click)="closeReporteModal()">&times;</button>
+        <h2>Reporte de Ventas Históricas</h2>
+        <p style="margin-bottom: 1rem; opacity: 0.8;">Incluye pedidos entregados y archivados.</p>
+
+        <div class="table-responsive">
+            <table class="pedidos-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cant. Vendida</th>
+                        <th>Ingresos Totales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reporteVentas">
+                        <td>{{ item.producto }}</td>
+                        <td style="text-align: center; font-weight: bold;">{{ item.cantidad }}</td>
+                        <td style="text-align: right; color: #edb110; font-weight: bold;">
+                            ${{ item.total | number:'1.0-2' }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-footer" style="margin-top: 1.5rem; text-align: right;">
+            <button class="btn-submit" (click)="closeReporteModal()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reporte Diario -->
+<div class="modal-overlay" *ngIf="showReporteDiarioModal && reporteDiario">
+    <div class="modal-content" style="max-width: 800px;">
+        <button class="close-btn" (click)="closeReporteDiarioModal()">&times;</button>
+        <h2>Ventas del Día</h2>
+        
+        <div class="summary-cards" style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center;">
+            <div class="card" style="background: rgba(237, 177, 16, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #edb110; text-align: center; min-width: 150px;">
+                <h3 style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Pedidos</h3>
+                <p style="margin: 0.5rem 0 0; font-size: 1.5rem; font-weight: bold; color: #edb110;">{{ reporteDiario.cantidadPedidos }}</p>
+            </div>
+            <div class="card" style="background: rgba(40, 167, 69, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #28a745; text-align: center; min-width: 150px;">
+                <h3 style="margin: 0; font-size: 0.9rem; opacity: 0.8;">Total Vendido</h3>
+                <p style="margin: 0.5rem 0 0; font-size: 1.5rem; font-weight: bold; color: #28a745;">${{ reporteDiario.totalGeneral | number:'1.0-2' }}</p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Columna 1: Ranking Productos -->
+             <div>
+                <h3 style="color: #edb110; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1rem;">Ranking Platos</h3>
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                    <table class="pedidos-table" style="font-size: 0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th style="text-align: center;">Cant.</th>
+                                <th style="text-align: right;">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let prod of reporteDiario.rankingProductos">
+                                <td>{{ prod.nombre }}</td>
+                                <td style="text-align: center; font-weight: bold;">{{ prod.cantidad }}</td>
+                                <td style="text-align: right; opacity: 0.8;">${{ prod.subtotal | number:'1.0-2' }}</td>
+                            </tr>
+                            <tr *ngIf="reporteDiario.rankingProductos.length === 0">
+                                <td colspan="3" style="text-align: center; opacity: 0.6;">Sin ventas registradas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Columna 2: Métodos de Pago -->
+            <div>
+                <h3 style="color: #edb110; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1rem;">Métodos de Pago</h3>
+                <div class="table-responsive">
+                    <table class="pedidos-table" style="font-size: 0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>Método</th>
+                                <th style="text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of reporteDiario.resumenPagos">
+                                <td><span class="badge-payment">{{ item.metodoPago }}</span></td>
+                                <td style="text-align: right; font-weight: bold;">
+                                    ${{ item.totalVentas | number:'1.0-2' }}
+                                </td>
+                            </tr>
+                            <tr *ngIf="reporteDiario.resumenPagos.length === 0">
+                                <td colspan="2" style="text-align: center; opacity: 0.6;">Sin movimientos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="margin-top: 1.5rem; text-align: right;">
+            <button class="btn-submit" (click)="closeReporteDiarioModal()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Vista de Impresión -->
+<div class="print-view" *ngIf="modoImpresion">
+    <button class="btn-close-print no-print" (click)="cerrarImpresion()">
+        <i class="fas fa-times"></i> Cerrar Vista de Impresión
+    </button>
+
+    <div *ngFor="let informe of informesCadetes; let isLast = last" class="informe-cadete">
+        <div class="header-informe">
+            <div class="logo-section">
+                <h1>🍱 Manoplas</h1>
+                <p class="subtitle">Sistema de Reparto de Viandas</p>
+            </div>
+            <div class="fecha-section">
+                <p><strong>Fecha:</strong> {{ fechaImpresion | date:'dd/MM/yyyy' }}</p>
+                <p><strong>Hora:</strong> {{ fechaImpresion | date:'HH:mm' }}</p>
+            </div>
+        </div>
+
+        <div class="info-cadete">
+            <h2>Informe de Reparto</h2>
+            <div class="cadete-datos">
+                <p><strong>Cadete:</strong> {{ informe.cadete.nombre }} {{ informe.cadete.apellido }}</p>
+                <p><strong>Vehículo:</strong> {{ informe.cadete.vehiculo }}</p>
+                <p><strong>Teléfono:</strong> {{ informe.cadete.telefono }}</p>
+                <p><strong>Total de Entregas:</strong> {{ informe.pedidos.length }}</p>
+            </div>
+        </div>
+
+        <div class="lista-entregas">
+            <h3>Entregas del Día</h3>
+            
+            <div *ngFor="let pedido of informe.pedidos; let i = index" class="entrega-item">
+                <div class="entrega-header">
+                    <span class="numero-entrega">Entrega #{{ i + 1 }}</span>
+                    <span class="pedido-id">Pedido #{{ pedido.id }}</span>
+                    <span class="estado-badge" [class]="pedido.estado.toLowerCase()">{{ pedido.estado }}</span>
+                </div>
+
+                <div class="cliente-info" *ngIf="pedido.usuario">
+                    <h4>📍 Datos del Cliente</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Nombre:</strong>
+                            <span>{{ pedido.usuario.nombre }} {{ pedido.usuario.apellido }}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Teléfono:</strong>
+                            <span class="destacado">{{ pedido.usuario.telefono }}</span>
+                        </div>
+                        <div class="info-item full-width">
+                            <strong>Dirección:</strong>
+                            <span class="destacado">{{ pedido.usuario.direccion || 'No especificada' }}</span>
+                        </div>
+                        <div class="info-item" *ngIf="pedido.usuario.piso">
+                            <strong>Piso:</strong>
+                            <span>{{ pedido.usuario.piso }}</span>
+                        </div>
+                        <div class="info-item" *ngIf="pedido.usuario.departamento">
+                            <strong>Depto:</strong>
+                            <span>{{ pedido.usuario.departamento }}</span>
+                        </div>
+                        <div class="info-item" *ngIf="pedido.usuario.zona">
+                            <strong>Zona:</strong>
+                            <span>{{ pedido.usuario.zona }}</span>
+                        </div>
+                        <div class="info-item full-width" *ngIf="pedido.usuario.observaciones">
+                            <strong>⚠️ Observaciones:</strong>
+                            <span class="observaciones">{{ pedido.usuario.observaciones }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="productos-info">
+                    <h4>📦 Productos a Entregar</h4>
+                    <table class="productos-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unit.</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detalle of pedido.detalles">
+                                <td>{{ detalle.producto?.nombre || 'Producto' }}</td>
+                                <td class="text-center">{{ detalle.cantidad }}</td>
+                                <td class="text-right">${{ detalle.precioUnitario }}</td>
+                                <td class="text-right">${{ detalle.precioUnitario * detalle.cantidad }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pago-info">
+                    <div class="pago-item">
+                        <strong>💰 Total a Cobrar:</strong>
+                        <span class="total-destacado">${{ pedido.total }}</span>
+                    </div>
+                    <div class="pago-item">
+                        <strong>💳 Método de Pago:</strong>
+                        <span class="metodo-pago">{{ pedido.metodoPago || 'Efectivo' }}</span>
+                    </div>
+                </div>
+
+                <div class="firma-section">
+                    <div class="firma-box">
+                        <p>Firma del Cliente:</p>
+                        <div class="firma-linea"></div>
+                    </div>
+                    <div class="firma-box">
+                        <p>Hora de Entrega:</p>
+                        <div class="firma-linea"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-informe">
+            <p>Este informe fue generado automáticamente por el Sistema Manoplas</p>
+            <p>Para consultas: contacto&#64;manoplas.com</p>
+        </div>
+
+        <!-- Salto de página entre cadetes -->
+        <div *ngIf="!isLast" class="page-break"></div>
+    </div>
+</div>

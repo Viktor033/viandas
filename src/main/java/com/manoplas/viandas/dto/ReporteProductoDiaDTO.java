@@ -1,9 +1,14 @@
 package com.manoplas.viandas.dto;
 
-public interface ReporteProductoDiaDTO {
-    String getNombre();
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    Long getCantidad();
-
-    Double getSubtotal();
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ReporteProductoDiaDTO {
+    private String nombre;
+    private Long cantidad;
+    private Double subtotal;
 }

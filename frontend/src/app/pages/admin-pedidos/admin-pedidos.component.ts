@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+
+import { Component, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PedidoService, Pedido, ReporteVentas, ReporteDiario, ReporteDiarioCompleto } from '../../services/pedido.service';
@@ -22,6 +23,7 @@ interface InformeCadete {
 export class AdminPedidosComponent {
   private pedidoService = inject(PedidoService);
   private cadeteService = inject(CadeteService);
+  private cd = inject(ChangeDetectorRef);
 
   pedidos: Pedido[] = [];
   cadetes: Cadete[] = [];
@@ -95,6 +97,35 @@ export class AdminPedidosComponent {
 
   // Generar informes de reparto para impresión
   generarInformes() {
+    // Preparar opciones para el select (Todos + Cadetes)
+    const options: { [key: string]: string } = {
+      'all': 'Todos los Cadetes'
+    };
+
+    this.cadetes.forEach(c => {
+      options[c.id!.toString()] = `${c.nombre} ${c.apellido} (${c.vehiculo})`;
+    });
+
+    Swal.fire({
+      title: 'Seleccionar Cadete',
+      text: '¿Para quién deseas generar el informe?',
+      input: 'select',
+      inputOptions: options,
+      inputValue: 'all',
+      showCancelButton: true,
+      confirmButtonText: 'Generar',
+      cancelButtonText: 'Cancelar',
+      background: '#1a1a1a',
+      color: '#f8edda',
+      confirmButtonColor: '#edb110'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.procesarInformes(result.value);
+      }
+    });
+  }
+
+  procesarInformes(cadeteIdSeleccionado: string) {
     this.informesCadetes = [];
 
     // Agrupar pedidos por cadete
@@ -106,10 +137,13 @@ export class AdminPedidosComponent {
         const cadeteId = pedido.usuario?.cadete?.id;
 
         if (cadeteId) {
-          if (!pedidosPorCadete.has(cadeteId)) {
-            pedidosPorCadete.set(cadeteId, []);
+          // Si se seleccionó "Todos" O coincide el ID
+          if (cadeteIdSeleccionado === 'all' || cadeteId.toString() === cadeteIdSeleccionado) {
+            if (!pedidosPorCadete.has(cadeteId)) {
+              pedidosPorCadete.set(cadeteId, []);
+            }
+            pedidosPorCadete.get(cadeteId)!.push(pedido);
           }
-          pedidosPorCadete.get(cadeteId)!.push(pedido);
         }
       }
     });
@@ -135,7 +169,7 @@ export class AdminPedidosComponent {
     if (this.informesCadetes.length === 0) {
       Swal.fire({
         title: 'Sin informes',
-        text: 'No hay pedidos en preparación o en camino asignados a cadetes',
+        text: 'No hay pedidos en recorrido para el filtro seleccionado.',
         icon: 'info',
         background: '#1a1a1a',
         color: '#f8edda',
@@ -157,6 +191,23 @@ export class AdminPedidosComponent {
   // Cerrar modo impresión
   cerrarImpresion() {
     this.modoImpresion = false;
+  }
+
+  // --- Funcionalidad Impresión Reporte Diario ---
+  modoImpresionDiario = false;
+
+  imprimirReporteDiario() {
+    this.modoImpresionDiario = true;
+    this.fechaImpresion = new Date(); // Actualizar fecha de impresión
+    this.cd.detectChanges(); // Forzar actualización de la vista
+
+    setTimeout(() => {
+      window.print();
+    }, 800);
+  }
+
+  cerrarImpresionDiario() {
+    this.modoImpresionDiario = false;
   }
 
   // --- Funcionalidad Nueva ---

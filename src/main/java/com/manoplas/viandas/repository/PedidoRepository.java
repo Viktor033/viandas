@@ -39,14 +39,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
         @Query(value = "UPDATE pedidos SET estado = 'ARCHIVADO' WHERE estado = 'ENTREGADO'", nativeQuery = true)
         int archivarPedidosEntregados();
 
-        @Query("SELECT p.metodoPago as metodoPago, COUNT(p) as cantidadPedidos, SUM(p.total) as totalVentas " +
+        @Query("SELECT new com.manoplas.viandas.dto.ReporteDiarioDTO(p.metodoPago, COUNT(p), SUM(p.total)) " +
                         "FROM Pedido p " +
                         "WHERE FUNCTION('DATE', p.fecha) = CURRENT_DATE " +
                         "AND p.estado != 'CANCELADO' " +
                         "GROUP BY p.metodoPago")
         List<com.manoplas.viandas.dto.ReporteDiarioDTO> obtenerReporteDiario();
 
-        @Query("SELECT prod.nombre as nombre, SUM(dp.cantidad) as cantidad, SUM(dp.cantidad * dp.precioUnitario) as subtotal "
+        @Query("SELECT new com.manoplas.viandas.dto.ReporteProductoDiaDTO(prod.nombre, SUM(dp.cantidad), SUM(dp.cantidad * dp.precioUnitario)) "
                         +
                         "FROM DetallePedido dp " +
                         "JOIN dp.pedido p " +

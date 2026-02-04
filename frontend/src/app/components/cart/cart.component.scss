@@ -102,7 +102,7 @@ h2 {
     transition: all 0.2s;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(237, 177, 16, 0.1);
         border-color: rgba($primary-gold, 0.2);
     }
 
@@ -163,7 +163,7 @@ h2 {
 .cart-footer {
     margin-top: auto;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-color);
     background: inherit; // Ensure it stays on top of scroll if needed, though flex handles it
 
     .total-row {
@@ -206,8 +206,8 @@ h2 {
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             padding: 0.8rem;
             border-radius: 8px;
             cursor: pointer;
@@ -231,7 +231,7 @@ h2 {
             }
 
             &:hover {
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(237, 177, 16, 0.1);
             }
 
             &.selected {

@@ -1,0 +1,74 @@
+<app-navbar></app-navbar>
+
+<div class="profile-container fade-in">
+    <div class="profile-card">
+        <div class="profile-header">
+            <h2>Mi Perfil</h2>
+            <p>Actualiza tus datos de contacto y dirección de envío.</p>
+        </div>
+
+        <form *ngIf="usuario" (ngSubmit)="onSubmit()" #profileForm="ngForm">
+            <!-- Datos Personales -->
+            <div class="form-section">
+                <h3>Datos Personales</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" [(ngModel)]="usuario.nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido" name="apellido" [(ngModel)]="usuario.apellido" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="text" id="telefono" name="telefono" [(ngModel)]="usuario.telefono" required>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Dirección -->
+            <div class="form-section">
+                <h3>Dirección de Envío</h3>
+                <div class="form-group">
+                    <label for="direccion">Calle y Altura</label>
+                    <input type="text" id="direccion" name="direccion" [(ngModel)]="usuario.direccion" placeholder="Ej: Av. San Martín 1234">
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="piso">Piso (Op)</label>
+                        <input type="text" id="piso" name="piso" [(ngModel)]="usuario.piso">
+                    </div>
+                    <div class="form-group">
+                        <label for="departamento">Depto (Op)</label>
+                        <input type="text" id="departamento" name="departamento" [(ngModel)]="usuario.departamento">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="zona">Barrio / Zona</label>
+                    <input type="text" id="zona" name="zona" [(ngModel)]="usuario.zona" placeholder="Ej: Centro, Alberdi...">
+                </div>
+
+                <div class="form-group">
+                    <label for="observaciones">Observaciones para el delivery</label>
+                    <textarea id="observaciones" name="observaciones" rows="3" [(ngModel)]="usuario.observaciones" placeholder="Ej: Timbre no anda, dejar en portería..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save" [disabled]="loading || !profileForm.form.valid">
+                    <span *ngIf="!loading">Guardar Cambios</span>
+                    <span *ngIf="loading">Guardando...</span>
+                </button>
+            </div>
+        </form>
+
+        <div *ngIf="!usuario && loading" class="loading-state">
+            <p>Cargando perfil...</p>
+        </div>
+    </div>
+</div>

@@ -1,17 +1,19 @@
 .pedidos-container {
     padding-top: 100px;
     min-height: 100vh;
-    background-image: url('/assets/images/login-bg.png');
+    // background-image: url('/assets/images/login-bg.png');
+    background-color: var(--bg-color);
     background-size: cover;
     background-attachment: fixed;
     font-family: 'Segoe UI', sans-serif;
-    color: #f8edda;
+    color: var(--text-color);
 
     &::before {
         content: '';
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.85);
+        background: var(--bg-color);
+        opacity: 0.85;
         z-index: 0;
     }
 }
@@ -34,14 +36,14 @@
     }
 
     p {
-        color: rgba(248, 237, 218, 0.7);
+        color: var(--text-muted);
     }
 }
 
 .pedido-card {
-    background: rgba(40, 40, 40, 0.8);
+    background: var(--bg-card);
     backdrop-filter: blur(5px);
-    border: 1px solid rgba(237, 177, 16, 0.2);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
@@ -101,7 +103,7 @@
 
         li {
             margin-bottom: 0.5rem;
-            color: rgba(248, 237, 218, 0.9);
+            color: var(--text-color);
 
             .price {
                 color: #edb110;

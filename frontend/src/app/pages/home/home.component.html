@@ -2,8 +2,8 @@
 
 <div class="home-container">
     <div class="main-content">
-        <h1>Bienvenido al Panel Principal</h1>
-        <p>Sistema de Gestión de Viandas</p>
+        <img src="/assets/images/logo-gold.png" alt="Manoplas Logo" style="max-width: 350px; margin-bottom: 2rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+        <h1>Hola, {{ userName }}</h1>
 
     <main>
         <div class="welcome-card">
@@ -12,6 +12,5 @@
             <p *ngIf="userRole">Tu rol es: <strong>{{ userRole }}</strong></p>
         </div>
         
-        <button (click)="logout()" class="logout-btn">Cerrar Sesión</button>
     </main>
 </div>
