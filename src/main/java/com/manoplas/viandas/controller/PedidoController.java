@@ -60,6 +60,26 @@ public class PedidoController {
         }
     }
 
+    @Autowired
+    private com.manoplas.viandas.service.MercadoPagoService mercadoPagoService;
+
+    @PostMapping("/checkout-mp")
+    public ResponseEntity<?> checkoutMP(@RequestBody PedidoRequest request) {
+        try {
+            // 1. Crear el pedido en estado PENDIENTE o similar (definido en servicio)
+            Pedido pedido = pedidoService.crearPedido(request);
+
+            // 2. Generar preferencia de MP
+            String initPoint = mercadoPagoService.createPreference(pedido);
+
+            // 3. Retornar URL
+            return ResponseEntity.ok(java.util.Collections.singletonMap("init_point", initPoint));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error al procesar pago MP: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/admin/reporte-ventas")
     public ResponseEntity<List<com.manoplas.viandas.dto.ReporteVentasDTO>> obtenerReporteVentas() {
         return ResponseEntity.ok(pedidoService.obtenerReporteVentas());

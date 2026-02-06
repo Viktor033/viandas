@@ -11,5 +11,8 @@ export const routes: Routes = [
     { path: 'admin/cadetes', loadComponent: () => import('./pages/admin-cadetes/admin-cadetes.component').then(m => m.AdminCadetesComponent) },
     { path: 'admin/clientes', loadComponent: () => import('./pages/admin-clientes/admin-clientes.component').then(m => m.AdminClientesComponent) },
     { path: 'admin/pedidos', loadComponent: () => import('./pages/admin-pedidos/admin-pedidos.component').then(m => m.AdminPedidosComponent) },
+    { path: 'pago-exitoso', loadComponent: () => import('./pages/payment-result/payment-result.component').then(m => m.PaymentResultComponent), data: { status: 'success' } },
+    { path: 'pago-fallido', loadComponent: () => import('./pages/payment-result/payment-result.component').then(m => m.PaymentResultComponent), data: { status: 'failure' } },
+    { path: 'pago-pendiente', loadComponent: () => import('./pages/payment-result/payment-result.component').then(m => m.PaymentResultComponent), data: { status: 'pending' } },
     { path: '**', redirectTo: 'login' }
 ];

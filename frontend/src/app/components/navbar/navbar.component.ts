@@ -24,12 +24,7 @@ export class NavbarComponent {
         this.userName = this.authService.getCurrentUser() || 'Usuario';
         this.isAdmin = this.authService.getUserRole() === 'ADMIN';
 
-        // Inicializar tema
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'design') {
-            this.isDesignTheme = true;
-            document.body.classList.add('theme-design');
-        }
+
 
         // Escuchar evento de cierre desde el componente hijo
         document.addEventListener('closeCart', () => {
@@ -41,23 +36,9 @@ export class NavbarComponent {
         this.showCart = !this.showCart;
     }
 
-    // --- Theme Switcher ---
-    isDesignTheme = false;
-
-    // --- User Dropdown ---
-    // --- User Dropdown ---
     showUserMenu = false;
 
-    toggleTheme() {
-        this.isDesignTheme = !this.isDesignTheme;
-        if (this.isDesignTheme) {
-            document.body.classList.add('theme-design');
-            localStorage.setItem('theme', 'design');
-        } else {
-            document.body.classList.remove('theme-design');
-            localStorage.setItem('theme', 'default');
-        }
-    }
+
 
     toggleUserMenu() {
         this.showUserMenu = !this.showUserMenu;

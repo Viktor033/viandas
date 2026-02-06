@@ -74,11 +74,41 @@ export class MenuComponent {
     }
 
     deleteProduct(id: number) {
-        if (confirm('¿Estás seguro de eliminar este producto?')) {
-            this.productoService.deleteProducto(id).subscribe(() => {
-                this.loadProductos();
-            });
-        }
+        Swal.fire({
+            title: '¿Eliminar Producto?',
+            text: "Esta acción no se puede deshacer",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ff6b6b',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            background: '#1a1a1a',
+            color: '#f8edda'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.productoService.deleteProducto(id).subscribe({
+                    next: () => {
+                        this.showSuccess('Producto eliminado');
+                        // Optimistic update
+                        this.productos = this.productos.filter(p => p.id !== id);
+                        this.loadProductos();
+                    },
+                    error: (err) => console.error('Error eliminando producto', err)
+                });
+            }
+        });
+    }
+
+    private showSuccess(msg: string) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: msg,
+            timer: 1500,
+            showConfirmButton: false,
+            background: '#1a1a1a',
+            color: '#f8edda'
+        });
     }
 
     toggleForm() {

@@ -32,7 +32,7 @@ export class AdminClientesComponent {
 
   loadClientes() {
     this.clienteService.getClientes().subscribe({
-      next: (res) => this.clientes = res.filter(u => u.rol !== 'ADMIN'), // Ocultar admin
+      next: (res) => this.clientes = res.filter(u => u.rol !== 'ADMIN' && u.activo !== false), // Ocultar admin e inactivos
       error: (err) => console.error(err)
     });
   }
@@ -111,6 +111,35 @@ export class AdminClientesComponent {
       printWindow.document.close();
       printWindow.print();
     }
+  }
+
+  deleteCliente(id: number) {
+    Swal.fire({
+      title: '¿Eliminar Cliente?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ff6b6b',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      background: '#1a1a1a',
+      color: '#f8edda'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.clienteService.deleteCliente(id).subscribe({
+          next: () => {
+            this.showSuccess('Cliente eliminado');
+            // Optimistic update: remove from local list immediately
+            this.clientes = this.clientes.filter(c => c.id !== id);
+            this.loadClientes(); // Reload from server just in case
+          },
+          error: (err) => {
+            console.error('SERVER ERROR DELETE:', err);
+            this.showError('Algo falló: ' + (err.error?.message || err.statusText));
+          }
+        });
+      }
+    });
   }
 
   getEmptyCliente(): Cliente {

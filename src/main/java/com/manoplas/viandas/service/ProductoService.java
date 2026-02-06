@@ -31,6 +31,10 @@ public class ProductoService {
     }
 
     public void eliminarProducto(Long id) {
-        productoRepository.deleteById(id);
+        productoRepository.findById(id).ifPresent(producto -> {
+            producto.setActivo(false);
+            productoRepository.save(producto);
+            System.out.println("SOFT DELETE PRODUCTO: " + producto.getNombre());
+        });
     }
 }

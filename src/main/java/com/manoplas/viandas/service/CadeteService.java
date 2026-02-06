@@ -25,10 +25,38 @@ public class CadeteService {
     }
 
     public Cadete save(Cadete cadete) {
+        Optional<Cadete> existingCadete = cadeteRepository.findByTelefono(cadete.getTelefono());
+
+        if (existingCadete.isPresent()) {
+            Cadete existing = existingCadete.get();
+
+            // Permitir si es el MISMO cadete que estamos editando
+            if (cadete.getId() != null && cadete.getId().equals(existing.getId())) {
+                return cadeteRepository.save(cadete);
+            }
+
+            if (Boolean.TRUE.equals(existing.getActivo())) {
+                // Si ya existe y está activo -> Error (lo manejará el Controller/Frontend)
+                throw new RuntimeException("El cadete ya existe con ese teléfono.");
+            } else {
+                // Si existe pero está INACTIVO ("eliminado") -> Lo reactivamos
+                existing.setActivo(true);
+                existing.setNombre(cadete.getNombre());
+                existing.setApellido(cadete.getApellido());
+                existing.setVehiculo(cadete.getVehiculo());
+                System.out.println("REACTIVANDO CADETE: " + existing.getNombre());
+                return cadeteRepository.save(existing);
+            }
+        }
+
         return cadeteRepository.save(cadete);
     }
 
     public void delete(Long id) {
-        cadeteRepository.deleteById(id);
+        // Implementación de Soft Delete (Borrado Lógico)
+        cadeteRepository.findById(id).ifPresent(cadete -> {
+            cadete.setActivo(false);
+            cadeteRepository.save(cadete);
+        });
     }
 }

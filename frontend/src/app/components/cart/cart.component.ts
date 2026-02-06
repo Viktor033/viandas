@@ -84,6 +84,9 @@ export class CartComponent {
     confirmOrder(items: CartItem[]) {
         if (items.length === 0) return;
 
+        // DEBUG: Alertar método seleccionado para confirmar actualización
+        //alert('DEBUG: Método seleccionado -> ' + this.selectedPaymentMethod);
+
         this.isProcessing = true;
         const itemsDto = {
             items: items.map(item => ({
@@ -92,6 +95,32 @@ export class CartComponent {
             })),
             metodoPago: this.selectedPaymentMethod
         };
+
+        console.log('Confirmando orden. Método seleccionado:', this.selectedPaymentMethod);
+
+        if (this.selectedPaymentMethod === 'MERCADOPAGO' || this.selectedPaymentMethod === 'TARJETA') {
+            console.log('Iniciando flujo MercadoPago/Tarjeta...');
+            this.pedidoService.createPreferenceMP(itemsDto).subscribe({
+                next: (res) => {
+                    // Redirigir a MercadoPago
+                    window.location.href = res.init_point;
+                },
+                error: (err) => {
+                    console.error('Error MP:', err);
+                    const errorMsg = typeof err.error === 'string' ? err.error : (err.message || 'Error desconocido');
+                    Swal.fire({
+                        title: 'Error MP',
+                        text: errorMsg,
+                        icon: 'error',
+                        background: '#1a1a1a',
+                        color: '#f8edda',
+                        confirmButtonColor: '#ff6b6b'
+                    });
+                    this.isProcessing = false;
+                }
+            });
+            return;
+        }
 
         this.pedidoService.crearPedido(itemsDto).subscribe({
             next: (res) => {
@@ -111,6 +140,7 @@ export class CartComponent {
                             </p>
                         `,
                         icon: 'info',
+                        showCloseButton: true,
                         background: '#1a1a1a',
                         color: '#f8edda',
                         confirmButtonColor: '#25D366',
@@ -122,7 +152,7 @@ export class CartComponent {
                 } else {
                     Swal.fire({
                         title: '¡Pedido Confirmado!',
-                        text: 'Tu pedido ha sido realizado con éxito.',
+                        text: `Tu pedido ha sido realizado con éxito. Método: ${this.selectedPaymentMethod}`, // DEBUG INCLUIDO
                         icon: 'success',
                         background: '#1a1a1a',
                         color: '#f8edda',

@@ -100,12 +100,13 @@ $table-bg: var(--bg-card);
         padding: 0.3rem 0.8rem;
         border-radius: 20px;
         font-size: 0.8rem;
-        font-weight: bold;
+        font-weight: 400;
 
         &.zona {
             background: rgba(0, 0, 0, 0.05);
-            color: var(--primary-color);
+            color: #000 !important;
             border: 1px solid var(--primary-color);
+            font-weight: 400 !important;
         }
 
         &.cadete {
@@ -114,7 +115,8 @@ $table-bg: var(--bg-card);
 
             &.assigned {
                 background: rgba(237, 177, 16, 0.2);
-                color: var(--primary-color);
+                color: #000 !important;
+                font-weight: 400 !important;
             }
         }
     }
@@ -149,6 +151,15 @@ $table-bg: var(--bg-card);
 
             &:hover {
                 background: rgba(237, 177, 16, 0.1);
+            }
+        }
+
+        &.delete {
+            color: $danger;
+
+            &:hover {
+                background: rgba(255, 107, 107, 0.1);
+                transform: scale(1.1);
             }
         }
     }

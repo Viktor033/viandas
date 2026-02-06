@@ -33,7 +33,7 @@ export class AdminCadetesComponent {
 
   loadCadetes() {
     this.cadeteService.getCadetes().subscribe({
-      next: (data) => this.cadetes = data,
+      next: (data) => this.cadetes = data.filter(c => c.activo !== false),
       error: (err) => console.error('Error cargando cadetes', err)
     });
   }

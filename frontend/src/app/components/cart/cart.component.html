@@ -59,7 +59,7 @@
                     class="btn-confirm" 
                     [disabled]="isProcessing"
                     (click)="confirmOrder(items)">
-                    {{ isProcessing ? 'Procesando...' : 'Confirmar Pedido' }}
+                    {{ isProcessing ? 'Procesando...' : (selectedPaymentMethod === 'MERCADOPAGO' || selectedPaymentMethod === 'TARJETA' ? 'Ir a Pagar' : 'Confirmar Pedido') }}
                 </button>
             </div>
         </div>

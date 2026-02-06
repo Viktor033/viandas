@@ -10,8 +10,8 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5); // Neutral dark overlay - keep generic
-        backdrop-filter: blur(3px);
+        background: rgba(255, 255, 255, 0.2); // Lighter overlay for light mode
+        backdrop-filter: blur(5px);
     }
 }
 
@@ -109,7 +109,7 @@ h3 {
         width: 100%;
         padding: 1.1rem 1.1rem 1.1rem 3.5rem;
         background: var(--bg-card); // Use card bg (white in design, dark in default)
-        border: 2px solid rgba(237, 177, 16, 0.4); // Keep generic or use var
+        border: 1px solid var(--border-color); // Use var
         border-color: var(--primary-color); // Use var
         border-radius: 14px;
         color: var(--text-color); // Adapt text color

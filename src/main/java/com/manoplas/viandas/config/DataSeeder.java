@@ -14,28 +14,27 @@ public class DataSeeder {
     @Bean
     CommandLineRunner initDatabase(UsuarioRepository repository) {
         return args -> {
+            // Migration: Update old admin phone if exists
+            repository.findByTelefono("1111111111").ifPresent(oldAdmin -> {
+                if ("ADMIN".equals(oldAdmin.getRol())) {
+                    oldAdmin.setTelefono("3794920999");
+                    repository.save(oldAdmin);
+                    System.out.println("Migración: Admin actualizado de 1111111111 a 3794920999");
+                }
+            });
+
             if (repository.count() == 0) {
                 // Admin User
                 Usuario admin = new Usuario();
                 admin.setNombre("Admin");
                 admin.setApellido("Super");
-                admin.setTelefono("1111111111");
+                admin.setTelefono("3794920999"); // Updated Admin Phone
                 admin.setRol("ADMIN");
                 admin.setActivo(true);
                 admin.setFechaRegistro(LocalDate.now());
                 repository.save(admin);
 
-                // Normal User
-                Usuario user = new Usuario();
-                user.setNombre("Pepe");
-                user.setApellido("Cliente");
-                user.setTelefono("2222222222");
-                user.setRol("USUARIO");
-                user.setActivo(true);
-                user.setFechaRegistro(LocalDate.now());
-                repository.save(user);
-
-                System.out.println("Usuarios de prueba creados: Admin (1111111111), User (2222222222)");
+                System.out.println("Base de datos reiniciada. Solo existe Admin (3794920999).");
             }
         };
     }

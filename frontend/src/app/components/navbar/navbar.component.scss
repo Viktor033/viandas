@@ -31,17 +31,14 @@
     cursor: pointer;
 
     .nav-logo {
-        height: 50px;
+        height: 80px;
         width: auto;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        transition: transform 0.3s ease;
+        object-fit: contain;
     }
 
-    .brand-name {
-        color: var(--text-color);
-        font-size: 1.2rem;
-        font-weight: 700;
-        letter-spacing: 1px;
-    }
+
 }
 
 .nav-links {
@@ -91,26 +88,7 @@
     padding-left: 2rem;
     border-left: 1px solid var(--text-color); // Usar variable si es posible, o dejar hardcoded transparente
 
-    .theme-btn {
-        background: transparent;
-        border: 1px solid var(--primary-color);
-        color: var(--primary-color);
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        margin-right: 1rem;
-        transition: all 0.3s ease;
 
-        &:hover {
-            background: var(--primary-color);
-            color: var(--bg-color); // Contraste inverso
-            transform: rotate(15deg);
-        }
-    }
 
     .cart-trigger {
         position: relative;
@@ -203,8 +181,10 @@
             }
 
             &:hover {
-                background-color: rgba(237, 177, 16, 0.1);
-                color: #fff;
+                background: rgba(237, 177, 16, 0.1);
+                /* Gold with opacity */
+                color: var(--text-color);
+                /* Dark text for readability */
             }
 
             &.logout {

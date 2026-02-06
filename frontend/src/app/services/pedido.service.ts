@@ -56,6 +56,10 @@ export class PedidoService {
         return this.http.post(this.apiUrl, data);
     }
 
+    createPreferenceMP(data: { items: { productoId: number, cantidad: number }[], metodoPago: string }): Observable<{ init_point: string }> {
+        return this.http.post<{ init_point: string }>(`${this.apiUrl}/checkout-mp`, data);
+    }
+
     getMisPedidos(): Observable<Pedido[]> {
         return this.http.get<Pedido[]>(`${this.apiUrl}/mis-pedidos`);
     }

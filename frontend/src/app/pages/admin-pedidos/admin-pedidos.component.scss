@@ -751,49 +751,70 @@ $secondary: #6c757d;
 }
 
 // ============================================
-// MEDIA QUERIES PARA IMPRESIÓN
+// MEDIA PRINT RULES
 // ============================================
-
 @media print {
+    @page {
+        margin: 10mm; // Margen razonable para la hoja
+        size: auto;
+    }
 
-    // Ocultar elementos que no deben imprimirse
-    .no-print,
+    // Esconder todo lo que no sea la vista de impresión
     app-navbar,
     .dashboard-container,
-    .btn-close-print {
+    .modal-overlay,
+    .no-print {
         display: none !important;
     }
 
-    // Ajustar la vista de impresión
-    .print-view {
-        position: static;
-        padding: 0;
+    // Asegurar que el body y html no generen espacio extra
+    body,
+    html {
+        height: auto;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible;
         background: white;
+    }
 
-        .informe-cadete {
-            box-shadow: none;
-            padding: 15mm;
-            margin: 0;
+    // Resetear el contenedor de impresión
+    .print-view {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+        padding: 0 !important;
+        display: block !important;
+
+        // Esconder botón de cerrar en impresión
+        .btn-close-print {
+            display: none !important;
         }
 
-        .page-break {
-            page-break-after: always;
+        // Ajustar informes
+        .informe-cadete,
+        .informe-contable {
+            margin: 0 !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            border: none !important; // Quitar bordes del contenedor principal si los hay
         }
 
-        .entrega-item {
+        // Evitar saltos de página dentro de tarjetas o filas de tablas
+        tr,
+        .kpi-box,
+        .section-container {
             page-break-inside: avoid;
         }
-    }
 
-    // Configuración de página
-    @page {
-        size: A4;
-        margin: 15mm;
-    }
-
-    // Asegurar que los colores se impriman
-    * {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        // Asegurar que el footer no fuerce página nueva si entra justito
+        .footer-contable,
+        .footer-informe {
+            page-break-inside: avoid;
+            margin-top: 2rem !important; // Reducir margen superior en impresión
+        }
     }
 }

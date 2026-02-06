@@ -43,6 +43,9 @@
                         <button class="btn-icon edit" (click)="openModal(cliente)" title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
+                        <button class="btn-icon delete" (click)="deleteCliente(cliente.id!)" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
                 <tr *ngIf="clientes.length === 0">
