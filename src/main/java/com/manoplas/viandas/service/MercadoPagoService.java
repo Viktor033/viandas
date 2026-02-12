@@ -27,6 +27,9 @@ public class MercadoPagoService {
     @Value("${mp.back.url.pending}")
     private String backUrlPending;
 
+    @Value("${mp.notification.url}")
+    private String notificationUrl;
+
     public String createPreference(Pedido pedido) {
         try {
             MercadoPagoConfig.setAccessToken(accessToken);
@@ -36,7 +39,7 @@ public class MercadoPagoService {
             System.out.println("Access Token: " + (accessToken != null ? "PRESENTE" : "NULO"));
             System.out.println("Back URL Success: " + backUrlSuccess);
 
-            // Validación de URLs de retorno
+            // Validación de URLs de retorno usando las propiedades inyectadas
             if (backUrlSuccess == null || backUrlSuccess.trim().isEmpty())
                 backUrlSuccess = "http://localhost:4200/pago-exitoso";
             if (backUrlFailure == null || backUrlFailure.trim().isEmpty())
@@ -46,6 +49,11 @@ public class MercadoPagoService {
 
             System.out.println("Usando Back URLs: Success=" + backUrlSuccess + ", Failure=" + backUrlFailure
                     + ", Pending=" + backUrlPending);
+
+            // Check Notification URL
+            if (notificationUrl != null) {
+                System.out.println("Notification URL: " + notificationUrl);
+            }
 
             List<PreferenceItemRequest> items = new ArrayList<>();
 
@@ -61,9 +69,9 @@ public class MercadoPagoService {
             }
 
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("http://localhost:4200/pago-exitoso")
-                    .failure("http://localhost:4200/pago-fallido")
-                    .pending("http://localhost:4200/pago-pendiente")
+                    .success(backUrlSuccess)
+                    .failure(backUrlFailure)
+                    .pending(backUrlPending)
                     .build();
 
             // Configuración de métodos de pago
@@ -85,7 +93,8 @@ public class MercadoPagoService {
                     .items(items)
                     .backUrls(backUrls)
                     .paymentMethods(paymentMethods)
-                    // .autoReturn("approved") // Desactivado temporalmente
+                    .autoReturn("approved")
+                    .notificationUrl(notificationUrl)
                     .externalReference(pedido.getId().toString())
                     .build();
 

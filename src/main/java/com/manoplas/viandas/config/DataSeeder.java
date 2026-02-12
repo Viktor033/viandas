@@ -17,9 +17,18 @@ public class DataSeeder {
             // Migration: Update old admin phone if exists
             repository.findByTelefono("1111111111").ifPresent(oldAdmin -> {
                 if ("ADMIN".equals(oldAdmin.getRol())) {
-                    oldAdmin.setTelefono("3794920999");
+                    oldAdmin.setTelefono("231508");
                     repository.save(oldAdmin);
-                    System.out.println("Migración: Admin actualizado de 1111111111 a 3794920999");
+                    System.out.println("Migración: Admin actualizado de 1111111111 a 231508");
+                }
+            });
+
+            // Migration: Update previous admin phone (3794920999) to new requested 231508
+            repository.findByTelefono("3794920999").ifPresent(oldAdmin -> {
+                if ("ADMIN".equals(oldAdmin.getRol())) {
+                    oldAdmin.setTelefono("231508");
+                    repository.save(oldAdmin);
+                    System.out.println("Migración: Admin actualizado de 3794920999 a 231508");
                 }
             });
 
@@ -28,13 +37,13 @@ public class DataSeeder {
                 Usuario admin = new Usuario();
                 admin.setNombre("Admin");
                 admin.setApellido("Super");
-                admin.setTelefono("3794920999"); // Updated Admin Phone
+                admin.setTelefono("231508"); // Updated Admin Phone
                 admin.setRol("ADMIN");
                 admin.setActivo(true);
                 admin.setFechaRegistro(LocalDate.now());
                 repository.save(admin);
 
-                System.out.println("Base de datos reiniciada. Solo existe Admin (3794920999).");
+                System.out.println("Base de datos reiniciada. Solo existe Admin (231508).");
             }
         };
     }

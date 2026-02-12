@@ -136,7 +136,7 @@ export class CartComponent {
                                 <p><strong>Titular:</strong> Juan Manoplas</p>
                             </div>
                             <p style="margin-top: 15px; font-size: 0.9em; color: #edb110;">
-                                <i class="fab fa-whatsapp"></i> Compartí el comprobante por WhatsApp y se procederá con su pedido.
+                                <i class="fab fa-whatsapp"></i> Compartí el comprobante por WhatsApp al <strong>3794908091</strong> y se procederá con su pedido.
                             </p>
                         `,
                         icon: 'info',
@@ -148,6 +148,18 @@ export class CartComponent {
                         customClass: {
                             popup: 'swal-custom-popup'
                         }
+                    }).then((result) => {
+                        this.cartService.clearCart();
+                        this.isProcessing = false;
+                        this.closeModal();
+
+                        // Si confirma (click en botón verde), abrir WhatsApp
+                        if (result.isConfirmed) {
+                            // Asumimos formato internacional para Argentina con 9 después de 54
+                            window.open('https://wa.me/5493794908091?text=Hola,%20adjunto%20comprobante%20de%20transferencia%20para%20mi%20pedido.', '_blank');
+                        }
+
+                        this.router.navigate(['/mis-pedidos']);
                     });
                 } else {
                     Swal.fire({
@@ -161,13 +173,13 @@ export class CartComponent {
                         customClass: {
                             popup: 'swal-custom-popup'
                         }
+                    }).then(() => {
+                        this.cartService.clearCart();
+                        this.isProcessing = false;
+                        this.closeModal();
+                        this.router.navigate(['/mis-pedidos']);
                     });
                 }
-
-                this.cartService.clearCart();
-                this.isProcessing = false;
-                this.closeModal();
-                this.router.navigate(['/mis-pedidos']);
             },
             error: (err) => {
                 console.error(err);

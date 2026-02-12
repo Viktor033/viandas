@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface CadeteRepository extends JpaRepository<Cadete, Long> {
     Optional<Cadete> findByTelefono(String telefono);
+
+    java.util.List<Cadete> findByActivoTrue();
 }

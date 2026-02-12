@@ -22,6 +22,7 @@ public class SecurityConfig {
                         org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll() // Allow test endpoints for development
                         .requestMatchers("/api/upload/**").permitAll() // Allow uploads explicitly if needed, or protect
                                                                        // them
                         .requestMatchers("/api/**").authenticated()

@@ -1,6 +1,6 @@
 .pedidos-container {
     padding-top: 100px;
-    min-height: 100vh;
+    // min-height: 100vh; /* Removed to let app-wrapper handle height */
     // background-image: url('/assets/images/login-bg.png');
     background-color: var(--bg-color);
     background-size: cover;
@@ -49,6 +49,10 @@
     margin-bottom: 1.5rem;
     transition: transform 0.2s;
 
+    @media (max-width: 768px) {
+        padding: 1rem;
+    }
+
     &:hover {
         border-color: #edb110;
         transform: translateY(-2px);
@@ -61,6 +65,12 @@
     margin-bottom: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 0.5rem;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
 
     .fecha {
         font-weight: bold;

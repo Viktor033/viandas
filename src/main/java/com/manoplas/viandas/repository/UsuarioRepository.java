@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     java.util.Optional<Usuario> findByTelefono(String telefono);
 
+    java.util.List<Usuario> findByCadete(com.manoplas.viandas.model.Cadete cadete);
+
     java.util.Optional<Usuario> findByEmail(String email);
 }

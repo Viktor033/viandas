@@ -11,13 +11,16 @@ import java.util.Optional;
 public class CadeteService {
 
     private final CadeteRepository cadeteRepository;
+    private final com.manoplas.viandas.repository.UsuarioRepository usuarioRepository;
 
-    public CadeteService(CadeteRepository cadeteRepository) {
+    public CadeteService(CadeteRepository cadeteRepository,
+            com.manoplas.viandas.repository.UsuarioRepository usuarioRepository) {
         this.cadeteRepository = cadeteRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<Cadete> findAll() {
-        return cadeteRepository.findAll();
+        return cadeteRepository.findByActivoTrue();
     }
 
     public Optional<Cadete> findById(Long id) {
@@ -53,8 +56,16 @@ public class CadeteService {
     }
 
     public void delete(Long id) {
-        // Implementación de Soft Delete (Borrado Lógico)
+        // Implementación de Soft Delete (Borrado Lógico) con Cascada manual
         cadeteRepository.findById(id).ifPresent(cadete -> {
+            // Desvincular usuarios
+            List<com.manoplas.viandas.model.Usuario> usuarios = usuarioRepository.findByCadete(cadete);
+            for (com.manoplas.viandas.model.Usuario u : usuarios) {
+                u.setCadete(null);
+            }
+            usuarioRepository.saveAll(usuarios);
+
+            // Soft delete
             cadete.setActivo(false);
             cadeteRepository.save(cadete);
         });

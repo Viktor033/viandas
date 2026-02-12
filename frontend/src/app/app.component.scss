@@ -5,7 +5,19 @@
 }
 
 .content-wrapper {
-    flex: 1;
+    /* Allow growth, don't shrink */
     display: flex;
     flex-direction: column;
+    width: 100%;
+    /* Ensure full width */
+    position: relative;
+    z-index: 1;
+}
+
+app-footer {
+    display: block;
+    width: 100%;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 100;
 }

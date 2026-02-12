@@ -1,7 +1,7 @@
 .profile-container {
     padding: 100px 1rem 2rem;
     /* Navbar spacing */
-    min-height: 100vh;
+    // min-height: 100vh; /* Removed to let app-wrapper handle height */
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -54,7 +54,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
         grid-template-columns: 1fr;
     }
 }

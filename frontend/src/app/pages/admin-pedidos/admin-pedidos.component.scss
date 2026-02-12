@@ -10,7 +10,7 @@ $warning: #ffc107;
 $secondary: #6c757d;
 
 .dashboard-container {
-    min-height: 100vh;
+    // min-height: 100vh; /* Removed to let app-wrapper handle height */
     padding-top: 100px;
     padding-bottom: 2rem;
     padding-left: 1rem;

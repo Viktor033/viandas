@@ -1,6 +1,6 @@
 import { Component, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { CartComponent } from '../cart/cart.component';
@@ -15,20 +15,30 @@ import { CartComponent } from '../cart/cart.component';
 export class NavbarComponent {
     private authService = inject(AuthService);
     public cartService = inject(CartService);
+    private router = inject(Router); // Injected Router
 
     userName: string = 'Usuario';
     isAdmin: boolean = false;
     showCart: boolean = false;
+    showUserMenu = false; // Moved declaration here
+    isMobileMenuOpen = false; // Added new property
 
     ngOnInit() {
-        this.userName = this.authService.getCurrentUser() || 'Usuario';
-        this.isAdmin = this.authService.getUserRole() === 'ADMIN';
-
-
+        // Updated to use subscription for dynamic user updates
+        this.authService.currentUser$.subscribe(user => {
+            this.userName = user ? user.nombre : 'Usuario';
+            this.isAdmin = user?.rol === 'ADMIN';
+        });
 
         // Escuchar evento de cierre desde el componente hijo
         document.addEventListener('closeCart', () => {
             this.showCart = false;
+        });
+
+        // Cerrar menú móvil y de usuario al cambiar de ruta
+        this.router.events.subscribe(() => {
+            this.isMobileMenuOpen = false;
+            this.showUserMenu = false;
         });
     }
 
@@ -36,12 +46,12 @@ export class NavbarComponent {
         this.showCart = !this.showCart;
     }
 
-    showUserMenu = false;
-
-
-
     toggleUserMenu() {
         this.showUserMenu = !this.showUserMenu;
+    }
+
+    toggleMobileMenu() { // Added new method
+        this.isMobileMenuOpen = !this.isMobileMenuOpen;
     }
 
     closeUserMenu() {
