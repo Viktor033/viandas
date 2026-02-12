@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada - Manoplas</title>
+    <style>
+        :root {
+            --primary-gold: #edb110;
+            --bg-color: #f4f7f6;
+            --text-color: #333333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .error-container {
+            padding: 4rem;
+            max-width: 800px;
+            width: 90%;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            /* Generous spacing around the content */
+            margin: 2rem; 
+        }
+
+        .logo {
+            max-width: 400px;
+            width: 80%;
+            height: auto;
+            margin-bottom: 3rem; /* Espacio debajo del logo */
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        h1 {
+            color: var(--primary-gold);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background-color: var(--primary-gold);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(237, 177, 16, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <!-- Logo Dorado -->
+        <img src="/assets/images/logo-gold.png" alt="Manoplas Viandas Gourmet" class="logo">
+        
+        <h1>¡Ups! Algo salió mal</h1>
+        <p>Parece que la página que buscas no existe o ha ocurrido un error inesperado.<br>No te preocupes, puedes volver al inicio y continuar tu pedido.</p>
+        
+        <a href="/" class="btn-home">IR AL INICIO</a>
+    </div>
+</body>
+</html>

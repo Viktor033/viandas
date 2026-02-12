@@ -1,0 +1,46 @@
+.home-container {
+    padding-top: 100px;
+    background-color: var(--bg-color);
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--text-color);
+    padding-bottom: 2rem;
+    min-height: calc(100vh - 200px);
+    /* Ensure it takes space but allows footer */
+
+    .main-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem 1rem;
+        width: 100%;
+        max-width: 800px;
+
+        /* Responsive Logo */
+        img {
+            max-width: 350px;
+            width: 80%;
+            height: auto;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+    }
+
+    .welcome-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        margin: 0 auto 1.5rem auto;
+        text-align: center;
+        width: 90%;
+        max-width: 500px;
+    }
+}

@@ -1,0 +1,17 @@
+<app-navbar></app-navbar>
+
+<div class="home-container">
+    <div class="main-content">
+        <h1>Bienvenido al Panel Principal</h1>
+        <p>Sistema de Gestión de Viandas</p>
+
+    <main>
+        <div class="welcome-card">
+            <h2>Panel Principal</h2>
+            <p>Has iniciado sesión correctamente.</p>
+            <p *ngIf="userRole">Tu rol es: <strong>{{ userRole }}</strong></p>
+        </div>
+        
+        <button (click)="logout()" class="logout-btn">Cerrar Sesión</button>
+    </main>
+</div>

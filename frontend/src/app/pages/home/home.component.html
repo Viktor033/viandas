@@ -1,0 +1,16 @@
+<app-navbar></app-navbar>
+
+<div class="home-container">
+    <div class="main-content">
+        <img src="/assets/images/logo-gold.png" alt="Manoplas Logo">
+        <h1>Hola, {{ userName }}</h1>
+
+    <main>
+        <div class="welcome-card">
+            <h2>Panel Principal</h2>
+            <p>Has iniciado sesión correctamente.</p>
+            <p *ngIf="userRole">Tu rol es: <strong>{{ userRole }}</strong></p>
+        </div>
+        
+    </main>
+</div>

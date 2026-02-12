@@ -1,0 +1,242 @@
+// Variables - Now mapping to CSS variables
+$primary-gold: var(--primary-color);
+$bg-dark: var(--bg-color);
+$text-light: var(--text-color);
+$danger: #ff6b6b;
+$table-bg: var(--bg-card);
+
+.dashboard-container {
+    // min-height: 100vh; /* Removed to let app-wrapper handle height */
+    padding-top: 100px;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    background-color: var(--bg-color);
+    /* Removing background image and overlay to respect the new light theme */
+
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--text-color);
+    position: relative;
+
+    /* Wrapper */
+    >* {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h1 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: #fff;
+        /* White text on gold button usually looks better/readable */
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.table-responsive {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cadetes-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        color: var(--text-color);
+    }
+
+    th {
+        color: var(--primary-color);
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    td {
+        font-size: 1rem;
+    }
+
+    .status-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-muted);
+
+        &.active {
+            background: rgba(237, 177, 16, 0.1);
+            /* Gold with opacity */
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+    }
+
+    .actions-cell {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: background 0.2s;
+
+        &.edit {
+            color: var(--text-color);
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.05);
+            }
+        }
+
+        &.delete {
+            color: $danger;
+
+            &:hover {
+                background: rgba(255, 107, 107, 0.1);
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 2rem;
+        opacity: 0.6;
+    }
+}
+
+// Modal Styles (Reusable)
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Lighter overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    position: relative;
+    box-shadow: var(--card-shadow);
+
+    .close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: var(--text-color);
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    h2 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--bg-color);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+            border-radius: 6px;
+
+            &:focus {
+                outline: none;
+                border-color: var(--primary-color);
+            }
+        }
+    }
+
+    .checkbox-group {
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        input {
+            width: auto;
+        }
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 1rem;
+
+        &:hover {
+            filter: brightness(1.1);
+        }
+    }
+}

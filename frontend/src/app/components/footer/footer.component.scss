@@ -1,0 +1,52 @@
+:host {
+    display: block;
+    width: 100%;
+    margin-top: auto;
+    /* Force high contrast dark theme */
+    position: relative;
+    z-index: 100;
+}
+
+.footer {
+    width: 100%;
+    padding: 2rem 0;
+    /* Remove background from inner div to let host handle it, avoiding gaps */
+    background-color: #222 !important;
+    border-top: 4px solid #edb110 !important;
+    color: #fff !important;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+
+    @media (min-width: 768px) {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+}
+
+.copyright {
+    color: #ddd !important;
+    font-size: 0.95rem;
+}
+
+.developer {
+    font-weight: 500;
+    color: #fff !important;
+
+    .brand {
+        color: #edb110 !important;
+        /* Gold */
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+}
