@@ -14,6 +14,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Mapea /images/** a la carpeta ./uploads/ en la raíz del proyecto
         exposeDirectory("uploads", registry);
+
+        // Serve static files from target/frontend-staging
+        registry.addResourceHandler("/**")
+                .addResourceLocations("file:target/frontend-staging/")
+                .setCachePeriod(0); // Disable caching for development/debugging
     }
 
     private void exposeDirectory(String dirName, ResourceHandlerRegistry registry) {

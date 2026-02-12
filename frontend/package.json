@@ -4,7 +4,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve --proxy-config proxy.conf.json",
-        "build": "ng build && move ..\\target\\frontend-staging\\browser\\* ..\\target\\frontend-staging\\ && rmdir ..\\target\\frontend-staging\\browser",
+        "build": "ng build && node post-build.js",
         "watch": "ng build --watch --configuration development",
         "test": "ng test"
     },
