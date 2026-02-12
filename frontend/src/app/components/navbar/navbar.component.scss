@@ -107,6 +107,7 @@
 .nav-links {
     list-style: none;
     display: flex;
+    align-items: center;
     gap: 2.5rem;
     margin: 0;
     padding: 0;
@@ -132,14 +133,24 @@
     }
 }
 
+.nav-links li {
+    display: flex;
+    align-items: center;
+    /* Removed height: 100% to let flexbox center content naturally */
+}
+
 .nav-links li a {
+    display: flex;
+    align-items: center;
     text-decoration: none;
     color: var(--text-muted);
     font-size: 0.95rem;
     font-weight: 500;
     transition: all 0.3s ease;
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.5rem;
+    /* Balanced padding */
     position: relative;
+    line-height: normal;
 }
 
 @media (max-width: 768px) {
@@ -171,7 +182,9 @@
 
 .nav-links li.admin-links {
     display: flex;
+    align-items: center;
     gap: 15px;
+    /* Removed height: 100% */
 }
 
 @media (max-width: 768px) {
