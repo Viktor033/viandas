@@ -162,7 +162,7 @@
 							<outputDirectory>${project.build.directory}/classes/static</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${project.build.directory}/frontend-staging/browser</directory>
+									<directory>${project.build.directory}/frontend-staging</directory>
 								</resource>
 							</resources>
 						</configuration>
