@@ -14,6 +14,12 @@ import java.util.List;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
         List<Pedido> findByUsuarioOrderByFechaDesc(Usuario usuario);
 
+        List<Pedido> findByUsuarioIdOrderByFechaDesc(Long usuarioId);
+
+        long deleteByUsuarioIdAndEstado(Long usuarioId, com.manoplas.viandas.model.EstadoPedido estado);
+
+        long deleteByUsuarioId(Long usuarioId);
+
         // Obtener pedidos cuyo usuario tiene asignado un cadete específico
         @Query("SELECT p FROM Pedido p WHERE p.usuario.cadete = :cadete ORDER BY p.fecha DESC")
         List<Pedido> findByUsuarioCadeteOrderByFechaDesc(@Param("cadete") Cadete cadete);

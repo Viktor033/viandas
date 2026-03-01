@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ClienteService, Cliente } from '../../services/cliente.service';
 import { CadeteService, Cadete } from '../../services/cadete.service';
+import { PedidoService, Pedido } from '../../services/pedido.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,6 +17,7 @@ import Swal from 'sweetalert2';
 export class AdminClientesComponent {
   private clienteService = inject(ClienteService);
   private cadeteService = inject(CadeteService);
+  private pedidoService = inject(PedidoService);
 
   clientes: Cliente[] = [];
   cadetes: Cadete[] = [];
@@ -24,6 +26,11 @@ export class AdminClientesComponent {
   isEditing: boolean = false;
 
   currentCliente: Cliente = this.getEmptyCliente();
+
+  // Historial
+  showHistoryModal: boolean = false;
+  historyPedidos: Pedido[] = [];
+  historyCliente: Cliente | null = null;
 
   ngOnInit() {
     this.loadClientes();
@@ -78,6 +85,78 @@ export class AdminClientesComponent {
       error: (err) => {
         const msg = err.error?.message || err.message || 'Error desconocido';
         this.showError(`Error: ${msg}`);
+      }
+    });
+  }
+
+  // --- Historial Methods ---
+
+  openHistory(cliente: Cliente) {
+    this.historyCliente = cliente;
+    this.showHistoryModal = true;
+    this.loadHistory();
+  }
+
+  closeHistory() {
+    this.showHistoryModal = false;
+    this.historyPedidos = [];
+    this.historyCliente = null;
+  }
+
+  loadHistory() {
+    if (!this.historyCliente?.id) return;
+    this.pedidoService.getPedidosByCliente(this.historyCliente.id).subscribe({
+      next: (res) => this.historyPedidos = res,
+      error: (err) => console.error(err)
+    });
+  }
+
+  deleteDeliveredHistory() {
+    if (!this.historyCliente?.id) return;
+    Swal.fire({
+      title: '¿Eliminar Entregados?',
+      text: "Se eliminarán TODOS los pedidos con estado 'ENTREGADO' de este cliente. Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ff6b6b',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      background: '#1a1a1a',
+      color: '#f8edda'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.pedidoService.deletePedidosEntregadosByCliente(this.historyCliente!.id!).subscribe({
+          next: (count) => {
+            this.showSuccess(`Se eliminaron ${count} pedidos entregados.`);
+            this.loadHistory();
+          },
+          error: (err) => this.showError('Error al eliminar historial.')
+        });
+      }
+    });
+  }
+
+  clearAllHistory() {
+    if (!this.historyCliente?.id) return;
+    Swal.fire({
+      title: '¿Limpiar Todo el Historial?',
+      text: "Se eliminarán ABSOLUTAMENTE TODOS los pedidos de este cliente. ¡Cuidado!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ff0000',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, BORRAR TODO',
+      background: '#1a1a1a',
+      color: '#f8edda'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.pedidoService.deleteAllPedidosByCliente(this.historyCliente!.id!).subscribe({
+          next: (count) => {
+            this.showSuccess(`Historial vaciado. ${count} pedidos eliminados.`);
+            this.loadHistory();
+          },
+          error: (err) => this.showError('Error al vaciar historial.')
+        });
       }
     });
   }

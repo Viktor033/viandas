@@ -126,4 +126,18 @@ public class PedidoService {
 
         return new com.manoplas.viandas.dto.ReporteDiarioCompletoDTO(pagos, productos, total, cantidad);
     }
+
+    public List<Pedido> getPedidosByCliente(Long clienteId) {
+        return pedidoRepository.findByUsuarioIdOrderByFechaDesc(clienteId);
+    }
+
+    @Transactional
+    public long deletePedidosEntregadosByCliente(Long clienteId) {
+        return pedidoRepository.deleteByUsuarioIdAndEstado(clienteId, EstadoPedido.ENTREGADO);
+    }
+
+    @Transactional
+    public long deleteAllPedidosByCliente(Long clienteId) {
+        return pedidoRepository.deleteByUsuarioId(clienteId);
+    }
 }

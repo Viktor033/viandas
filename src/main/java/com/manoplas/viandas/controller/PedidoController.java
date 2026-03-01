@@ -89,4 +89,19 @@ public class PedidoController {
     public ResponseEntity<com.manoplas.viandas.dto.ReporteDiarioCompletoDTO> obtenerReporteDiario() {
         return ResponseEntity.ok(pedidoService.obtenerReporteDiario());
     }
+
+    @GetMapping("/admin/cliente/{clienteId}")
+    public ResponseEntity<List<Pedido>> getPedidosByCliente(@PathVariable Long clienteId) {
+        return ResponseEntity.ok(pedidoService.getPedidosByCliente(clienteId));
+    }
+
+    @DeleteMapping("/admin/cliente/{clienteId}/entregados")
+    public ResponseEntity<Long> deletePedidosEntregados(@PathVariable Long clienteId) {
+        return ResponseEntity.ok(pedidoService.deletePedidosEntregadosByCliente(clienteId));
+    }
+
+    @DeleteMapping("/admin/cliente/{clienteId}/todos")
+    public ResponseEntity<Long> deleteAllPedidos(@PathVariable Long clienteId) {
+        return ResponseEntity.ok(pedidoService.deleteAllPedidosByCliente(clienteId));
+    }
 }

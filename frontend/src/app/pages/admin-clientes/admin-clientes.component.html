@@ -37,6 +37,9 @@
                         </span>
                     </td>
                     <td class="actions-cell">
+                        <button class="btn-icon history" (click)="openHistory(cliente)" title="Historial">
+                            <i class="fas fa-history"></i>
+                        </button>
                         <button class="btn-icon print" (click)="printFicha(cliente)" title="Imprimir Ficha">
                             <i class="fas fa-print"></i>
                         </button>
@@ -116,5 +119,54 @@
 
             <button type="submit" class="btn-submit">Guardar</button>
         </form>
+    </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal-overlay" *ngIf="showHistoryModal" (click)="closeHistory()">
+    <div class="modal-content history-modal" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeHistory()">&times;</button>
+        <h2>Historial: {{ historyCliente?.nombre }} {{ historyCliente?.apellido }}</h2>
+
+        <div class="history-actions">
+             <button class="btn-danger" (click)="deleteDeliveredHistory()">
+                <i class="fas fa-trash-alt"></i> Eliminar Entregados
+            </button>
+            <button class="btn-danger-dark" (click)="clearAllHistory()">
+                <i class="fas fa-bomb"></i> Limpiar Todo
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="clientes-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pedido of historyPedidos">
+                        <td>#{{ pedido.id }}</td>
+                         <td>{{ pedido.fecha | date:'short' }}</td>
+                        <td><span class="badge" [ngClass]="pedido.estado.toLowerCase()">{{ pedido.estado }}</span></td>
+                        <td>${{ pedido.total }}</td>
+                        <td>
+                            <ul class="detail-list">
+                                <li *ngFor="let d of pedido.detalles">
+                                    {{ d.cantidad }}x {{ d.producto.nombre }}
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                     <tr *ngIf="historyPedidos.length === 0">
+                        <td colspan="5" class="empty-message">No hay historial disponible.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

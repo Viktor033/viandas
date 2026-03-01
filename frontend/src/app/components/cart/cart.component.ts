@@ -130,10 +130,10 @@ export class CartComponent {
                         html: `
                             <p style="margin-bottom: 15px;">Tu pedido ha sido registrado. Para finalizar, realiza la transferencia a:</p>
                             <div style="background: #333; padding: 10px; border-radius: 8px; text-align: left; font-size: 0.9em; color: #fff;">
-                                <p><strong>Alias:</strong> VIANDAS.MANOPLAS</p>
-                                <p><strong>CBU:</strong> 0000003100000000000000</p>
-                                <p><strong>Banco:</strong> Banco Provincia</p>
-                                <p><strong>Titular:</strong> Juan Manoplas</p>
+                                <p><strong>Alias:</strong> MANOPLAS.MP</p>
+                                <p><strong>CVU:</strong> 0000003100047556076615</p>
+                                <p><strong>Banco:</strong> Mercado Pago</p>
+                                <p><strong>Titular:</strong> Ana Paula Gonzalez</p>
                             </div>
                             <p style="margin-top: 15px; font-size: 0.9em; color: #edb110;">
                                 <i class="fab fa-whatsapp"></i> Compartí el comprobante por WhatsApp al <strong>3794908091</strong> y se procederá con su pedido.

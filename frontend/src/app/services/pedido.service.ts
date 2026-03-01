@@ -90,4 +90,17 @@ export class PedidoService {
     getReporteDiario(): Observable<ReporteDiarioCompleto> {
         return this.http.get<ReporteDiarioCompleto>(`${this.apiUrl}/admin/reporte-diario`);
     }
+
+    // --- Historial Cliente ---
+    getPedidosByCliente(clienteId: number): Observable<Pedido[]> {
+        return this.http.get<Pedido[]>(`${this.apiUrl}/admin/cliente/${clienteId}`);
+    }
+
+    deletePedidosEntregadosByCliente(clienteId: number): Observable<number> {
+        return this.http.delete<number>(`${this.apiUrl}/admin/cliente/${clienteId}/entregados`);
+    }
+
+    deleteAllPedidosByCliente(clienteId: number): Observable<number> {
+        return this.http.delete<number>(`${this.apiUrl}/admin/cliente/${clienteId}/todos`);
+    }
 }

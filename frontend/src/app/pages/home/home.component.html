@@ -2,15 +2,39 @@
 
 <div class="home-container">
     <div class="main-content">
-        <img src="/assets/images/logo-gold.png" alt="Manoplas Logo">
-        <h1>Hola, {{ userName }}</h1>
-
-    <main>
-        <div class="welcome-card">
-            <h2>Panel Principal</h2>
-            <p>Has iniciado sesión correctamente.</p>
-            <p *ngIf="userRole">Tu rol es: <strong>{{ userRole }}</strong></p>
+        <div class="logo-hero">
+            <img src="/assets/images/logo-gold.png" alt="Manoplas Logo" class="hero-logo">
         </div>
-        
-    </main>
+        <h1>Hola, <span class="highlight">{{ userName }}</span></h1>
+
+        <main>
+            <div class="welcome-card">
+                <h2>Bienvenido a Manoplas</h2>
+                <p>Descubrí nuestras viandas gourmet caseras. Frescas, sabrosas y listas para disfrutar.</p>
+                <p *ngIf="userRole" class="role-badge">Tu rol: <strong>{{ userRole }}</strong></p>
+                <button class="btn-cta" routerLink="/menu">
+                    <i class="fas fa-utensils"></i> Ver el Menú
+                </button>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-fire feature-icon"></i>
+                    <h3>Cocina Casera</h3>
+                    <p>Platos elaborados con recetas tradicionales y los mejores ingredientes.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-truck feature-icon"></i>
+                    <h3>Delivery</h3>
+                    <p>Te llevamos tu vianda a la puerta de tu casa u oficina.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-heart feature-icon"></i>
+                    <h3>Con Amor</h3>
+                    <p>Cada plato es preparado con dedicación y cariño.</p>
+                </div>
+            </div>
+        </main>
+    </div>
 </div>
+

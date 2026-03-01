@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 import { NavbarComponent } from '../../components/navbar/navbar.component';
@@ -8,7 +9,7 @@ import Swal from 'sweetalert2';
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [CommonModule, NavbarComponent],
+    imports: [CommonModule, NavbarComponent, RouterLink],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
