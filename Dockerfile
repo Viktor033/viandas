@@ -1,5 +1,5 @@
 # ETAPA 1: Construir el Frontend (Angular)
-FROM node:20 AS build-frontend
+FROM public.ecr.aws/docker/library/node:20 AS build-frontend
 WORKDIR /app/frontend
 
 # Copiar dependencias del nivel de frontend
@@ -14,7 +14,7 @@ RUN npm run build
 
 
 # ETAPA 2: Construir el Backend (Java Spring Boot)
-FROM maven:3.9.5-eclipse-temurin-17 AS build-backend
+FROM public.ecr.aws/docker/library/maven:3.9.5-eclipse-temurin-17 AS build-backend
 WORKDIR /app
 
 # Copiar pom.xml y fuente de Java
@@ -33,7 +33,7 @@ RUN mvn clean package -DskipTests -Dskip.installnodenpm=true -Dskip.npm=true
 
 
 # ETAPA 3: Imagen Final Liviana para Producción
-FROM eclipse-temurin:17-jre
+FROM public.ecr.aws/docker/library/eclipse-temurin:17-jre
 WORKDIR /app
 
 # Copiar solo el .jar empaquetado final
