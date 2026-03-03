@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["...", "nodejs_20"]
+
+[phases.install]
+cmds = ["npm install --prefix frontend", "mvn dependency:go-offline"]
+
+[phases.build]
+cmds = ["npm run build --prefix frontend", "mvn clean package -DskipTests -Dskip.installnodenpm=true -Dskip.npm=true"]
+
+[start]
+cmd = "java -jar target/viandas-0.0.1-SNAPSHOT.jar"
