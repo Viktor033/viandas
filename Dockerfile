@@ -5,6 +5,9 @@ WORKDIR /app/frontend
 # Copiar dependencias del nivel de frontend
 COPY frontend/package*.json ./
 
+# Instar Angular CLI globalmente para evitar el error 127
+RUN npm install -g @angular/cli@19
+
 # Instalar TODO (incluyendo devDependencies como Angular CLI)
 RUN npm install
 
