@@ -109,6 +109,7 @@
 					<installDirectory>${project.build.directory}</installDirectory>
 				</configuration>
 				<executions>
+					<!-- 
 					<execution>
 						<id>install node and npm</id>
 						<goals>
@@ -119,6 +120,7 @@
 							<npmVersion>10.2.3</npmVersion>
 						</configuration>
 					</execution>
+					-->
 					<execution>
 						<id>npm install</id>
 						<goals>
