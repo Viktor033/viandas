@@ -24,10 +24,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/upload/**").permitAll()
-                        .requestMatchers("/**/*.js", "/**/*.css", "/**/*.ico", "/assets/**", "/images/**",
-                                "/index.html")
-                        .permitAll()
-                        // them
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll());
         return http.build();
