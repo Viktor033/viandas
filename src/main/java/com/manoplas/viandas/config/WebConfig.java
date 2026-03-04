@@ -15,9 +15,11 @@ public class WebConfig implements WebMvcConfigurer {
         // Mapea /images/** a la carpeta ./uploads/ en la raíz del proyecto
         exposeDirectory("uploads", registry);
 
-        // Serve static files from target/frontend-staging
+        // Fallback to default Spring Boot static file serving
+        // (classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/,
+        // classpath:/public/)
         registry.addResourceHandler("/**")
-                .addResourceLocations("file:target/frontend-staging/")
+                .addResourceLocations("classpath:/static/")
                 .setCachePeriod(0); // Disable caching for development/debugging
     }
 
