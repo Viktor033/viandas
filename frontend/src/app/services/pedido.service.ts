@@ -56,6 +56,15 @@ export class PedidoService {
         return this.http.post(this.apiUrl, data);
     }
 
+    crearPedidoConDias(data: {
+        detalles: { productoId: number; cantidad: number; precioUnitario: number; observaciones: string }[];
+        diasSeleccionados: string;
+        esMensual: boolean;
+        metodoPago: string;
+    }): Observable<any> {
+        return this.http.post(`${this.apiUrl}/con-dias`, data);
+    }
+
     createPreferenceMP(data: { items: { productoId: number, cantidad: number }[], metodoPago: string }): Observable<{ init_point: string }> {
         return this.http.post<{ init_point: string }>(`${this.apiUrl}/checkout-mp`, data);
     }

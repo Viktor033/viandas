@@ -1,5 +1,4 @@
-package com.manoplas.viandas.controller;
-
+import com.manoplas.viandas.dto.PedidoConDiasRequest;
 import com.manoplas.viandas.dto.PedidoRequest;
 import com.manoplas.viandas.model.Pedido;
 import com.manoplas.viandas.service.PedidoService;
@@ -11,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pedidos")
-@CrossOrigin(origins = "http://localhost:4200")
 public class PedidoController {
 
     @Autowired
@@ -20,6 +18,12 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<Pedido> crearPedido(@RequestBody PedidoRequest request) {
         return ResponseEntity.ok(pedidoService.crearPedido(request));
+    }
+
+    /** Nuevo endpoint: pedido con días seleccionados y observaciones por item */
+    @PostMapping("/con-dias")
+    public ResponseEntity<Pedido> crearPedidoConDias(@RequestBody PedidoConDiasRequest request) {
+        return ResponseEntity.ok(pedidoService.crearPedidoConDias(request));
     }
 
     @GetMapping("/mis-pedidos")

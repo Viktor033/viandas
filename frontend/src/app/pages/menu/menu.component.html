@@ -1,65 +1,166 @@
 <app-navbar></app-navbar>
 
 <div class="menu-container">
-    <div class="header-section">
-        <h1>Menú de la Semana</h1>
-        <p>Elegí tus viandas favoritas y armá tu pedido.</p>
-        
-        <button *ngIf="isAdmin" class="btn-create" (click)="toggleForm()">
-            <i class="fas fa-plus"></i> {{ showForm ? 'Cancelar' : 'Nuevo Producto' }}
-        </button>
+
+  <!-- ===== HEADER ===== -->
+  <div class="header-section">
+    <div>
+      <h1>Menú de la Semana</h1>
+      <p>Elegí tus viandas y armá tu pedido.</p>
     </div>
+    <button *ngIf="isAdmin" class="btn-create" (click)="showForm = !showForm">
+      <i class="fas fa-plus"></i> {{ showForm ? 'Cancelar' : 'Nuevo Producto' }}
+    </button>
+  </div>
 
-    <!-- Formulario de Admin (Modal) -->
-    <div class="modal-overlay" *ngIf="showForm && isAdmin" (click)="toggleForm()">
-        <div class="modal-content" (click)="$event.stopPropagation()">
-            <button class="close-btn" (click)="toggleForm()">&times;</button>
-            <form (ngSubmit)="onSubmitProduct()" class="product-form">
-                <h3>Cargar Nueva Vianda</h3>
-                
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <input [(ngModel)]="newProduct.nombre" name="nombre" required placeholder="Ej: Milanesa con puré">
-                </div>
+  <!-- ===== MODAL ADMIN NUEVO PRODUCTO ===== -->
+  <div class="modal-overlay" *ngIf="showForm && isAdmin" (click)="showForm = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="showForm = false">&times;</button>
+      <form (ngSubmit)="onSubmitProduct()" class="product-form">
+        <h3>Nueva Vianda</h3>
 
-                <div class="form-group">
-                    <label>Descripción</label>
-                    <textarea [(ngModel)]="newProduct.descripcion" name="descripcion" required placeholder="Ingredientes, calorías, etc."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Precio</label>
-                    <input type="number" [(ngModel)]="newProduct.precio" name="precio" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Foto del Producto</label>
-                    <input type="file" (change)="onFileSelected($event)" accept="image/*" style="padding: 0.5rem; border: none;">
-                    
-                    <div *ngIf="isUploading" style="color: #edb110; font-size: 0.9rem;">Subiendo imagen...</div>
-                    
-                    <div *ngIf="newProduct.imagenUrl" style="margin-top: 10px;">
-                        <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 5px;">Vista previa:</p>
-                        <img [src]="newProduct.imagenUrl" alt="Preview" style="height: 100px; border-radius: 8px; border: 1px solid #edb110;">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit">Guardar Producto</button>
-            </form>
+        <div class="form-group">
+          <label>Nombre</label>
+          <input [(ngModel)]="newProduct.nombre" name="nombre" required placeholder="Ej: Milanesa con puré">
         </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="newProduct.descripcion" name="descripcion" placeholder="Ingredientes, calorías..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label>Precio ($)</label>
+            <input type="number" [(ngModel)]="newProduct.precio" name="precio" required>
+          </div>
+          <div class="form-group half">
+            <label>Día</label>
+            <select [(ngModel)]="newProduct.dia" name="dia">
+              <option value="Todos">Todos los días</option>
+              <option *ngFor="let d of DIAS" [value]="d">{{ d }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Foto del Producto</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*">
+          <div *ngIf="isUploading" class="upload-hint">Subiendo imagen...</div>
+          <img *ngIf="newProduct.imagenUrl" [src]="newProduct.imagenUrl" alt="Preview" class="img-preview">
+        </div>
+
+        <button type="submit" class="btn-submit">Guardar Producto</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TABS POR DÍA ===== -->
+  <div class="tabs-container">
+    <button
+      *ngFor="let dia of DIAS"
+      class="tab-btn"
+      [class.active]="tabActivo === dia"
+      (click)="tabActivo = dia">
+      {{ dia }}
+    </button>
+  </div>
+
+  <!-- ===== GRILLA DE PRODUCTOS DEL DÍA ===== -->
+  <div class="products-grid" *ngIf="productosDia.length > 0; else noProductos">
+
+    <div class="product-card" *ngFor="let prod of productosDia">
+
+      <!-- Botón eliminar (admin) -->
+      <button *ngIf="isAdmin" class="btn-delete-admin" (click)="deleteProduct(prod.id!)" title="Eliminar">
+        <i class="fas fa-trash"></i>
+      </button>
+
+      <!-- Imagen -->
+      <div class="card-image">
+        <img *ngIf="prod.imagenUrl" [src]="prod.imagenUrl" [alt]="prod.nombre">
+        <div *ngIf="!prod.imagenUrl" class="img-placeholder"><i class="fas fa-utensils"></i></div>
+      </div>
+
+      <!-- Info -->
+      <div class="card-body">
+        <h3 class="card-title">{{ prod.nombre }}</h3>
+        <p class="card-desc">{{ prod.descripcion }}</p>
+        <p class="card-price">$ {{ prod.precio | number }}</p>
+
+        <!-- Opciones: Normal checkbox + observaciones -->
+        <div class="card-options">
+          <label class="check-normal">
+            <input type="checkbox" [(ngModel)]="getItem(prod).esNormal">
+            <span>Normal</span>
+          </label>
+          <input
+            *ngIf="!getItem(prod).esNormal"
+            type="text"
+            class="input-obs"
+            [(ngModel)]="getItem(prod).observaciones"
+            placeholder="Preferencias (sin sal, sin aceite...)">
+        </div>
+
+        <!-- Cantidad -->
+        <div class="card-qty">
+          <button class="qty-btn" (click)="decrementar(prod)" [disabled]="getItem(prod).cantidad === 0">−</button>
+          <span class="qty-value">{{ getItem(prod).cantidad }}</span>
+          <button class="qty-btn" (click)="incrementar(prod)">+</button>
+        </div>
+      </div>
     </div>
 
-    <div class="products-grid">
-        <app-product-card 
-            *ngFor="let prod of productos" 
-            [product]="prod" 
-            [isAdmin]="isAdmin"
-            (addToCart)="addToCart($event)"
-            (deleteProduct)="deleteProduct($event)">
-        </app-product-card>
-    </div>
+  </div>
 
-    <div *ngIf="productos.length === 0" class="no-products">
-        <p>No hay productos disponibles en este momento.</p>
+  <ng-template #noProductos>
+    <div class="no-products">
+      <i class="fas fa-bowl-food"></i>
+      <p>No hay productos para este día todavía.</p>
     </div>
+  </ng-template>
+
+  <!-- ===== PANEL DE PEDIDO (sticky bottom) ===== -->
+  <div class="order-panel" *ngIf="haySeleccion">
+    <div class="order-panel-inner">
+
+      <!-- Resumen -->
+      <div class="order-summary">
+        <h4>Mi pedido</h4>
+        <div class="order-items">
+          <div *ngFor="let item of itemsSeleccionados" class="order-item">
+            <span>{{ item.cantidad }}× {{ item.producto.nombre }}</span>
+            <span class="item-sub" *ngIf="!item.esNormal && item.observaciones">{{ item.observaciones }}</span>
+            <span class="item-price">$ {{ (item.cantidad * item.producto.precio) | number }}</span>
+          </div>
+        </div>
+        <div class="order-total">
+          Total: <strong>$ {{ totalCarrito | number }}</strong>
+        </div>
+      </div>
+
+      <!-- Selector de días -->
+      <div class="day-selector">
+        <h4>¿Para qué días?</h4>
+        <div class="day-checks">
+          <label *ngFor="let dia of DIAS" class="day-check">
+            <input type="checkbox" [(ngModel)]="diasPedido[dia]" [disabled]="esMensual">
+            <span>{{ dia }}</span>
+          </label>
+        </div>
+        <label class="mensual-check">
+          <input type="checkbox" [(ngModel)]="esMensual" (change)="toggleTodoElMes()">
+          <span>📅 Todo el mes</span>
+        </label>
+      </div>
+
+      <!-- Botón confirmar -->
+      <button class="btn-confirmar" (click)="confirmarPedido()">
+        <i class="fas fa-check-circle"></i> Confirmar Pedido
+      </button>
+
+    </div>
+  </div>
+
 </div>

@@ -66,6 +66,48 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
 
+    @Transactional
+    public Pedido crearPedidoConDias(com.manoplas.viandas.dto.PedidoConDiasRequest request) {
+        String telefono = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepository.findByTelefono(telefono)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Pedido pedido = new Pedido();
+        pedido.setUsuario(usuario);
+        pedido.setFecha(LocalDateTime.now());
+        pedido.setEstado(EstadoPedido.PENDIENTE);
+        pedido.setDiasSeleccionados(request.getDiasSeleccionados());
+        pedido.setEsMensual(request.getEsMensual() != null && request.getEsMensual());
+
+        try {
+            if (request.getMetodoPago() != null && !request.getMetodoPago().isEmpty()) {
+                pedido.setMetodoPago(MetodoPago.valueOf(request.getMetodoPago().toUpperCase()));
+            } else {
+                pedido.setMetodoPago(MetodoPago.EFECTIVO);
+            }
+        } catch (IllegalArgumentException e) {
+            pedido.setMetodoPago(MetodoPago.EFECTIVO);
+        }
+
+        double total = 0;
+        for (com.manoplas.viandas.dto.PedidoConDiasRequest.DetalleConDiasDTO item : request.getDetalles()) {
+            Producto producto = productoRepository.findById(item.getProductoId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + item.getProductoId()));
+
+            DetallePedido detalle = new DetallePedido();
+            detalle.setProducto(producto);
+            detalle.setCantidad(item.getCantidad());
+            detalle.setPrecioUnitario(producto.getPrecio());
+            detalle.setObservaciones(item.getObservaciones());
+
+            pedido.addDetalle(detalle);
+            total += producto.getPrecio() * item.getCantidad();
+        }
+
+        pedido.setTotal(total);
+        return pedidoRepository.save(pedido);
+    }
+
     public List<Pedido> misPedidos() {
         String telefono = SecurityContextHolder.getContext().getAuthentication().getName();
         Usuario usuario = usuarioRepository.findByTelefono(telefono)

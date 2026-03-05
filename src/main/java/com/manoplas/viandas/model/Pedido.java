@@ -40,6 +40,14 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetallePedido> detalles = new ArrayList<>();
 
+    /** Días de la semana seleccionados, ej: "Lunes,Miércoles,Viernes" */
+    @Column(name = "dias_seleccionados", length = 100)
+    private String diasSeleccionados;
+
+    /** Si el cliente solicitó el pedido por todo el mes */
+    @Column(name = "es_mensual")
+    private Boolean esMensual = false;
+
     public void addDetalle(DetallePedido detalle) {
         detalles.add(detalle);
         detalle.setPedido(this);

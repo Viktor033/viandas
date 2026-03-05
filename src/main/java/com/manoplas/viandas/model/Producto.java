@@ -30,4 +30,11 @@ public class Producto {
 
     @Column(nullable = false)
     private Boolean activo = true;
+
+    /**
+     * Día de la semana al que pertenece este producto: Lunes, Martes, Miércoles,
+     * Jueves, Viernes, Todos
+     */
+    @Column
+    private String dia = "Todos";
 }

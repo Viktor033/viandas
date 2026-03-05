@@ -29,5 +29,9 @@ public class DetallePedido {
     private Integer cantidad;
 
     @Column(nullable = false)
-    private Double precioUnitario; // Guardamos el precio al momento de la compra
+    private Double precioUnitario;
+
+    /** Preferencias del cliente para este item (ej: "sin sal", "sin aceite") */
+    @Column(length = 255)
+    private String observaciones;
 }
