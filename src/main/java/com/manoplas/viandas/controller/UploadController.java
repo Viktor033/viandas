@@ -18,25 +18,25 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/upload")
-@CrossOrigin(origins = "http://localhost:4200")
 public class UploadController {
 
-    // Carpeta en la raíz del proyecto
     private final String UPLOAD_DIR = "uploads";
 
     @PostMapping
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            // Generar nombre único
-            String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+            String originalName = StringUtils.cleanPath(file.getOriginalFilename());
 
-            // Guardar en la carpeta externa
+            // Sanitizar: reemplazar espacios y caracteres problemáticos por guión bajo
+            String safeName = originalName.replaceAll("\\s+", "_")
+                    .replaceAll("[^a-zA-Z0-9._\\-]", "_");
+
+            // Generar nombre único
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + safeName;
+
             saveFile(UPLOAD_DIR, uniqueFileName, file);
 
-            // La URL ahora es servida por WebConfig mapeando /images/** a ./uploads/
             String fileUrl = "/images/" + uniqueFileName;
-
             return ResponseEntity.ok(Collections.singletonMap("url", fileUrl));
 
         } catch (Exception e) {
@@ -48,11 +48,9 @@ public class UploadController {
 
     private void saveFile(String uploadDir, String fileName, MultipartFile file) throws IOException {
         Path uploadPath = Paths.get(uploadDir);
-
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-
         try (InputStream inputStream = file.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
