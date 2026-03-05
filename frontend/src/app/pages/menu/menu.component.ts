@@ -90,7 +90,23 @@ export class MenuComponent implements OnInit {
 
     incrementar(producto: Producto) {
         const item = this.getItem(producto);
+        const wasZero = item.cantidad === 0;
         item.cantidad++;
+        if (wasZero) {
+            Swal.fire({
+                title: '✅ ¡Vianda agregada!',
+                text: `${producto.nombre} — ${item.observaciones}`,
+                icon: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                background: 'var(--bg-card)',
+                color: 'var(--text-color)',
+                iconColor: '#edb110',
+            });
+        }
     }
 
     decrementar(producto: Producto) {
