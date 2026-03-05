@@ -32,7 +32,8 @@ RUN mkdir -p target/frontend-staging
 COPY --from=build-frontend /app/target/frontend-staging target/frontend-staging/
 
 # IMPORTANTE: Construir el .jar PERO saltándose la descarga e instalación de node interna de Maven
-RUN mvn clean package -DskipTests -Dskip.installnodenpm=true -Dskip.npm=true
+# NO usar 'clean' porque borraría el target/frontend-staging copiado de la etapa anterior
+RUN mvn package -DskipTests -Dskip.installnodenpm=true -Dskip.npm=true
 
 
 # ETAPA 3: Imagen Final Liviana para Producción
