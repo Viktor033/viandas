@@ -11,19 +11,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "http://localhost:4200") // Permitir frontend Angular
 public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
 
-    // Público: Ver lista de productos activos para el menú
     @GetMapping
     public List<Producto> listarProductos() {
         return productoService.obtenerActivos();
     }
 
-    // Solo Admin: Ver todos (incluidos inactivos si se desea, o para gestión)
     @GetMapping("/admin/todos")
     @PreAuthorize("hasRole('ADMIN')")
     public List<Producto> listarTodosAdmin() {
@@ -37,14 +34,22 @@ public class ProductoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Solo Admin: Crear/Actualizar
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public Producto guardarProducto(@RequestBody Producto producto) {
         return productoService.guardarProducto(producto);
     }
 
-    // Solo Admin: Eliminar
+    /** Editar producto existente */
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        return productoService.obtenerPorId(id).map(existing -> {
+            producto.setId(id);
+            return ResponseEntity.ok(productoService.guardarProducto(producto));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {

@@ -11,8 +11,7 @@ import Swal from 'sweetalert2';
 export interface ItemSeleccionado {
     producto: Producto;
     cantidad: number;
-    observaciones: string;
-    esNormal: boolean;
+    observaciones: string; // 'Común' | 'Sin sal'
 }
 
 @Component({
@@ -34,6 +33,7 @@ export class MenuComponent implements OnInit {
     isAdmin = false;
     isUploading = false;
     showForm = false;
+    showEditForm = false;
 
     // Tab activo
     tabActivo = 'Lunes';
@@ -47,8 +47,13 @@ export class MenuComponent implements OnInit {
     };
     esMensual = false;
 
-    // Formulario admin
+    // Formulario nuevo producto
     newProduct: Partial<Producto> = {
+        nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos'
+    };
+
+    // Formulario editar producto
+    editProduct: Producto = {
         nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos'
     };
 
@@ -77,8 +82,7 @@ export class MenuComponent implements OnInit {
             this.seleccion.set(producto.id!, {
                 producto,
                 cantidad: 0,
-                observaciones: '',
-                esNormal: true
+                observaciones: 'Común'
             });
         }
         return this.seleccion.get(producto.id!)!;
@@ -136,7 +140,7 @@ export class MenuComponent implements OnInit {
             productoId: i.producto.id!,
             cantidad: i.cantidad,
             precioUnitario: i.producto.precio,
-            observaciones: i.esNormal ? 'Normal' : (i.observaciones || '')
+            observaciones: i.observaciones || 'Común'
         }));
 
         const payload = {
@@ -166,6 +170,34 @@ export class MenuComponent implements OnInit {
     }
 
     // ——— Admin ———
+    openEdit(prod: Producto) {
+        this.editProduct = { ...prod };
+        this.showEditForm = true;
+    }
+
+    onSubmitEdit() {
+        if (!this.editProduct.id) return;
+        this.productoService.updateProducto(this.editProduct.id, this.editProduct).subscribe({
+            next: () => {
+                this.loadProductos();
+                this.showEditForm = false;
+                Swal.fire({ icon: 'success', title: 'Producto actualizado', timer: 1500, showConfirmButton: false });
+            },
+            error: (err: any) => console.error(err)
+        });
+    }
+
+    onFileSelectedEdit(event: any) {
+        const file: File = event.target.files[0];
+        if (file) {
+            this.isUploading = true;
+            this.uploadService.uploadImage(file).subscribe({
+                next: res => { this.editProduct.imagenUrl = res.url; this.isUploading = false; },
+                error: () => { this.isUploading = false; alert('Error al subir imagen'); }
+            });
+        }
+    }
+
     deleteProduct(id: number) {
         Swal.fire({
             title: '¿Eliminar Producto?',

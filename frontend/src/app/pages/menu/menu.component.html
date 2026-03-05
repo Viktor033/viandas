@@ -56,6 +56,56 @@
     </div>
   </div>
 
+  <!-- ===== MODAL EDITAR PRODUCTO (ADMIN) ===== -->
+  <div class="modal-overlay" *ngIf="showEditForm && isAdmin" (click)="showEditForm = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="showEditForm = false">&times;</button>
+      <form (ngSubmit)="onSubmitEdit()" class="product-form">
+        <h3>✏️ Editar Vianda</h3>
+
+        <div class="form-group">
+          <label>Nombre</label>
+          <input [(ngModel)]="editProduct.nombre" name="edit-nombre" required placeholder="Nombre del producto">
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="editProduct.descripcion" name="edit-descripcion" placeholder="Ingredientes, calorías..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label>Precio ($)</label>
+            <input type="number" [(ngModel)]="editProduct.precio" name="edit-precio" required>
+          </div>
+          <div class="form-group half">
+            <label>Día</label>
+            <select [(ngModel)]="editProduct.dia" name="edit-dia">
+              <option value="Todos">Todos los días</option>
+              <option *ngFor="let d of DIAS" [value]="d">{{ d }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Foto del Producto</label>
+          <input type="file" (change)="onFileSelectedEdit($event)" accept="image/*">
+          <div *ngIf="isUploading" class="upload-hint">Subiendo imagen...</div>
+          <img *ngIf="editProduct.imagenUrl" [src]="editProduct.imagenUrl" alt="Preview" class="img-preview">
+        </div>
+
+        <div class="form-group">
+          <label class="check-normal" style="justify-content: flex-start; gap: 0.5rem;">
+            <input type="checkbox" [(ngModel)]="editProduct.activo" name="edit-activo">
+            <span>Producto activo</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit">💾 Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+
   <!-- ===== TABS POR DÍA ===== -->
   <div class="tabs-container">
     <button
@@ -72,10 +122,15 @@
 
     <div class="product-card" *ngFor="let prod of productosDia">
 
-      <!-- Botón eliminar (admin) -->
-      <button *ngIf="isAdmin" class="btn-delete-admin" (click)="deleteProduct(prod.id!)" title="Eliminar">
-        <i class="fas fa-trash"></i>
-      </button>
+      <!-- Botones admin (eliminar + editar) -->
+      <div *ngIf="isAdmin" class="admin-actions">
+        <button class="btn-admin-icon edit" (click)="openEdit(prod)" title="Editar">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn-admin-icon del" (click)="deleteProduct(prod.id!)" title="Eliminar">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
 
       <!-- Imagen -->
       <div class="card-image">
@@ -89,18 +144,16 @@
         <p class="card-desc">{{ prod.descripcion }}</p>
         <p class="card-price">$ {{ prod.precio | number }}</p>
 
-        <!-- Opciones: Normal checkbox + observaciones -->
+        <!-- Tipo de vianda: Común / Sin sal -->
         <div class="card-options">
-          <label class="check-normal">
-            <input type="checkbox" [(ngModel)]="getItem(prod).esNormal">
-            <span>Normal</span>
+          <label class="radio-option">
+            <input type="radio" [name]="'tipo-' + prod.id" value="Común" [(ngModel)]="getItem(prod).observaciones">
+            <span>Común</span>
           </label>
-          <input
-            *ngIf="!getItem(prod).esNormal"
-            type="text"
-            class="input-obs"
-            [(ngModel)]="getItem(prod).observaciones"
-            placeholder="Preferencias (sin sal, sin aceite...)">
+          <label class="radio-option">
+            <input type="radio" [name]="'tipo-' + prod.id" value="Sin sal" [(ngModel)]="getItem(prod).observaciones">
+            <span>Sin sal</span>
+          </label>
         </div>
 
         <!-- Cantidad -->
