@@ -132,3 +132,26 @@
         color: var(--text-color);
     }
 }
+
+// Responsive - Mobile
+@media (max-width: 768px) {
+    .menu-container {
+        padding-top: 80px !important;
+
+        .header-section {
+            margin-bottom: 1.5rem;
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            p {
+                font-size: 0.95rem;
+            }
+
+            .btn-create {
+                width: 100%;
+            }
+        }
+    }
+}
