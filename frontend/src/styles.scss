@@ -127,6 +127,10 @@ app-root {
     border: 1px solid var(--primary-color) !important;
 }
 
+.swal2-container {
+    z-index: 99999 !important;
+}
+
 /* Print Overrides Globales */
 /* Print Overrides Globales */
 @media print {

@@ -184,7 +184,7 @@
         <div class="order-items">
           <div *ngFor="let item of itemsSeleccionados" class="order-item">
             <span>{{ item.cantidad }}× {{ item.producto.nombre }}</span>
-            <span class="item-sub" *ngIf="!item.esNormal && item.observaciones">{{ item.observaciones }}</span>
+            <span class="item-sub" *ngIf="item.observaciones && item.observaciones !== 'Común'">{{ item.observaciones }}</span>
             <span class="item-price">$ {{ (item.cantidad * item.producto.precio) | number }}</span>
           </div>
         </div>
