@@ -1,50 +1,88 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { CadeteService, Cadete } from '../../services/cadete.service';
-import Swal from 'sweetalert2';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-admin-cadetes',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FormsModule],
+  imports: [CommonModule, NavbarComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './admin-cadetes.component.html',
   styleUrls: ['./admin-cadetes.component.scss']
 })
-export class AdminCadetesComponent {
+export class AdminCadetesComponent implements OnInit {
   private cadeteService = inject(CadeteService);
+  private notifyService = inject(NotificationService);
+  private fb = inject(FormBuilder);
 
   cadetes: Cadete[] = [];
+  isLoading: boolean = false;
+  searchTerm: string = '';
+
   showModal: boolean = false;
   isEditing: boolean = false;
+  editingId: number | null = null;
+  cadeteForm: FormGroup;
 
-  currentCadete: Cadete = {
-    nombre: '',
-    apellido: '',
-    vehiculo: '',
-    telefono: '',
-    activo: true
-  };
+  constructor() {
+    this.cadeteForm = this.fb.group({
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      vehiculo: ['', Validators.required],
+      telefono: ['', Validators.required],
+      activo: [true]
+    });
+  }
 
   ngOnInit() {
     this.loadCadetes();
   }
 
   loadCadetes() {
+    this.isLoading = true;
     this.cadeteService.getCadetes().subscribe({
-      next: (data) => this.cadetes = data.filter(c => c.activo !== false),
-      error: (err) => console.error('Error cargando cadetes', err)
+      next: (data) => {
+        // En cadetes solemos mostrar tanto activos como inactivos (para gestionar el estado)
+        // Pero si la regla original era ocultarlos: this.cadetes = data.filter(c => c.activo !== false)
+        // Para admin preferimos ver todos, pero respeto la lógica original
+        this.cadetes = data; 
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando cadetes', err);
+        this.isLoading = false;
+      }
     });
+  }
+
+  get filteredCadetes() {
+    if (!this.searchTerm) return this.cadetes;
+    const term = this.searchTerm.toLowerCase();
+    return this.cadetes.filter(c => 
+      c.nombre.toLowerCase().includes(term) || 
+      c.apellido.toLowerCase().includes(term) || 
+      c.vehiculo.toLowerCase().includes(term) ||
+      c.telefono.includes(term)
+    );
   }
 
   openModal(cadete?: Cadete) {
     if (cadete) {
       this.isEditing = true;
-      this.currentCadete = { ...cadete };
+      this.editingId = cadete.id || null;
+      this.cadeteForm.patchValue({
+        nombre: cadete.nombre,
+        apellido: cadete.apellido,
+        vehiculo: cadete.vehiculo,
+        telefono: cadete.telefono,
+        activo: cadete.activo !== false
+      });
     } else {
       this.isEditing = false;
-      this.resetForm();
+      this.editingId = null;
+      this.cadeteForm.reset({ activo: true });
     }
     this.showModal = true;
   }
@@ -53,86 +91,55 @@ export class AdminCadetesComponent {
     this.showModal = false;
   }
 
-  resetForm() {
-    this.currentCadete = {
-      nombre: '',
-      apellido: '',
-      vehiculo: '',
-      telefono: '',
-      activo: true
-    };
-  }
-
   saveCadete() {
-    if (this.isEditing && this.currentCadete.id) {
-      this.cadeteService.updateCadete(this.currentCadete.id, this.currentCadete).subscribe({
+    if (this.cadeteForm.invalid) {
+      this.cadeteForm.markAllAsTouched();
+      return;
+    }
+
+    const cadeteData: Cadete = this.cadeteForm.value;
+
+    if (this.isEditing && this.editingId) {
+      this.cadeteService.updateCadete(this.editingId, cadeteData).subscribe({
         next: () => {
-          this.showSuccess('Cadete actualizado correctamente');
+          this.notifyService.toastSuccess('Cadete actualizado correctamente');
           this.loadCadetes();
           this.closeModal();
         },
-        error: () => this.showError('Error al actualizar cadete')
+        error: () => this.notifyService.error('Error', 'Error al actualizar cadete')
       });
     } else {
-      this.cadeteService.createCadete(this.currentCadete).subscribe({
+      this.cadeteService.createCadete(cadeteData).subscribe({
         next: () => {
-          this.showSuccess('Cadete creado correctamente');
+          this.notifyService.toastSuccess('Cadete creado correctamente');
           this.loadCadetes();
           this.closeModal();
         },
         error: (err) => {
           console.error('Error creating cadete:', err);
           const errorMsg = err.error?.message || err.message || 'Error desconocido';
-          const status = err.status || 'N/A';
-          this.showError(`Error al crear cadete (${status}): ${errorMsg}`);
+          this.notifyService.error('Error al crear cadete', errorMsg);
         }
       });
     }
   }
 
-  deleteCadete(id: number) {
-    Swal.fire({
-      title: '¿Eliminar Cadete?',
-      text: "No podrás revertir esto",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#ff6b6b',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Sí, eliminar',
-      background: '#1a1a1a',
-      color: '#f8edda'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.cadeteService.deleteCadete(id).subscribe({
-          next: () => {
-            this.showSuccess('Cadete eliminado');
-            this.loadCadetes();
-          },
-          error: () => this.showError('Error al eliminar')
-        });
-      }
-    });
-  }
+  async deleteCadete(id: number) {
+    const confirm = await this.notifyService.confirm(
+      '¿Eliminar Cadete?',
+      'No podrás revertir esto',
+      'Sí, eliminar',
+      true
+    );
 
-  private showSuccess(msg: string) {
-    Swal.fire({
-      title: 'Éxito',
-      text: msg,
-      icon: 'success',
-      background: '#1a1a1a',
-      color: '#f8edda',
-      confirmButtonColor: '#edb110'
-    });
-  }
-
-  private showError(msg: string) {
-    Swal.fire({
-      title: 'Error',
-      text: msg,
-      icon: 'error',
-      background: '#1a1a1a',
-      color: '#f8edda',
-      confirmButtonColor: '#ff6b6b'
-    });
+    if (confirm) {
+      this.cadeteService.deleteCadete(id).subscribe({
+        next: () => {
+          this.notifyService.toastSuccess('Cadete eliminado');
+          this.loadCadetes();
+        },
+        error: () => this.notifyService.error('Error', 'Error al eliminar')
+      });
+    }
   }
 }

@@ -35,10 +35,11 @@ export class NavbarComponent {
             this.showCart = false;
         });
 
-        // Cerrar menú móvil y de usuario al cambiar de ruta
+        // Cerrar menú móvil, de usuario y carrito al cambiar de ruta
         this.router.events.subscribe(() => {
             this.isMobileMenuOpen = false;
             this.showUserMenu = false;
+            this.showCart = false;
         });
     }
 

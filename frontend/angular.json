@@ -55,7 +55,25 @@
                         "development": {
                             "optimization": false,
                             "extractLicenses": false,
-                            "sourceMap": true
+                            "sourceMap": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.development.ts"
+                                }
+                            ]
+                        },
+                        "demo": {
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractLicenses": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.demo.ts"
+                                }
+                            ]
                         }
                     },
                     "defaultConfiguration": "production"
@@ -71,6 +89,9 @@
                         },
                         "development": {
                             "buildTarget": "frontend:build:development"
+                        },
+                        "demo": {
+                            "buildTarget": "frontend:build:demo"
                         }
                     },
                     "defaultConfiguration": "development"

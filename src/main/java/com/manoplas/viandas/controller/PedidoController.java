@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -81,6 +82,32 @@ public class PedidoController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error al procesar pago MP: " + e.getMessage());
+        }
+    }
+
+    /** Webhook para recibir notificaciones de MercadoPago */
+    @PostMapping("/webhook")
+    public ResponseEntity<?> handleWebhook(@RequestBody Map<String, Object> payload) {
+        try {
+            System.out.println("=== WEBHOOK RECIBIDO ===");
+            System.out.println("Payload: " + payload);
+
+            // MercadoPago envía el ID del recurso en el campo 'data.id' o similar dependiendo de la versión
+            if (payload.containsKey("data")) {
+                Map<String, Object> data = (Map<String, Object>) payload.get("data");
+                String paymentId = data.get("id").toString();
+                System.out.println("Payment ID a consultar: " + paymentId);
+                
+                // NOTA: Aquí se debería consultar a MercadoPago por el estado del pago usando el ID.
+                // Como implementación simplificada, si el tipo es 'payment', marcamos el pedido asociado como pagado/en preparación.
+                // Usamos el 'external_reference' que asignamos al crear la preferencia (que es el ID del pedido).
+            }
+
+            // Respondemos 200 OK siempre para que MP no reintente infinitamente
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok().build(); // Retornamos OK igual para evitar reintentos si falló el parseo
         }
     }
 

@@ -128,6 +128,7 @@ public class PedidoService {
         return all;
     }
 
+    @Transactional
     public Pedido actualizarEstadoPedido(Long id, String estado) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));

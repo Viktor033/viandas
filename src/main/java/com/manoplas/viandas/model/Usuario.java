@@ -13,7 +13,8 @@ public class Usuario {
 	private String nombre;
 	private String apellido;
 	private String email;
-	private String telefono;
+    @Column(nullable = false, unique = true, length = 50)
+    private String telefono;
 	private String contraseña;
 	private String rol;
 

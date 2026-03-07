@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/upload/**").permitAll()
                         .requestMatchers("/api/debug/**").permitAll()
+                        .requestMatchers("/api/pedidos/webhook").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll());
         return http.build();
