@@ -1,0 +1,88 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard-container">
+    <div class="header-section">
+        <h1>Gestión de Cadetes</h1>
+        <button class="btn-primary" (click)="openModal()">
+            <i class="fas fa-plus"></i> Nuevo Cadete
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="cadetes-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Vehículo</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cadete of cadetes">
+                    <td>{{ cadete.nombre }}</td>
+                    <td>{{ cadete.apellido }}</td>
+                    <td>{{ cadete.vehiculo }}</td>
+                    <td>{{ cadete.telefono }}</td>
+                    <td>
+                        <span class="status-badge" [class.active]="cadete.activo">
+                            {{ cadete.activo ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td class="actions-cell">
+                        <button class="btn-icon edit" (click)="openModal(cadete)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon delete" (click)="deleteCadete(cadete.id!)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="cadetes.length === 0">
+                    <td colspan="6" class="empty-message">No hay cadetes registrados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Form -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <h2>{{ isEditing ? 'Editar Cadete' : 'Nuevo Cadete' }}</h2>
+        
+        <form (ngSubmit)="saveCadete()">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input [(ngModel)]="currentCadete.nombre" name="nombre" required placeholder="Nombre">
+            </div>
+
+            <div class="form-group">
+                <label>Apellido</label>
+                <input [(ngModel)]="currentCadete.apellido" name="apellido" required placeholder="Apellido">
+            </div>
+
+            <div class="form-group">
+                <label>Vehículo</label>
+                <input [(ngModel)]="currentCadete.vehiculo" name="vehiculo" required placeholder="Ej: Moto Honda 150cc">
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input [(ngModel)]="currentCadete.telefono" name="telefono" required placeholder="Whatsapp de contacto">
+            </div>
+
+            <div class="form-group checkbox-group">
+                <label>
+                    <input type="checkbox" [(ngModel)]="currentCadete.activo" name="activo">
+                    Cadete Activo (Disponible para repartos)
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit">Guardar</button>
+        </form>
+    </div>
+</div>
