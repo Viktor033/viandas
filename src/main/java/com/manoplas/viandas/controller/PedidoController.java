@@ -24,6 +24,8 @@ public class PedidoController {
     /** Nuevo endpoint: pedido con días seleccionados y observaciones por item */
     @PostMapping("/con-dias")
     public ResponseEntity<Pedido> crearPedidoConDias(@RequestBody PedidoConDiasRequest request) {
+        System.out.println("=== CREANDO PEDIDO CON DIAS ===");
+        System.out.println("Request: " + request);
         return ResponseEntity.ok(pedidoService.crearPedidoConDias(request));
     }
 

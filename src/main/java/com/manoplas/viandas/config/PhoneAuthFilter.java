@@ -28,23 +28,27 @@ public class PhoneAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String phone = request.getHeader("X-Auth-Phone");
+        // Log para depuración en producción
+        if (phone != null) {
+            System.out.println("PHONE FILTER - Header Recibido: " + phone);
+        }
 
         if (phone != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             Optional<Usuario> userOpt = usuarioRepository.findByTelefono(phone);
 
             if (userOpt.isPresent()) {
                 Usuario user = userOpt.get();
-                // Asignar rol. Asegurarse que el rol tenga el prefijo ROLE_ si Spring Security
-                // lo requiere por defecto,
-                // o usar AuthorityUtils.
+                System.out.println("PHONE FILTER - Usuario encontrado: " + user.getTelefono() + " con rol: " + user.getRol());
                 String rol = "ROLE_" + (user.getRol() != null ? user.getRol() : "USER");
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        user.getTelefono(), // Principal (usamos telefono como ID)
+                        user.getTelefono(),
                         null,
                         Collections.singletonList(new SimpleGrantedAuthority(rol)));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                System.out.println("PHONE FILTER - Usuario NO encontrado para el teléfono: " + phone);
             }
         }
 

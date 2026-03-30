@@ -13,6 +13,7 @@
             <div *ngFor="let item of items" class="cart-item">
                 <div class="item-info">
                     <span class="item-name">{{ item.producto.nombre }}</span>
+                    <span class="item-extra" *ngIf="item.observaciones && item.observaciones !== 'Común'">({{ item.observaciones }})</span>
                     <span class="item-price">$ {{ item.producto.precio }}</span>
                 </div>
                 <div class="item-controls">

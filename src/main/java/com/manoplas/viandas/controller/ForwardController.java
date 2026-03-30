@@ -16,10 +16,15 @@ public class ForwardController implements ErrorController {
 
     /**
      * Captura errores (404, etc.) y reenvía a index.html para que Angular los
-     * maneje.
+     * maneje, PERO solo si no es una ruta de la API.
      */
     @RequestMapping(value = "/error")
     public String error(HttpServletRequest request) {
+        String uri = (String) request.getAttribute("jakarta.servlet.error.request_uri");
+        if (uri != null && uri.startsWith("/api")) {
+            // Si el error es en la API, devolvemos el error tal cual
+            return null; // Deja que Spring maneje el error por defecto para la API
+        }
         return "forward:/index.html";
     }
 
@@ -33,7 +38,11 @@ public class ForwardController implements ErrorController {
             "/configuracion", "/pago-exitoso", "/pago-fallido", "/pago-pendiente",
             "/admin/**"
     })
-    public String forward() {
+    public String forward(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        if (uri != null && uri.startsWith("/api")) {
+            return null; 
+        }
         return "forward:/index.html";
     }
 }

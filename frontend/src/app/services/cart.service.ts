@@ -6,6 +6,7 @@ import { PedidoService } from './pedido.service';
 export interface CartItem {
     producto: Producto;
     cantidad: number;
+    observaciones?: string; // Nuevo: Para 'Común' / 'Sin sal'
 }
 
 @Injectable({
@@ -16,30 +17,40 @@ export class CartService {
     private cartItems = new BehaviorSubject<CartItem[]>([]);
     cart$ = this.cartItems.asObservable();
 
-    addToCart(producto: Producto) {
+    addToCart(producto: Producto, observaciones: string = 'Común') {
         const currentItems = this.cartItems.value;
-        const existingItem = currentItems.find(item => item.producto.id === producto.id);
+        // Buscamos si ya existe el mismo producto con la misma observación
+        const existingItem = currentItems.find(item => 
+            item.producto.id === producto.id && item.observaciones === observaciones
+        );
 
         if (existingItem) {
             existingItem.cantidad++;
             this.cartItems.next([...currentItems]);
         } else {
-            this.cartItems.next([...currentItems, { producto, cantidad: 1 }]);
+            this.cartItems.next([...currentItems, { producto, cantidad: 1, observaciones }]);
         }
     }
 
-    decreaseQuantity(productoId: number) {
+    decreaseQuantity(productoId: number, observaciones: string = 'Común') {
         const currentItems = this.cartItems.value;
-        const existingItem = currentItems.find(item => item.producto.id === productoId);
+        const existingItem = currentItems.find(item => 
+            item.producto.id === productoId && item.observaciones === observaciones
+        );
         if (existingItem) {
             existingItem.cantidad > 1
                 ? (existingItem.cantidad--, this.cartItems.next([...currentItems]))
-                : this.removeFromCart(productoId);
+                : this.removeFromCart(productoId, observaciones);
         }
     }
 
-    removeFromCart(productoId: number) {
-        this.cartItems.next(this.cartItems.value.filter(item => item.producto.id !== productoId));
+    removeFromCart(productoId: number, observaciones?: string) {
+        this.cartItems.next(this.cartItems.value.filter(item => {
+            if (observaciones) {
+                return !(item.producto.id === productoId && item.observaciones === observaciones);
+            }
+            return item.producto.id !== productoId;
+        }));
     }
 
     clearCart() { this.cartItems.next([]); }

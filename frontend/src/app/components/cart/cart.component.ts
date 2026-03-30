@@ -55,9 +55,9 @@ export class CartComponent {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.cartService.decreaseQuantity(item.producto.id!);
+                    this.cartService.decreaseQuantity(item.producto.id!, item.observaciones);
                 } else if (result.isDenied) {
-                    this.cartService.removeFromCart(item.producto.id!);
+                    this.cartService.removeFromCart(item.producto.id!, item.observaciones);
                 }
             });
         } else {
@@ -75,7 +75,7 @@ export class CartComponent {
                 cancelButtonColor: '#6c757d'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.cartService.removeFromCart(item.producto.id!);
+                    this.cartService.removeFromCart(item.producto.id!, item.observaciones);
                 }
             });
         }

@@ -60,6 +60,26 @@ export class MenuComponent implements OnInit {
     ngOnInit() {
         this.loadProductos();
         this.isAdmin = this.authService.getUserRole() === 'ADMIN';
+
+        // Sincronizar selección local con el carrito global
+        this.cartService.cart$.subscribe(items => {
+            items.forEach(item => {
+                if (item.producto.id) {
+                    this.seleccion.set(item.producto.id, {
+                        producto: item.producto,
+                        cantidad: item.cantidad,
+                        observaciones: item.observaciones || 'Común'
+                    });
+                }
+            });
+            // También limpiar los que ya no están en el carrito global
+            this.seleccion.forEach((val, key) => {
+                const stillInCart = items.find(i => i.producto.id === key && i.observaciones === val.observaciones);
+                if (!stillInCart) {
+                    val.cantidad = 0;
+                }
+            });
+        });
     }
 
     loadProductos() {
@@ -91,7 +111,10 @@ export class MenuComponent implements OnInit {
     incrementar(producto: Producto) {
         const item = this.getItem(producto);
         const wasZero = item.cantidad === 0;
-        item.cantidad++;
+        
+        // Llamar al servicio global
+        this.cartService.addToCart(producto, item.observaciones);
+        
         if (wasZero) {
             Swal.fire({
                 title: '✅ ¡Vianda agregada!',
@@ -111,7 +134,9 @@ export class MenuComponent implements OnInit {
 
     decrementar(producto: Producto) {
         const item = this.getItem(producto);
-        if (item.cantidad > 0) item.cantidad--;
+        if (item.cantidad > 0) {
+            this.cartService.decreaseQuantity(producto.id!, item.observaciones);
+        }
     }
 
     get itemsSeleccionados(): ItemSeleccionado[] {
@@ -174,6 +199,7 @@ export class MenuComponent implements OnInit {
                     text: this.esMensual ? 'Tu pedido mensual fue registrado.' : `Tu pedido para ${this.diasSeleccionadosList.join(', ')} fue registrado.`,
                     confirmButtonColor: '#edb110'
                 });
+                this.cartService.clearCart(); // Limpiar carrito global
                 this.seleccion.clear();
                 this.DIAS.forEach(d => this.diasPedido[d] = false);
                 this.esMensual = false;
