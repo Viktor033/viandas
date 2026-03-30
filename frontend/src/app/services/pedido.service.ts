@@ -50,7 +50,7 @@ export interface ReporteDiarioCompleto {
 })
 export class PedidoService {
     private http = inject(HttpClient);
-    private apiUrl = '/api/pedidos';
+    private apiUrl = '/api/v2/pedidos';
 
     crearPedido(data: { items: { productoId: number, cantidad: number }[], metodoPago: string }): Observable<any> {
         return this.http.post(this.apiUrl, data);
