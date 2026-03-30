@@ -30,7 +30,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer::disable)
                 .cors(org.springframework.security.config.Customizer.withDefaults()) // Enable CORS
                 .addFilterBefore(new PhoneAuthFilter(usuarioRepository),
                         org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)

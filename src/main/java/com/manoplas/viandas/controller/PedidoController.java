@@ -22,11 +22,16 @@ public class PedidoController {
     }
 
     /** Nuevo endpoint: pedido con días seleccionados y observaciones por item */
-    @PostMapping("/con-dias")
+    @PostMapping({"/con-dias", "/con-dias/"})
     public ResponseEntity<Pedido> crearPedidoConDias(@RequestBody PedidoConDiasRequest request) {
-        System.out.println("=== CREANDO PEDIDO CON DIAS ===");
+        System.out.println("=== CREANDO PEDIDO CON DIAS (POST) ===");
         System.out.println("Request: " + request);
         return ResponseEntity.ok(pedidoService.crearPedidoConDias(request));
+    }
+
+    @GetMapping("/con-dias")
+    public ResponseEntity<String> testGetConDias() {
+        return ResponseEntity.ok("Endpoint /api/pedidos/con-dias alcanzable via GET");
     }
 
     @GetMapping("/mis-pedidos")
