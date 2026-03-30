@@ -29,6 +29,11 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.crearPedidoConDias(request));
     }
 
+    @GetMapping("/ping")
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("pong");
+    }
+
     @GetMapping("/con-dias")
     public ResponseEntity<String> testGetConDias() {
         return ResponseEntity.ok("Endpoint /api/pedidos/con-dias alcanzable via GET");
