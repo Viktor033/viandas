@@ -35,12 +35,12 @@ public class SecurityConfig {
                 .addFilterBefore(new PhoneAuthFilter(usuarioRepository),
                         org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/health", "/api/v2/pedidos/ping", "/api/v2/pedidos/post-test").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/upload/**").permitAll()
                         .requestMatchers("/api/debug/**").permitAll()
                         .requestMatchers("/api/pedidos/webhook").permitAll()
-                        .requestMatchers("/api/health", "/api/v2/pedidos/ping").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll());
         return http.build();

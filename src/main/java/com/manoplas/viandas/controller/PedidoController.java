@@ -39,6 +39,11 @@ public class PedidoController {
         return ResponseEntity.ok("Endpoint /api/pedidos/con-dias alcanzable via GET");
     }
 
+    @PostMapping("/post-test")
+    public ResponseEntity<String> testPostPublico() {
+        return ResponseEntity.ok("POST Publico alcanzado correctamente (Bypass de seguridad exitoso)");
+    }
+
     @GetMapping("/mis-pedidos")
     public List<Pedido> misPedidos() {
         return pedidoService.misPedidos();
