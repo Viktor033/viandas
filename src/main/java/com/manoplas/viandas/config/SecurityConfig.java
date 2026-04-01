@@ -43,7 +43,6 @@ public class SecurityConfig {
 
                         // 🔥 PERMITIR POST específicamente
                         .requestMatchers(
-                                org.springframework.http.HttpMethod.POST,
                                 "/api/pedidos/con-dias",
                                 "/api/v2/pedidos/con-dias"
                         ).permitAll()
