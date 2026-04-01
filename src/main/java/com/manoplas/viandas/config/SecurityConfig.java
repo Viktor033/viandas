@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .addFilterBefore(new PhoneAuthFilter(usuarioRepository),
                         org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/health", "/api/v2/pedidos/ping", "/api/v2/pedidos/post-test").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()

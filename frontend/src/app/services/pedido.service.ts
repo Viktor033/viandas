@@ -45,12 +45,14 @@ export interface ReporteDiarioCompleto {
     cantidadPedidos: number;
 }
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class PedidoService {
     private http = inject(HttpClient);
-    private apiUrl = '/api/v2/pedidos';
+    private apiUrl = environment.apiUrl;
 
     crearPedido(data: { items: { productoId: number, cantidad: number }[], metodoPago: string }): Observable<any> {
         return this.http.post(this.apiUrl, data);
