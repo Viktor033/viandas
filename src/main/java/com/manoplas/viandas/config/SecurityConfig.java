@@ -35,12 +35,18 @@ public class SecurityConfig {
                 .addFilterBefore(new PhoneAuthFilter(usuarioRepository),
                         org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        // 🔥 IMPORTANTE PARA CORS
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                        
-                        // 🔥 PERMITIR CREAR PEDIDOS SIN LOGIN
-                        .requestMatchers("/api/pedidos/con-dias", "/api/pedidos/con-dias/").permitAll()
-                        .requestMatchers("/api/v2/pedidos/con-dias", "/api/v2/pedidos/con-dias/").permitAll()
+                        // 🔥 PERMITIR PREFLIGHT (MUY IMPORTANTE)
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.OPTIONS,
+                                "/**"
+                        ).permitAll()
+
+                        // 🔥 PERMITIR POST específicamente
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.POST,
+                                "/api/pedidos/con-dias",
+                                "/api/v2/pedidos/con-dias"
+                        ).permitAll()
 
                         .requestMatchers("/api/health", "/api/v2/pedidos/ping", "/api/v2/pedidos/post-test").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
