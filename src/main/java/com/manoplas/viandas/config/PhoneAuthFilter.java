@@ -27,6 +27,13 @@ public class PhoneAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        if (path.equals("/api/pedidos/con-dias") || path.equals("/api/v2/pedidos/con-dias")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String phone = request.getHeader("X-Auth-Phone");
         // Log para depuración en producción
         if (phone != null) {
