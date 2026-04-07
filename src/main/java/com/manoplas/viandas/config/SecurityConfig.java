@@ -41,6 +41,9 @@ public class SecurityConfig {
                                 "/**"
                         ).permitAll()
 
+                        // 🔥 PERMITIR ACCESO PUBLICO A PRODUCTOS
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/productos/**").permitAll()
+
                         // 🔥 PERMITIR POST específicamente
                         .requestMatchers(
                                 "/api/pedidos/con-dias",
