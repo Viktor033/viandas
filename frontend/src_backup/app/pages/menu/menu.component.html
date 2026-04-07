@@ -1,0 +1,65 @@
+<app-navbar></app-navbar>
+
+<div class="menu-container">
+    <div class="header-section">
+        <h1>Menú de la Semana</h1>
+        <p>Elegí tus viandas favoritas y armá tu pedido.</p>
+        
+        <button *ngIf="isAdmin" class="btn-create" (click)="toggleForm()">
+            <i class="fas fa-plus"></i> {{ showForm ? 'Cancelar' : 'Nuevo Producto' }}
+        </button>
+    </div>
+
+    <!-- Formulario de Admin (Modal) -->
+    <div class="modal-overlay" *ngIf="showForm && isAdmin" (click)="toggleForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <button class="close-btn" (click)="toggleForm()">&times;</button>
+            <form (ngSubmit)="onSubmitProduct()" class="product-form">
+                <h3>Cargar Nueva Vianda</h3>
+                
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input [(ngModel)]="newProduct.nombre" name="nombre" required placeholder="Ej: Milanesa con puré">
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea [(ngModel)]="newProduct.descripcion" name="descripcion" required placeholder="Ingredientes, calorías, etc."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Precio</label>
+                    <input type="number" [(ngModel)]="newProduct.precio" name="precio" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Foto del Producto</label>
+                    <input type="file" (change)="onFileSelected($event)" accept="image/*" style="padding: 0.5rem; border: none;">
+                    
+                    <div *ngIf="isUploading" style="color: #edb110; font-size: 0.9rem;">Subiendo imagen...</div>
+                    
+                    <div *ngIf="newProduct.imagenUrl" style="margin-top: 10px;">
+                        <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 5px;">Vista previa:</p>
+                        <img [src]="newProduct.imagenUrl" alt="Preview" style="height: 100px; border-radius: 8px; border: 1px solid #edb110;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Guardar Producto</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="products-grid">
+        <app-product-card 
+            *ngFor="let prod of productos" 
+            [product]="prod" 
+            [isAdmin]="isAdmin"
+            (addToCart)="addToCart($event)"
+            (deleteProduct)="deleteProduct($event)">
+        </app-product-card>
+    </div>
+
+    <div *ngIf="productos.length === 0" class="no-products">
+        <p>No hay productos disponibles en este momento.</p>
+    </div>
+</div>

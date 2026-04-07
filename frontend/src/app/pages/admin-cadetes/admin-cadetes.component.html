@@ -1,0 +1,108 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard-container">
+    <div class="header-section">
+        <div class="header-titles">
+            <h1>Gestión de Cadetes</h1>
+        </div>
+        <div class="header-actions">
+            <!-- Barra de búsqueda -->
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar cadete o vehículo...">
+            </div>
+
+            <button class="btn-primary" (click)="openModal()">
+                <i class="fas fa-plus"></i> Nuevo Cadete
+            </button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <!-- Indicador de Carga -->
+        <div class="loading-state" *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Cargando cadetes...</span>
+        </div>
+
+        <table class="cadetes-table" *ngIf="!isLoading">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Vehículo</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cadete of filteredCadetes">
+                    <td>{{ cadete.nombre }}</td>
+                    <td>{{ cadete.apellido }}</td>
+                    <td>{{ cadete.vehiculo }}</td>
+                    <td>{{ cadete.telefono }}</td>
+                    <td>
+                        <span class="status-badge" [class.active]="cadete.activo">
+                            {{ cadete.activo ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td class="actions-cell">
+                        <button class="btn-icon edit" (click)="openModal(cadete)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon delete" (click)="deleteCadete(cadete.id!)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="filteredCadetes.length === 0">
+                    <td colspan="6" class="empty-message">No se encontraron cadetes.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Form -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <h2>{{ isEditing ? 'Editar Cadete' : 'Nuevo Cadete' }}</h2>
+        
+        <form [formGroup]="cadeteForm" (ngSubmit)="saveCadete()">
+            <div class="form-group">
+                <label>Nombre *</label>
+                <input formControlName="nombre" placeholder="Nombre">
+                <span class="error-text" *ngIf="cadeteForm.get('nombre')?.invalid && cadeteForm.get('nombre')?.touched">Obligatorio</span>
+            </div>
+
+            <div class="form-group">
+                <label>Apellido *</label>
+                <input formControlName="apellido" placeholder="Apellido">
+                <span class="error-text" *ngIf="cadeteForm.get('apellido')?.invalid && cadeteForm.get('apellido')?.touched">Obligatorio</span>
+            </div>
+
+            <div class="form-group">
+                <label>Vehículo *</label>
+                <input formControlName="vehiculo" placeholder="Ej: Moto Honda 150cc">
+                <span class="error-text" *ngIf="cadeteForm.get('vehiculo')?.invalid && cadeteForm.get('vehiculo')?.touched">Obligatorio</span>
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono *</label>
+                <input formControlName="telefono" placeholder="Whatsapp de contacto">
+                <span class="error-text" *ngIf="cadeteForm.get('telefono')?.invalid && cadeteForm.get('telefono')?.touched">Obligatorio</span>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <label>
+                    <input type="checkbox" formControlName="activo">
+                    <span>Cadete Activo (Disponible para repartos)</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit" [disabled]="cadeteForm.invalid">Guardar</button>
+        </form>
+    </div>
+</div>

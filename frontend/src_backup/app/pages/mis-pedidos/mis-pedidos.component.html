@@ -1,0 +1,40 @@
+<app-navbar></app-navbar>
+
+<div class="pedidos-container">
+    <div class="header">
+        <h1>Mis Pedidos</h1>
+        <p>Historial de tus compras recientes</p>
+    </div>
+
+    <div class="pedidos-list">
+        <div *ngFor="let pedido of pedidos" class="pedido-card">
+            <div class="pedido-header">
+                <span class="fecha">{{ pedido.fecha | date:'medium' }}</span>
+                <span class="estado" [ngClass]="pedido.estado">{{ pedido.estado }}</span>
+            </div>
+            
+            <div class="pedido-body">
+                <ul>
+                    <li *ngFor="let detalle of pedido.detalles">
+                        {{ detalle.cantidad }}x {{ detalle.producto.nombre }} 
+                        <span class="price">(${{ detalle.precioUnitario }})</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pedido-footer">
+                <div class="payment-info" *ngIf="pedido.metodoPago">
+                    <span class="payment-label">Pago:</span>
+                    <span class="payment-value">{{ pedido.metodoPago }}</span>
+                </div>
+                <span class="total-label">Total:</span>
+                <span class="total-amount">${{ pedido.total }}</span>
+            </div>
+        </div>
+
+        <div *ngIf="pedidos.length === 0" class="no-pedidos">
+            <p>Aún no has realizado ningún pedido.</p>
+            <a routerLink="/menu" class="btn-shop">Ir al Menú</a>
+        </div>
+    </div>
+</div>

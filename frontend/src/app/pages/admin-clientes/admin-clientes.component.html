@@ -1,0 +1,191 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard-container">
+    <div class="header-section">
+        <div class="header-titles">
+            <h1>Gestión de Clientes</h1>
+        </div>
+        <div class="header-actions">
+            <!-- Barra de búsqueda -->
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar cliente, teléfono o zona...">
+            </div>
+            
+            <button class="btn-primary" (click)="openModal()">
+                <i class="fas fa-plus"></i> Nuevo Cliente
+            </button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <!-- Indicador de Carga -->
+        <div class="loading-state" *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Cargando clientes...</span>
+        </div>
+
+        <table class="clientes-table" *ngIf="!isLoading">
+            <thead>
+                <tr>
+                    <th>Nombre y Apellido</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Zona</th>
+                    <th>Cadete</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cliente of filteredClientes">
+                    <td>{{ cliente.nombre }} {{ cliente.apellido }}</td>
+                    <td>{{ cliente.telefono }}</td>
+                    <td>
+                        {{ cliente.direccion }}
+                        <span *ngIf="cliente.piso || cliente.departamento" class="small-text">
+                            ({{ cliente.piso }} {{ cliente.departamento }})
+                        </span>
+                    </td>
+                    <td><span class="badge zona" *ngIf="cliente.zona">{{ cliente.zona }}</span></td>
+                    <td>
+                        <span class="badge cadete" [class.assigned]="cliente.cadete">
+                            {{ cliente.cadete ? cliente.cadete.nombre : 'Sin asignar' }}
+                        </span>
+                    </td>
+                    <td class="actions-cell">
+                        <button class="btn-icon history" (click)="openHistory(cliente)" title="Historial">
+                            <i class="fas fa-history"></i>
+                        </button>
+                        <button class="btn-icon print" (click)="printFicha(cliente)" title="Imprimir Ficha">
+                            <i class="fas fa-print"></i>
+                        </button>
+                        <button class="btn-icon edit" (click)="openModal(cliente)" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon delete" (click)="deleteCliente(cliente.id!)" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="filteredClientes.length === 0">
+                    <td colspan="6" class="empty-message">No se encontraron clientes.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Form -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <h2>{{ isEditing ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
+        
+        <form [formGroup]="clienteForm" (ngSubmit)="saveCliente()">
+            <div class="form-row">
+                <div class="form-group half">
+                    <label>Nombre *</label>
+                    <input formControlName="nombre" placeholder="Ej: Juan">
+                    <span class="error-text" *ngIf="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched">Obligatorio</span>
+                </div>
+                <div class="form-group half">
+                    <label>Apellido *</label>
+                    <input formControlName="apellido" placeholder="Ej: Perez">
+                    <span class="error-text" *ngIf="clienteForm.get('apellido')?.invalid && clienteForm.get('apellido')?.touched">Obligatorio</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono (ID Acceso) *</label>
+                <input formControlName="telefono" placeholder="Ej: 3415555555" title="Se usará como ID de acceso">
+                <span class="error-text" *ngIf="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">Obligatorio</span>
+            </div>
+
+            <div class="form-group">
+                <label>Dirección</label>
+                <input formControlName="direccion" placeholder="Calle y Altura">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group third">
+                    <label>Piso</label>
+                    <input formControlName="piso">
+                </div>
+                <div class="form-group third">
+                    <label>Depto</label>
+                    <input formControlName="departamento">
+                </div>
+                <div class="form-group third">
+                    <label>Zona</label>
+                    <input formControlName="zona" placeholder="Ej: CENTRO">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Observaciones</label>
+                <textarea formControlName="observaciones" rows="2" placeholder="Detalles de entrega, timbres, horarios frecuentes..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Cadete Asignado</label>
+                <select formControlName="cadete">
+                    <option [ngValue]="null">-- Sin Asignar --</option>
+                    <option *ngFor="let c of cadetes" [ngValue]="c">
+                        {{ c.nombre }} ({{ c.vehiculo }})
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit" [disabled]="clienteForm.invalid">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal-overlay" *ngIf="showHistoryModal" (click)="closeHistory()">
+    <div class="modal-content history-modal" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeHistory()">&times;</button>
+        <h2>Historial: {{ historyCliente?.nombre }} {{ historyCliente?.apellido }}</h2>
+
+        <div class="history-actions">
+             <button class="btn-danger" (click)="deleteDeliveredHistory()">
+                <i class="fas fa-trash-alt"></i> Eliminar Entregados
+            </button>
+            <button class="btn-danger-dark" (click)="clearAllHistory()">
+                <i class="fas fa-bomb"></i> Limpiar Todo
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="clientes-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pedido of historyPedidos">
+                        <td>#{{ pedido.id }}</td>
+                         <td>{{ pedido.fecha | date:'short' }}</td>
+                        <td><span class="badge" [ngClass]="pedido.estado.toLowerCase()">{{ pedido.estado }}</span></td>
+                        <td>${{ pedido.total }}</td>
+                        <td>
+                            <ul class="detail-list">
+                                <li *ngFor="let d of pedido.detalles">
+                                    {{ d.cantidad }}x {{ d.producto.nombre }}
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                     <tr *ngIf="historyPedidos.length === 0">
+                        <td colspan="5" class="empty-message">No hay historial disponible.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
