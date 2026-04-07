@@ -147,19 +147,19 @@
         <!-- Tipo de vianda: Común / Sin sal -->
         <div class="card-options">
           <label class="radio-option">
-            <input type="radio" [name]="'tipo-' + prod.id" value="Común" [(ngModel)]="getItem(prod).observaciones">
+            <input type="radio" [name]="'tipo-' + prod.id" value="Común" [(ngModel)]="opcionSeleccionada[prod.id || 0]">
             <span>Común</span>
           </label>
           <label class="radio-option">
-            <input type="radio" [name]="'tipo-' + prod.id" value="Sin sal" [(ngModel)]="getItem(prod).observaciones">
+            <input type="radio" [name]="'tipo-' + prod.id" value="Sin sal" [(ngModel)]="opcionSeleccionada[prod.id || 0]">
             <span>Sin sal</span>
           </label>
         </div>
 
         <!-- Cantidad -->
         <div class="card-qty">
-          <button class="qty-btn" (click)="decrementar(prod)" [disabled]="getItem(prod).cantidad === 0">−</button>
-          <span class="qty-value">{{ getItem(prod).cantidad }}</span>
+          <button class="qty-btn" (click)="decrementar(prod)" [disabled]="getCantidad(prod.id || 0, opcionSeleccionada[prod.id || 0]) === 0">−</button>
+          <span class="qty-value">{{ getCantidad(prod.id || 0, opcionSeleccionada[prod.id || 0]) }}</span>
           <button class="qty-btn" (click)="incrementar(prod)">+</button>
         </div>
       </div>

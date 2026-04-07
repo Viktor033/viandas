@@ -3,16 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ProductoService, Producto } from '../../services/producto.service';
-import { CartService } from '../../services/cart.service';
+import { CartService, CartItem } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { UploadService } from '../../services/upload.service';
 import Swal from 'sweetalert2';
-
-export interface ItemSeleccionado {
-    producto: Producto;
-    cantidad: number;
-    observaciones: string; // 'Común' | 'Sin sal'
-}
 
 @Component({
     selector: 'app-menu',
@@ -38,9 +32,6 @@ export class MenuComponent implements OnInit {
     // Tab activo
     tabActivo = 'Lunes';
 
-    // Mapa de selección: productoId -> ItemSeleccionado
-    seleccion: Map<number, ItemSeleccionado> = new Map();
-
     // Días del pedido seleccionados
     diasPedido: { [dia: string]: boolean } = {
         Lunes: false, Martes: false, Miércoles: false, Jueves: false, Viernes: false
@@ -57,34 +48,33 @@ export class MenuComponent implements OnInit {
         nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos'
     };
 
+    // UI state para la opción de vianda en cada producto
+    opcionSeleccionada: { [id: number]: string } = {};
+
+    // Espejo del carrito global
+    itemsCarrito: CartItem[] = [];
+
     ngOnInit() {
         this.loadProductos();
         this.isAdmin = this.authService.getUserRole() === 'ADMIN';
 
-        // Sincronizar selección local con el carrito global
+        // Escuchar el carrito
         this.cartService.cart$.subscribe(items => {
-            items.forEach(item => {
-                if (item.producto.id) {
-                    this.seleccion.set(item.producto.id, {
-                        producto: item.producto,
-                        cantidad: item.cantidad,
-                        observaciones: item.observaciones || 'Común'
-                    });
-                }
-            });
-            // También limpiar los que ya no están en el carrito global
-            this.seleccion.forEach((val, key) => {
-                const stillInCart = items.find(i => i.producto.id === key && i.observaciones === val.observaciones);
-                if (!stillInCart) {
-                    val.cantidad = 0;
-                }
-            });
+            this.itemsCarrito = items;
         });
     }
 
     loadProductos() {
         this.productoService.getProductos().subscribe({
-            next: data => this.productos = data,
+            next: data => {
+                this.productos = data;
+                // Inicializar las opciones seleccionadas a "Común"
+                this.productos.forEach(p => {
+                    if (p.id) {
+                        this.opcionSeleccionada[p.id] = this.opcionSeleccionada[p.id] || 'Común';
+                    }
+                });
+            },
             error: err => console.error('Error cargando productos', err)
         });
     }
@@ -97,28 +87,22 @@ export class MenuComponent implements OnInit {
     }
 
     // ——— Selección de items ———
-    getItem(producto: Producto): ItemSeleccionado {
-        if (!this.seleccion.has(producto.id!)) {
-            this.seleccion.set(producto.id!, {
-                producto,
-                cantidad: 0,
-                observaciones: 'Común'
-            });
-        }
-        return this.seleccion.get(producto.id!)!;
+    getCantidad(productoId: number, opcion: string): number {
+        const item = this.itemsCarrito.find(i => i.producto.id === productoId && i.observaciones === opcion);
+        return item ? item.cantidad : 0;
     }
 
     incrementar(producto: Producto) {
-        const item = this.getItem(producto);
-        const wasZero = item.cantidad === 0;
-        
+        const opcion = this.opcionSeleccionada[producto.id!] || 'Común';
+        const wasZero = this.getCantidad(producto.id!, opcion) === 0;
+
         // Llamar al servicio global
-        this.cartService.addToCart(producto, item.observaciones);
+        this.cartService.addToCart(producto, opcion);
         
         if (wasZero) {
             Swal.fire({
                 title: '✅ ¡Vianda agregada!',
-                text: `${producto.nombre} — ${item.observaciones}`,
+                text: `${producto.nombre} — ${opcion}`,
                 icon: 'success',
                 toast: true,
                 position: 'top-end',
@@ -133,24 +117,24 @@ export class MenuComponent implements OnInit {
     }
 
     decrementar(producto: Producto) {
-        const item = this.getItem(producto);
-        if (item.cantidad > 0) {
-            this.cartService.decreaseQuantity(producto.id!, item.observaciones);
+        const opcion = this.opcionSeleccionada[producto.id!] || 'Común';
+        if (this.getCantidad(producto.id!, opcion) > 0) {
+            this.cartService.decreaseQuantity(producto.id!, opcion);
         }
     }
 
-    get itemsSeleccionados(): ItemSeleccionado[] {
-        return Array.from(this.seleccion.values()).filter(i => i.cantidad > 0);
+    get itemsSeleccionados(): CartItem[] {
+        return this.itemsCarrito.filter(i => i.cantidad > 0);
     }
 
     get totalCarrito(): number {
-        return this.itemsSeleccionados.reduce(
+        return this.itemsCarrito.reduce(
             (sum, i) => sum + i.cantidad * i.producto.precio, 0
         );
     }
 
     get haySeleccion(): boolean {
-        return this.itemsSeleccionados.length > 0;
+        return this.itemsCarrito.length > 0;
     }
 
     // ——— Días del pedido ———
@@ -200,7 +184,6 @@ export class MenuComponent implements OnInit {
                     confirmButtonColor: '#edb110'
                 });
                 this.cartService.clearCart(); // Limpiar carrito global
-                this.seleccion.clear();
                 this.DIAS.forEach(d => this.diasPedido[d] = false);
                 this.esMensual = false;
             },
