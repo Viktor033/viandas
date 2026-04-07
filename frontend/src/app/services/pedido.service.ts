@@ -64,7 +64,7 @@ export class PedidoService {
         esMensual: boolean;
         metodoPago: string;
     }): Observable<any> {
-        return this.http.post(`${this.apiUrl}/con-dias`, data);
+        return this.http.post(`${this.apiUrl}/crear-con-dias`, data);
     }
 
     createPreferenceMP(data: { items: { productoId: number, cantidad: number }[], metodoPago: string }): Observable<{ init_point: string }> {
