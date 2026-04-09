@@ -1,0 +1,84 @@
+<nav class="navbar">
+  <div class="container nav-content">
+    <div class="logo">
+      <img src="logo.png" alt="MANOPLAS">
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Inicio</a></li>
+      <li><a href="#">Propuesta de la semana</a></li>
+      <li><a href="#">Contacto</a></li>
+      <li><a href="#"><i class="fas fa-history"></i> Mis Pedidos</a></li>
+      <li><a href="#">Victor</a></li>
+      <li><a href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+    </ul>
+    <div class="cart-icon">
+      <i class="fas fa-shopping-cart"></i>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1>¡El Sabor que Estabas Esperando!</h1>
+    <p>Las mejores Pizzas, Milanesas y Choripanes de la ciudad.</p>
+  </div>
+</header>
+
+<section class="menu-section container">
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let product of products">
+      <img [src]="product.image" [alt]="product.title" class="product-image">
+      <div class="product-info">
+        <h3>{{ product.title }}</h3>
+        <p class="description">{{ product.description }}</p>
+        <div class="price-row">
+          <span class="price">${{ product.price }}</span>
+          <button class="btn-add" (click)="addToCart(product)">+ AGREGAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container footer-content">
+    <div class="footer-logo">
+      <h3>Manoplas</h3>
+      <p>El mejor sabor en tu puerta.</p>
+    </div>
+    <div class="footer-links">
+      <h4>Enlaces</h4>
+      <ul>
+        <li><a href="#">Términos y Condiciones</a></li>
+        <li><a href="#">Política de Privacidad</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="footer-social">
+      <h4>Síguenos</h4>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>&copy; 2026 Manoplas. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<!-- Floating Action Buttons -->
+<div class="floating-buttons">
+  <!-- Scroll to Top -->
+  <button class="fab-btn scroll-top" (click)="scrollToTop()" aria-label="Volver arriba">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+  
+  <!-- WhatsApp -->
+  <a href="https://wa.me/1234567890" target="_blank" class="fab-btn whatsapp" aria-label="Chat en WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</div>

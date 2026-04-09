@@ -1,0 +1,14 @@
+/* Global Styles */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    /* Dark background to prevent white flashes or gaps */
+    font-family: 'Segoe UI', sans-serif;
+    height: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}

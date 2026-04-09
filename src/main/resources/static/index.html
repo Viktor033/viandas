@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manoplas - El Sabor que Estabas Esperando</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* SCSS Translated to CSS */
+        :root {
+            --primary-green: #2e7d32;
+            --highlight-green: #90ee90;
+            --dark-bg: #1a1a1a;
+            --card-bg: #222;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.9);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            background: rgba(255,255,255,0.1); 
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active {
+            color: var(--highlight-green);
+        }
+
+        .cart-icon {
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Hero */
+        .hero {
+            height: 70vh;
+            background-image: url('https://images.unsplash.com/photo-1544025162-d76690b6d012?q=80&w=1974&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 1rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            color: #ddd;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Menu Section */
+        .menu-section {
+            padding: 4rem 1rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid #333;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-green);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            color: var(--highlight-green);
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .description {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            min-height: 40px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .btn-add {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .btn-add:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Simple Auth Logic styles */
+        #auth-status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-content">
+            <div class="logo">
+                <img src="/images/logo.png" alt="MANOPLAS">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Inicio</a></li>
+                <li><a href="#">Propuesta de la semana</a></li>
+                <li><a href="#">Contacto</a></li>
+                <li><a href="#"><i class="fas fa-history"></i> Mis Pedidos</a></li>
+                <li><a href="#">Victor</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+            </ul>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>¡El Sabor que Estabas Esperando!</h1>
+            <p>Las mejores Pizzas, Milanesas y Choripanes de la ciudad.</p>
+        </div>
+    </header>
+
+    <section class="menu-section container">
+        <div class="product-grid">
+            <!-- Producto 1 -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?q=80&w=2070&auto=format&fit=crop" alt="Milanesa">
+                <div class="product-info">
+                    <h3>Milanesa Napolitana</h3>
+                    <p class="description">Carne / Pollo</p>
+                    <div class="price-row">
+                        <span class="price">$10000</span>
+                        <button class="btn-add" onclick="addToCart('Milanesa')">+ AGREGAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1626776876729-bab4306261ca?q=80&w=2070&auto=format&fit=crop" alt="Empanadas">
+                <div class="product-info">
+                    <h3>Empanadas</h3>
+                    <p class="description">Jamon-Queso-Carne-Pollo | Frita o Horno</p>
+                    <div class="price-row">
+                        <span class="price">$13000</span>
+                        <button class="btn-add" onclick="addToCart('Empanadas')">+ AGREGAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 3 -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=2000&auto=format&fit=crop" alt="Pizza">
+                <div class="product-info">
+                    <h3>Pizza</h3>
+                    <p class="description">Muzzarellas | Comun | Calabresa | ConGos</p>
+                    <div class="price-row">
+                        <span class="price">$12000</span>
+                        <button class="btn-add" onclick="addToCart('Pizza')">+ AGREGAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="auth-status">Backend Connected</div>
+
+    <script>
+        function addToCart(item) {
+            alert('¡' + item + ' agregado al carrito!');
+        }
+    </script>
+</body>
+</html>
