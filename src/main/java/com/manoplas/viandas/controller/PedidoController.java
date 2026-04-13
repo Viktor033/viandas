@@ -1,3 +1,5 @@
+package com.manoplas.viandas.controller;
+
 import com.manoplas.viandas.dto.PedidoConDiasRequest;
 import com.manoplas.viandas.dto.PedidoRequest;
 import com.manoplas.viandas.model.Pedido;
