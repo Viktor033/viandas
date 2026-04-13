@@ -29,8 +29,8 @@ public class PhoneAuthFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // 🔥 IGNORAR pedidos (CLAVE)
-        if (path.contains("/api/pedidos")) {
+        // 🔥 IGNORAR pedidos y carrito (CLAVE)
+        if (path.contains("/api/pedidos") || path.contains("/api/carrito")) {
             filterChain.doFilter(request, response);
             return;
         }

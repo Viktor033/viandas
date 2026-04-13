@@ -46,7 +46,8 @@ public class SecurityConfig {
 
                         // 🔥 PERMITIR POST específicamente
                         .requestMatchers(
-                                "/api/carrito/enviar"
+                                "/api/carrito/enviar",
+                                "/api/pedidos/crear-con-dias"
                         ).permitAll()
 
                         .requestMatchers("/api/health", "/api/v2/pedidos/ping", "/api/v2/pedidos/post-test").permitAll()

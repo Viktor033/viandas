@@ -36,6 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
         // Fallback para archivos estáticos del frontend (Angular)
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/")
-                .setCachePeriod(0);
+                .setCachePeriod(0)
+                .resourceChain(false);
     }
 }

@@ -64,9 +64,7 @@ export class PedidoService {
         esMensual: boolean;
         metodoPago: string;
     }): Observable<any> {
-        // Redirigir al nuevo controlador independiente para evadir los 404 del PedidoController
-        const carritoUrl = this.apiUrl.replace('/pedidos', '/carrito');
-        return this.http.post(`${carritoUrl}/enviar`, data);
+        return this.http.post(`${this.apiUrl}/crear-con-dias`, data);
     }
 
     createPreferenceMP(data: { items: { productoId: number, cantidad: number }[], metodoPago: string }): Observable<{ init_point: string }> {
