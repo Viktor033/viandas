@@ -208,9 +208,29 @@
         </label>
       </div>
 
+      <!-- Selector de método de pago -->
+      <div class="payment-methods-inline" style="margin-top: 15px; margin-bottom: 15px;">
+        <h4 style="margin-bottom: 8px; color: var(--text-color); font-size: 0.95rem;">Método de Pago</h4>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <input type="radio" name="pay-method" value="EFECTIVO" [(ngModel)]="selectedPaymentMethod">
+                <span>Efectivo</span>
+            </label>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <input type="radio" name="pay-method" value="TRANSFERENCIA" [(ngModel)]="selectedPaymentMethod">
+                <span>Transf.</span>
+            </label>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <input type="radio" name="pay-method" value="MERCADOPAGO" [(ngModel)]="selectedPaymentMethod">
+                <span>MercadoPago</span>
+            </label>
+        </div>
+      </div>
+
       <!-- Botón confirmar -->
-      <button class="btn-confirmar" (click)="confirmarPedido()">
-        <i class="fas fa-check-circle"></i> Confirmar Pedido
+      <button class="btn-confirmar" [disabled]="isProcessing" (click)="confirmarPedido()">
+        <i class="fas" [ngClass]="isProcessing ? 'fa-spinner fa-spin' : 'fa-check-circle'"></i> 
+        {{ isProcessing ? 'Procesando...' : (selectedPaymentMethod === 'MERCADOPAGO' ? 'Pagar y Confirmar' : 'Confirmar Pedido') }}
       </button>
 
     </div>

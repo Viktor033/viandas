@@ -104,6 +104,18 @@ public class PedidoController {
         }
     }
 
+    @PostMapping("/checkout-mp-con-dias")
+    public ResponseEntity<?> checkoutMPConDias(@RequestBody PedidoConDiasRequest request) {
+        try {
+            Pedido pedido = pedidoService.crearPedidoConDias(request);
+            String initPoint = mercadoPagoService.createPreference(pedido);
+            return ResponseEntity.ok(java.util.Collections.singletonMap("init_point", initPoint));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error al procesar pago MP con días: " + e.getMessage());
+        }
+    }
+
     /** Webhook para recibir notificaciones de MercadoPago */
     @PostMapping("/webhook")
     public ResponseEntity<?> handleWebhook(@RequestBody Map<String, Object> payload) {

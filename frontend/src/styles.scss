@@ -131,6 +131,14 @@ app-root {
     z-index: 99999 !important;
 }
 
+.swal2-confirm, .swal2-cancel, .swal2-deny {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: normal !important;
+    padding: 0.7em 2em !important;
+}
+
 /* Print Overrides Globales */
 /* Print Overrides Globales */
 @media print {
