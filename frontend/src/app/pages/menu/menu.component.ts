@@ -17,6 +17,11 @@ import Swal from 'sweetalert2';
     styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
+    private productoService = inject(ProductoService);
+    private cartService = inject(CartService);
+    private pedidoService = inject(PedidoService);
+    private authService = inject(AuthService);
+    private uploadService = inject(UploadService);
 
     readonly DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
