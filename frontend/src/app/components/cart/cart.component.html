@@ -30,7 +30,21 @@
                     <span class="total-amount">$ {{ total | number:'1.0-0' }}</span>
                 </div>
 
-                <div class="payment-methods">
+                <div class="day-selector" style="margin-top: 15px;">
+                    <h3 style="margin-bottom: 10px;">¿Para qué días?</h3>
+                    <div class="day-checks" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                        <label *ngFor="let dia of DIAS" class="day-check" style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" [(ngModel)]="diasPedido[dia]" [disabled]="esMensual">
+                            <span>{{ dia }}</span>
+                        </label>
+                    </div>
+                    <label class="mensual-check" style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" [(ngModel)]="esMensual" (change)="toggleTodoElMes()">
+                        <span>📅 Todo el mes</span>
+                    </label>
+                </div>
+
+                <div class="payment-methods" style="margin-top: 20px;">
                     <h3>Método de Pago</h3>
                     <div class="methods-grid">
                         <label class="method-option" [class.selected]="selectedPaymentMethod === 'EFECTIVO'">

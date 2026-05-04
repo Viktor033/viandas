@@ -34,16 +34,6 @@ export class MenuComponent implements OnInit {
     // Tab activo
     tabActivo = 'Lunes';
 
-    // Días del pedido seleccionados
-    diasPedido: { [dia: string]: boolean } = {
-        Lunes: false, Martes: false, Miércoles: false, Jueves: false, Viernes: false
-    };
-    esMensual = false;
-    
-    // Método de pago para el pedido directo
-    selectedPaymentMethod = 'EFECTIVO';
-    isProcessing = false;
-
     // Formulario nuevo producto
     newProduct: Partial<Producto> = {
         nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos'
@@ -141,115 +131,6 @@ export class MenuComponent implements OnInit {
 
     get haySeleccion(): boolean {
         return this.itemsCarrito.length > 0;
-    }
-
-    // ——— Días del pedido ———
-    toggleTodoElMes() {
-        this.esMensual = !this.esMensual;
-        if (this.esMensual) {
-            // seleccionar todos los días
-            this.DIAS.forEach(d => this.diasPedido[d] = true);
-        }
-    }
-
-    get diasSeleccionadosList(): string[] {
-        return this.DIAS.filter(d => this.diasPedido[d]);
-    }
-
-    // ——— Confirmar pedido ———
-    confirmarPedido() {
-        if (!this.haySeleccion) {
-            Swal.fire('Sin productos', 'Elegí al menos un producto.', 'warning');
-            return;
-        }
-        if (this.diasSeleccionadosList.length === 0 && !this.esMensual) {
-            Swal.fire('Sin días', 'Seleccioná al menos un día para el pedido.', 'warning');
-            return;
-        }
-
-        const items = this.itemsSeleccionados.map(i => ({
-            productoId: i.producto.id!,
-            cantidad: i.cantidad,
-            precioUnitario: i.producto.precio,
-            observaciones: i.observaciones || 'Común'
-        }));
-
-        const payload = {
-            detalles: items,
-            diasSeleccionados: this.diasSeleccionadosList.join(','),
-            esMensual: this.esMensual,
-            metodoPago: this.selectedPaymentMethod
-        };
-
-        this.isProcessing = true;
-
-        if (this.selectedPaymentMethod === 'MERCADOPAGO' || this.selectedPaymentMethod === 'TARJETA') {
-            this.pedidoService.createPreferenceMPConDias(payload).subscribe({
-                next: (res) => {
-                    // Limpiar carrito antes de redirigir
-                    this.cartService.clearCart();
-                    window.location.href = res.init_point;
-                },
-                error: (err) => {
-                    console.error('Error MP:', err);
-                    Swal.fire('Error MP', 'No se pudo generar el link de pago.', 'error');
-                    this.isProcessing = false;
-                }
-            });
-            return;
-        }
-
-        this.cartService.crearPedidoDirecto(payload).subscribe({
-            next: () => {
-                if (this.selectedPaymentMethod === 'TRANSFERENCIA') {
-                    Swal.fire({
-                        title: '¡Pedido Confirmado!',
-                        html: `
-                            <p style="margin-bottom: 15px;">Tu pedido ha sido registrado. Para finalizar, realiza la transferencia a:</p>
-                            <div style="background: #333; padding: 10px; border-radius: 8px; text-align: left; font-size: 0.9em; color: #fff;">
-                                <p><strong>Alias:</strong> MANOPLAS.MP</p>
-                                <p><strong>CVU:</strong> 0000003100047556076615</p>
-                                <p><strong>Banco:</strong> Mercado Pago</p>
-                                <p><strong>Titular:</strong> Ana Paula Gonzalez</p>
-                            </div>
-                            <p style="margin-top: 15px; font-size: 0.9em; color: #edb110;">
-                                <i class="fab fa-whatsapp"></i> Compartí el comprobante por WhatsApp al <strong>3794908091</strong> y se procederá con su pedido.
-                            </p>
-                        `,
-                        icon: 'info',
-                        showCloseButton: true,
-                        confirmButtonColor: '#25D366',
-                        confirmButtonText: 'Entendido, enviar comprobante'
-                    }).then((result) => {
-                        this.cartService.clearCart(); // Limpiar carrito global
-                        this.DIAS.forEach(d => this.diasPedido[d] = false);
-                        this.esMensual = false;
-                        this.isProcessing = false;
-
-                        if (result.isConfirmed) {
-                            window.open('https://wa.me/5493794908091?text=Hola,%20adjunto%20comprobante%20de%20transferencia%20para%20mi%20pedido.', '_blank');
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Pedido enviado!',
-                        text: this.esMensual ? 'Tu pedido mensual fue registrado.' : `Tu pedido para ${this.diasSeleccionadosList.join(', ')} fue registrado.`,
-                        confirmButtonColor: '#edb110'
-                    }).then(() => {
-                        this.cartService.clearCart(); // Limpiar carrito global
-                        this.DIAS.forEach(d => this.diasPedido[d] = false);
-                        this.esMensual = false;
-                        this.isProcessing = false;
-                    });
-                }
-            },
-            error: (err: any) => {
-                console.error(err);
-                Swal.fire('Error', 'No se pudo registrar el pedido.', 'error');
-                this.isProcessing = false;
-            }
-        });
     }
 
     // ——— Admin ———

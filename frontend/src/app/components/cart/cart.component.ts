@@ -23,6 +23,12 @@ export class CartComponent {
     isProcessing: boolean = false;
     selectedPaymentMethod: string = 'EFECTIVO';
 
+    readonly DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    diasPedido: { [dia: string]: boolean } = {
+        Lunes: false, Martes: false, Miércoles: false, Jueves: false, Viernes: false
+    };
+    esMensual = false;
+
     ngOnInit() {
         this.cartItems$.subscribe(items => {
             this.total = items.reduce((acc, item) => acc + (item.producto.precio * item.cantidad), 0);
@@ -32,6 +38,17 @@ export class CartComponent {
     close() {
         // Este método será llamado desde el padre o servicio
         // Por simplicidad, usaremos un output o controlaremos la visibilidad desde Navbar
+    }
+
+    toggleTodoElMes() {
+        this.esMensual = !this.esMensual;
+        if (this.esMensual) {
+            this.DIAS.forEach(d => this.diasPedido[d] = true);
+        }
+    }
+
+    get diasSeleccionadosList(): string[] {
+        return this.DIAS.filter(d => this.diasPedido[d]);
     }
 
     removeItem(item: CartItem) {
@@ -84,15 +101,21 @@ export class CartComponent {
     confirmOrder(items: CartItem[]) {
         if (items.length === 0) return;
 
-        // DEBUG: Alertar método seleccionado para confirmar actualización
-        //alert('DEBUG: Método seleccionado -> ' + this.selectedPaymentMethod);
+        if (this.diasSeleccionadosList.length === 0 && !this.esMensual) {
+            Swal.fire('Sin días', 'Seleccioná al menos un día para el pedido.', 'warning');
+            return;
+        }
 
         this.isProcessing = true;
-        const itemsDto = {
-            items: items.map(item => ({
-                productoId: item.producto.id!,
-                cantidad: item.cantidad
+        const payload = {
+            detalles: items.map(i => ({
+                productoId: i.producto.id!,
+                cantidad: i.cantidad,
+                precioUnitario: i.producto.precio,
+                observaciones: i.observaciones || 'Común'
             })),
+            diasSeleccionados: this.diasSeleccionadosList.join(','),
+            esMensual: this.esMensual,
             metodoPago: this.selectedPaymentMethod
         };
 
@@ -100,17 +123,16 @@ export class CartComponent {
 
         if (this.selectedPaymentMethod === 'MERCADOPAGO' || this.selectedPaymentMethod === 'TARJETA') {
             console.log('Iniciando flujo MercadoPago/Tarjeta...');
-            this.pedidoService.createPreferenceMP(itemsDto).subscribe({
+            this.pedidoService.createPreferenceMPConDias(payload).subscribe({
                 next: (res) => {
-                    // Redirigir a MercadoPago
+                    this.cartService.clearCart();
                     window.location.href = res.init_point;
                 },
                 error: (err) => {
                     console.error('Error MP:', err);
-                    const errorMsg = typeof err.error === 'string' ? err.error : (err.message || 'Error desconocido');
                     Swal.fire({
                         title: 'Error MP',
-                        text: errorMsg,
+                        text: 'No se pudo generar el link de pago.',
                         icon: 'error',
                         background: '#1a1a1a',
                         color: '#f8edda',
@@ -122,7 +144,7 @@ export class CartComponent {
             return;
         }
 
-        this.pedidoService.crearPedido(itemsDto).subscribe({
+        this.pedidoService.crearPedidoConDias(payload).subscribe({
             next: (res) => {
                 if (this.selectedPaymentMethod === 'TRANSFERENCIA') {
                     Swal.fire({
@@ -150,12 +172,12 @@ export class CartComponent {
                         }
                     }).then((result) => {
                         this.cartService.clearCart();
+                        this.DIAS.forEach(d => this.diasPedido[d] = false);
+                        this.esMensual = false;
                         this.isProcessing = false;
                         this.closeModal();
 
-                        // Si confirma (click en botón verde), abrir WhatsApp
                         if (result.isConfirmed) {
-                            // Asumimos formato internacional para Argentina con 9 después de 54
                             window.open('https://wa.me/5493794908091?text=Hola,%20adjunto%20comprobante%20de%20transferencia%20para%20mi%20pedido.', '_blank');
                         }
 
@@ -164,7 +186,7 @@ export class CartComponent {
                 } else {
                     Swal.fire({
                         title: '¡Pedido Confirmado!',
-                        text: `Tu pedido ha sido realizado con éxito. Método: ${this.selectedPaymentMethod}`, // DEBUG INCLUIDO
+                        text: this.esMensual ? 'Tu pedido mensual fue registrado.' : `Tu pedido para ${this.diasSeleccionadosList.join(', ')} fue registrado.`,
                         icon: 'success',
                         background: '#1a1a1a',
                         color: '#f8edda',
@@ -175,6 +197,8 @@ export class CartComponent {
                         }
                     }).then(() => {
                         this.cartService.clearCart();
+                        this.DIAS.forEach(d => this.diasPedido[d] = false);
+                        this.esMensual = false;
                         this.isProcessing = false;
                         this.closeModal();
                         this.router.navigate(['/mis-pedidos']);
