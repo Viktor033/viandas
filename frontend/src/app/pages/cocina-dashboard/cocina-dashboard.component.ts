@@ -2,7 +2,6 @@ import { Component, OnInit, inject, OnDestroy, PLATFORM_ID } from '@angular/core
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PedidoService, Pedido } from '../../services/pedido.service';
 import { interval, Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cocina-dashboard',
@@ -68,7 +67,7 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
         this.cargarPedidos();
       },
       error: (err) => {
-        Swal.fire('Error', 'No se pudo actualizar el estado', 'error');
+        alert('No se pudo actualizar el estado');
       }
     });
   }
@@ -76,17 +75,11 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
   finalizarPedido(pedido: Pedido): void {
     this.pedidoService.updateEstado(pedido.id, 'EN_CAMINO').subscribe({
       next: () => {
-        Swal.fire({
-          title: '¡Pedido Finalizado!',
-          text: 'El pedido ha pasado a la lista de repartos.',
-          icon: 'success',
-          timer: 2000,
-          showConfirmButton: false
-        });
+        alert('¡Pedido Finalizado! El pedido ha pasado a la lista de repartos.');
         this.cargarPedidos();
       },
       error: (err) => {
-        Swal.fire('Error', 'No se pudo finalizar el pedido', 'error');
+        alert('No se pudo finalizar el pedido');
       }
     });
   }
