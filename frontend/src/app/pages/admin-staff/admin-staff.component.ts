@@ -61,7 +61,7 @@ export class AdminStaffComponent implements OnInit {
   cargarStaff(): void {
     this.clienteService.getClientes().subscribe({
       next: (data) => {
-        this.staffList = data.filter(u => u.rol === 'ADMIN' || u.rol === 'COCINERO');
+        this.staffList = data.filter(u => u.rol === 'ADMIN' || u.rol === 'COCINERO' || u.rol === 'SECRETARIO');
       },
       error: (err) => console.error('Error al cargar staff', err)
     });
@@ -144,6 +144,12 @@ export class AdminStaffComponent implements OnInit {
       },
       error: () => alert('Error al procesar la solicitud')
     });
+  }
+
+  enviarEmail(user: Cliente): void {
+    const subject = encodeURIComponent('Acceso al Sistema - Manoplas Viandas');
+    const body = encodeURIComponent(`Hola ${user.nombre},\n\nSe ha creado tu cuenta en el sistema de Manoplas Viandas.\n\nTu rol: ${user.rol}\nTu correo de acceso: ${user.email}\n\nPor favor, contacta al administrador para obtener tu clave temporal.\n\nSaludos!`);
+    window.location.href = `mailto:${user.email}?subject=${subject}&body=${body}`;
   }
 
   eliminarUsuario(user: Cliente): void {

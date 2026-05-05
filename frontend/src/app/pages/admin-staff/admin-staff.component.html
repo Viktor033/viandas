@@ -37,7 +37,7 @@
             </td>
             <td>{{ user.email }}</td>
             <td>
-              <span class="role-badge" [class.admin]="user.rol === 'ADMIN'" [class.cocina]="user.rol === 'COCINERO'">
+              <span class="role-badge" [class.admin]="user.rol === 'ADMIN'" [class.cocina]="user.rol === 'COCINERO'" [class.secretario]="user.rol === 'SECRETARIO'">
                 {{ user.rol }}
               </span>
             </td>
@@ -47,6 +47,9 @@
               </span>
             </td>
             <td class="actions">
+              <button class="btn-email" (click)="enviarEmail(user)" title="Enviar Correo">
+                <i class="fas fa-envelope"></i>
+              </button>
               <button class="btn-edit" (click)="editarUsuario(user)" title="Editar">
                 <i class="fas fa-edit"></i>
               </button>
@@ -132,6 +135,7 @@
                 <select [(ngModel)]="editingUser.rol" name="rol" required>
                   <option value="COCINERO">COCINERO</option>
                   <option value="ADMIN">ADMIN</option>
+                  <option value="SECRETARIO">SECRETARIO</option>
                 </select>
             </div>
             <div class="form-group">

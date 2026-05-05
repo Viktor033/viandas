@@ -115,6 +115,7 @@
 
                     &.admin { background: #e3f2fd; color: #1976d2; }
                     &.cocina { background: #fbe9e7; color: #d84315; }
+                    &.secretario { background: #f3e5f5; color: #7b1fa2; }
                 }
 
                 .status-badge {
@@ -158,6 +159,12 @@
                         background: #ebf8ff;
                         color: #3182ce;
                         &:hover { background: #bee3f8; }
+                    }
+
+                    &.btn-email {
+                        background: #f0fff4;
+                        color: #38a169;
+                        &:hover { background: #c6f6d5; }
                     }
 
                     &.btn-delete {
