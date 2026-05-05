@@ -272,6 +272,16 @@ export class AdminClientesComponent implements OnInit {
     }
   }
 
+  enviarEmail(cliente: Cliente) {
+    if (!cliente.email) {
+      alert('Este cliente no tiene correo electrónico registrado.');
+      return;
+    }
+    const subject = encodeURIComponent('Bienvenido a Manoplas Viandas Gourmet');
+    const body = encodeURIComponent(`Hola ${cliente.nombre},\n\n¡Gracias por elegirnos! Tu cuenta ha sido registrada con éxito.\n\nUsuario (Teléfono): ${cliente.telefono}\nDirección registrada: ${cliente.direccion || 'No especificada'}\n\nYa puedes realizar tus pedidos a través de nuestra web.\n\n¡Buen provecho!`);
+    window.location.href = `mailto:${cliente.email}?subject=${subject}&body=${body}`;
+  }
+
   async deleteCliente(id: number) {
     const confirm = await this.notifyService.confirm(
       '¿Eliminar Cliente?',

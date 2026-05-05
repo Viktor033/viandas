@@ -131,6 +131,7 @@
                     justify-content: center;
                     transition: all 0.2s;
 
+                    &.email { background: #f0fff4; color: #38a169; &:hover { background: #c6f6d5; } }
                     &.history { background: #fff5f5; color: #e53e3e; &:hover { background: #fed7d7; } }
                     &.print { background: #f7fafc; color: #4a5568; &:hover { background: #edf2f7; } }
                     &.edit { background: #ebf8ff; color: #3182ce; &:hover { background: #bee3f8; } }
