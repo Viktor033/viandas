@@ -1,6 +1,6 @@
 <div class="cocina-container">
   <header class="dashboard-header">
-    <h1>👨‍🍳 Panel de Cocina</h1>
+    <h1>👨‍🍳 Cocina</h1>
     <div class="status-indicators">
       <span class="badge pending">Pendientes: {{ pedidosPendientes.length }}</span>
       <span class="badge in-progress">En Preparación: {{ pedidosEnPreparacion.length }}</span>
@@ -34,7 +34,7 @@
             </ul>
           </div>
           <button class="btn btn-prepare" (click)="pasarAPreparacion(pedido)">
-            Preparar
+            <i class="fas fa-fire"></i> Cocinar
           </button>
         </div>
       </div>
@@ -65,7 +65,7 @@
             </ul>
           </div>
           <button class="btn btn-finish" (click)="finalizarPedido(pedido)">
-            Listo
+            <i class="fas fa-check"></i> Listo
           </button>
         </div>
       </div>

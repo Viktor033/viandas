@@ -2,41 +2,39 @@ import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClienteService, Cliente } from '../../services/cliente.service';
+import { CadeteService, Cadete } from '../../services/cadete.service';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 @Component({
   selector: 'app-admin-staff',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NavbarComponent],
   templateUrl: './admin-staff.component.html',
-  styles: [`
-    .admin-staff-container { padding: 20px; font-family: sans-serif; }
-    .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .table-container { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-    .role-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-    .admin { background: #e3f2fd; color: #1976d2; }
-    .cocina { background: #fbe9e7; color: #d84315; }
-    .btn-add { background: #1976d2; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
-    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; }
-    .modal-content { background:white; padding:30px; border-radius:8px; width:400px; }
-    .form-group { margin-bottom: 15px; display:flex; flex-direction:column; gap:5px; }
-    input, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-    .modal-footer { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
-  `]
+  styleUrls: ['./admin-staff.component.scss']
 })
 export class AdminStaffComponent implements OnInit {
   private clienteService = inject(ClienteService);
+  private cadeteService = inject(CadeteService);
   private platformId = inject(PLATFORM_ID);
   
+  activeTab: 'staff' | 'cadetes' = 'staff';
   staffList: Cliente[] = [];
+  cadetesList: Cadete[] = [];
+  
   showModal: boolean = false;
   isEditing: boolean = false;
+  
   editingUser: Cliente = this.getEmptyUser();
+  editingCadete: Cadete = this.getEmptyCadete();
   passwordTemp: string = '';
 
   ngOnInit(): void {
+    this.cargarDatos();
+  }
+
+  cargarDatos(): void {
     this.cargarStaff();
+    this.cargarCadetes();
   }
 
   getEmptyUser(): Cliente {
@@ -50,6 +48,16 @@ export class AdminStaffComponent implements OnInit {
     };
   }
 
+  getEmptyCadete(): Cadete {
+    return {
+      nombre: '',
+      apellido: '',
+      vehiculo: '',
+      telefono: '',
+      activo: true
+    };
+  }
+
   cargarStaff(): void {
     this.clienteService.getClientes().subscribe({
       next: (data) => {
@@ -59,9 +67,24 @@ export class AdminStaffComponent implements OnInit {
     });
   }
 
+  cargarCadetes(): void {
+    this.cadeteService.getCadetes().subscribe({
+      next: (data) => this.cadetesList = data,
+      error: (err) => console.error('Error al cargar cadetes', err)
+    });
+  }
+
+  switchTab(tab: 'staff' | 'cadetes'): void {
+    this.activeTab = tab;
+  }
+
   abrirModalNuevo(): void {
-    this.editingUser = this.getEmptyUser();
-    this.passwordTemp = '';
+    if (this.activeTab === 'staff') {
+      this.editingUser = this.getEmptyUser();
+      this.passwordTemp = '';
+    } else {
+      this.editingCadete = this.getEmptyCadete();
+    }
     this.isEditing = false;
     this.showModal = true;
   }
@@ -73,11 +96,25 @@ export class AdminStaffComponent implements OnInit {
     this.showModal = true;
   }
 
+  editarCadete(cadete: Cadete): void {
+    this.editingCadete = { ...cadete };
+    this.isEditing = true;
+    this.showModal = true;
+  }
+
   cerrarModal(): void {
     this.showModal = false;
   }
 
-  guardarUsuario(): void {
+  guardar(): void {
+    if (this.activeTab === 'staff') {
+      this.guardarUsuario();
+    } else {
+      this.guardarCadete();
+    }
+  }
+
+  private guardarUsuario(): void {
     if (this.passwordTemp) {
       this.editingUser.password = this.passwordTemp;
     }
@@ -90,7 +127,20 @@ export class AdminStaffComponent implements OnInit {
       next: () => {
         this.cargarStaff();
         this.cerrarModal();
-        alert(this.isEditing ? 'Usuario actualizado' : 'Usuario creado con éxito');
+      },
+      error: () => alert('Error al procesar la solicitud')
+    });
+  }
+
+  private guardarCadete(): void {
+    const obs = this.isEditing 
+      ? this.cadeteService.updateCadete(this.editingCadete.id!, this.editingCadete)
+      : this.cadeteService.createCadete(this.editingCadete);
+
+    obs.subscribe({
+      next: () => {
+        this.cargarCadetes();
+        this.cerrarModal();
       },
       error: () => alert('Error al procesar la solicitud')
     });
@@ -99,11 +149,17 @@ export class AdminStaffComponent implements OnInit {
   eliminarUsuario(user: Cliente): void {
     if (confirm(`¿Estás seguro de que deseas eliminar a ${user.nombre}?`)) {
       this.clienteService.deleteCliente(user.id!).subscribe({
-        next: () => {
-          this.cargarStaff();
-          alert('Usuario eliminado correctamente');
-        },
+        next: () => this.cargarStaff(),
         error: () => alert('Error al eliminar usuario')
+      });
+    }
+  }
+
+  eliminarCadete(cadete: Cadete): void {
+    if (confirm(`¿Estás seguro de que deseas eliminar al cadete ${cadete.nombre}?`)) {
+      this.cadeteService.deleteCadete(cadete.id!).subscribe({
+        next: () => this.cargarCadetes(),
+        error: () => alert('Error al eliminar cadete')
       });
     }
   }
