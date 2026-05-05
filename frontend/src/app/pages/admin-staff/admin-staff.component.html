@@ -1,30 +1,49 @@
 <div class="admin-staff-container">
-    <div class="header">
+    <div class="header-section">
       <h1>Gestión de Personal</h1>
       <button class="btn-add" (click)="abrirModalNuevo()">
         <i class="fas fa-plus"></i> Nuevo Personal
       </button>
     </div>
   
-    <div class="staff-grid">
-      <div *ngFor="let user of staffList" class="staff-card">
-        <div class="user-info">
-          <div class="avatar">{{ user.nombre.charAt(0) }}{{ user.apellido.charAt(0) }}</div>
-          <div class="details">
-            <h3>{{ user.nombre }} {{ user.apellido }}</h3>
-            <span class="role-badge" [class.admin]="user.rol === 'ADMIN'">{{ user.rol }}</span>
-            <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn-edit" (click)="editarUsuario(user)">
-            <i class="fas fa-edit"></i> Editar
-          </button>
-          <button class="btn-delete" (click)="eliminarUsuario(user)">
-            <i class="fas fa-trash"></i> Eliminar
-          </button>
-        </div>
-      </div>
+    <div class="table-container">
+      <table class="staff-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of staffList">
+            <td>
+              <strong>{{ user.nombre }} {{ user.apellido }}</strong>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="role-badge" [class.admin]="user.rol === 'ADMIN'" [class.cocina]="user.rol === 'COCINERO'">
+                {{ user.rol }}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" [class.active]="user.activo" [class.inactive]="!user.activo">
+                {{ user.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn-edit" (click)="editarUsuario(user)" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-delete" (click)="eliminarUsuario(user)" title="Eliminar">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   
     <!-- Modal -->
