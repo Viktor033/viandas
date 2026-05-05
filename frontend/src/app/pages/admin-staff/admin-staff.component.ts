@@ -17,7 +17,7 @@ export class AdminStaffComponent implements OnInit {
   usuarios: Cliente[] = [];
   staff: Cliente[] = [];
   
-  editingUser: Partial<Cliente> | null = null;
+  editingUser: Cliente | null = null;
   isNewUser = false;
 
   ngOnInit(): void {
