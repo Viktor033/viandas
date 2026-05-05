@@ -9,43 +9,42 @@
         <i class="fas" [class.fa-bars]="!isMobileMenuOpen" [class.fa-times]="isMobileMenuOpen"></i>
     </button>
 
-    <!-- Nav Links (Desktop + Mobile Wrapper) -->
+    <!-- Nav Links -->
     <div class="nav-content" [class.mobile-open]="isMobileMenuOpen">
         <ul class="nav-links">
           <li><a routerLink="/home" routerLinkActive="active" (click)="isMobileMenuOpen = false">Inicio</a></li>
           <li><a routerLink="/menu" routerLinkActive="active" (click)="isMobileMenuOpen = false">Menú</a></li>
-          <li *ngIf="isAdmin" class="admin-links">
-            <a routerLink="/admin/clientes" routerLinkActive="active" (click)="isMobileMenuOpen = false">Clientes</a>
-            <a routerLink="/admin/pedidos" routerLinkActive="active" (click)="isMobileMenuOpen = false">Pedidos</a>
-            <a routerLink="/admin/personal" routerLinkActive="active" (click)="isMobileMenuOpen = false">Personal</a>
-          </li>
-          <li *ngIf="isCocinero || isAdmin" class="admin-links">
+          
+          <!-- Links de Administración (Solo Admin) -->
+          <ng-container *ngIf="isAdmin">
+            <li><a routerLink="/admin/clientes" routerLinkActive="active" (click)="isMobileMenuOpen = false">Clientes</a></li>
+            <li><a routerLink="/admin/pedidos" routerLinkActive="active" (click)="isMobileMenuOpen = false">Pedidos</a></li>
+            <li><a routerLink="/admin/personal" routerLinkActive="active" (click)="isMobileMenuOpen = false">Personal</a></li>
+          </ng-container>
+
+          <!-- Link de Cocina (Admin y Cocinero) -->
+          <li *ngIf="isCocinero || isAdmin">
             <a routerLink="/cocina" routerLinkActive="active" (click)="isMobileMenuOpen = false">Cocina</a>
           </li>
         </ul>
     
         <div class="user-section">
-          <!-- Cart Trigger (User only) -->
           <div class="cart-trigger" *ngIf="!isAdmin" (click)="toggleCart()">
             <i class="fas fa-shopping-cart"></i>
             <span class="badge" *ngIf="(cartService.cart$ | async)?.length as count">{{ count }}</span>
             <span class="mobile-label">Ver Carrito</span>
           </div>
     
-          <!-- User Dropdown -->
           <div class="user-dropdown-container">
             <div class="user-info-trigger" (click)="toggleUserMenu()">
                 <div class="user-info">
                     <span class="greeting">Hola,</span>
                     <span class="username">{{ userName }}</span>
                 </div>
-                <div class="avatar-circle">
-                    {{ userName.charAt(0) }}
-                </div>
+                <div class="avatar-circle">{{ userName.charAt(0) }}</div>
                 <i class="fas fa-chevron-down arrow-icon" [class.rotated]="showUserMenu"></i>
             </div>
     
-            <!-- Dropdown Menu -->
             <div class="dropdown-menu" [class.show]="showUserMenu">
                 <a *ngIf="!isAdmin" routerLink="/perfil" class="dropdown-item">
                     <i class="fas fa-user-cog"></i> Mi Perfil
@@ -64,5 +63,4 @@
   </div>
 </nav>
 
-<!-- Cart Modal -->
 <app-cart *ngIf="showCart"></app-cart>
