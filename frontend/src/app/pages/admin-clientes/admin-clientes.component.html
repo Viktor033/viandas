@@ -4,14 +4,16 @@
     <div class="header-section">
         <div class="header-titles">
             <h1>Gestión de Clientes</h1>
+            <p>Listado completo de clientes registrados.</p>
         </div>
         <div class="header-actions">
             <!-- Barra de búsqueda -->
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar cliente, teléfono o zona...">
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar cliente...">
             </div>
             
+            <!-- BOTÓN AGREGAR CLIENTE -->
             <button class="btn-primary" (click)="openModal()">
                 <i class="fas fa-plus"></i> Nuevo Cliente
             </button>
@@ -19,7 +21,6 @@
     </div>
 
     <div class="table-responsive">
-        <!-- Indicador de Carga -->
         <div class="loading-state" *ngIf="isLoading">
             <i class="fas fa-spinner fa-spin"></i>
             <span>Cargando clientes...</span>
@@ -38,7 +39,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let cliente of filteredClientes">
-                    <td>{{ cliente.nombre }} {{ cliente.apellido }}</td>
+                    <td><strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong></td>
                     <td>{{ cliente.telefono }}</td>
                     <td>
                         {{ cliente.direccion }}
@@ -58,9 +59,6 @@
                         </button>
                         <button class="btn-icon history" (click)="openHistory(cliente)" title="Historial">
                             <i class="fas fa-history"></i>
-                        </button>
-                        <button class="btn-icon print" (click)="printFicha(cliente)" title="Imprimir Ficha">
-                            <i class="fas fa-print"></i>
                         </button>
                         <button class="btn-icon edit" (click)="openModal(cliente)" title="Editar">
                             <i class="fas fa-edit"></i>
@@ -86,22 +84,24 @@
         
         <form [formGroup]="clienteForm" (ngSubmit)="saveCliente()">
             <div class="form-row">
-                <div class="form-group half">
+                <div class="form-group">
                     <label>Nombre *</label>
-                    <input formControlName="nombre" placeholder="Ej: Juan">
-                    <span class="error-text" *ngIf="clienteForm.get('nombre')?.invalid && clienteForm.get('nombre')?.touched">Obligatorio</span>
+                    <input formControlName="nombre" placeholder="Nombre">
                 </div>
-                <div class="form-group half">
+                <div class="form-group">
                     <label>Apellido *</label>
-                    <input formControlName="apellido" placeholder="Ej: Perez">
-                    <span class="error-text" *ngIf="clienteForm.get('apellido')?.invalid && clienteForm.get('apellido')?.touched">Obligatorio</span>
+                    <input formControlName="apellido" placeholder="Apellido">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Teléfono (ID Acceso) *</label>
-                <input formControlName="telefono" placeholder="Ej: 3415555555" title="Se usará como ID de acceso">
-                <span class="error-text" *ngIf="clienteForm.get('telefono')?.invalid && clienteForm.get('telefono')?.touched">Obligatorio</span>
+                <label>Email (Para notificaciones)</label>
+                <input formControlName="email" placeholder="email@ejemplo.com">
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono (WhatsApp) *</label>
+                <input formControlName="telefono" placeholder="Ej: 3415555555">
             </div>
 
             <div class="form-group">
@@ -110,85 +110,17 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group third">
-                    <label>Piso</label>
+                <div class="form-group">
+                    <label>Piso/Depto</label>
                     <input formControlName="piso">
                 </div>
-                <div class="form-group third">
-                    <label>Depto</label>
-                    <input formControlName="departamento">
-                </div>
-                <div class="form-group third">
+                <div class="form-group">
                     <label>Zona</label>
-                    <input formControlName="zona" placeholder="Ej: CENTRO">
+                    <input formControlName="zona" placeholder="CENTRO, SUR, etc.">
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Observaciones</label>
-                <textarea formControlName="observaciones" rows="2" placeholder="Detalles de entrega, timbres, horarios frecuentes..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Cadete Asignado</label>
-                <select formControlName="cadete">
-                    <option [ngValue]="null">-- Sin Asignar --</option>
-                    <option *ngFor="let c of cadetes" [ngValue]="c">
-                        {{ c.nombre }} ({{ c.vehiculo }})
-                    </option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn-submit" [disabled]="clienteForm.invalid">Guardar</button>
+            <button type="submit" class="btn-submit" [disabled]="clienteForm.invalid">Guardar Cliente</button>
         </form>
-    </div>
-</div>
-
-<!-- History Modal -->
-<div class="modal-overlay" *ngIf="showHistoryModal" (click)="closeHistory()">
-    <div class="modal-content history-modal" (click)="$event.stopPropagation()">
-        <button class="close-btn" (click)="closeHistory()">&times;</button>
-        <h2>Historial: {{ historyCliente?.nombre }} {{ historyCliente?.apellido }}</h2>
-
-        <div class="history-actions">
-             <button class="btn-danger" (click)="deleteDeliveredHistory()">
-                <i class="fas fa-trash-alt"></i> Eliminar Entregados
-            </button>
-            <button class="btn-danger-dark" (click)="clearAllHistory()">
-                <i class="fas fa-bomb"></i> Limpiar Todo
-            </button>
-        </div>
-
-        <div class="table-responsive">
-            <table class="clientes-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Fecha</th>
-                        <th>Estado</th>
-                        <th>Total</th>
-                        <th>Detalles</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let pedido of historyPedidos">
-                        <td>#{{ pedido.id }}</td>
-                         <td>{{ pedido.fecha | date:'short' }}</td>
-                        <td><span class="badge" [ngClass]="pedido.estado.toLowerCase()">{{ pedido.estado }}</span></td>
-                        <td>${{ pedido.total }}</td>
-                        <td>
-                            <ul class="detail-list">
-                                <li *ngFor="let d of pedido.detalles">
-                                    {{ d.cantidad }}x {{ d.producto.nombre }}
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                     <tr *ngIf="historyPedidos.length === 0">
-                        <td colspan="5" class="empty-message">No hay historial disponible.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 </div>

@@ -2,13 +2,18 @@
 
 <div class="admin-staff-container">
     <div class="header-section">
-      <h1>Gestión de Personal</h1>
+      <div class="header-info">
+          <h1>Gestión de Personal</h1>
+          <p>Administra administradores, cocineros, secretarios y cadetes.</p>
+      </div>
+      <!-- Botón de Agregar SIEMPRE VISIBLE -->
       <button class="btn-add" (click)="abrirModalNuevo()">
-        <i class="fas fa-plus"></i> Nuevo {{ 
+        <i class="fas fa-plus"></i> 
+        <span>Nuevo {{ 
             activeTab === 'admin' ? 'Administrador' : 
             activeTab === 'cocineros' ? 'Cocinero' : 
             activeTab === 'secretarios' ? 'Secretario' : 'Cadete' 
-        }}
+        }}</span>
       </button>
     </div>
 
@@ -72,9 +77,7 @@
             </td>
           </tr>
           <tr *ngIf="filteredStaff.length === 0">
-            <td colspan="5" style="text-align: center; padding: 2rem; color: #a0aec0;">
-                No hay personal registrado en esta categoría.
-            </td>
+            <td colspan="5" class="empty-message">No hay personal registrado en esta categoría.</td>
           </tr>
         </tbody>
       </table>
@@ -114,9 +117,7 @@
               </td>
             </tr>
             <tr *ngIf="cadetesList.length === 0">
-                <td colspan="5" style="text-align: center; padding: 2rem; color: #a0aec0;">
-                    No hay cadetes registrados.
-                </td>
+                <td colspan="5" class="empty-message">No hay cadetes registrados.</td>
             </tr>
           </tbody>
         </table>
