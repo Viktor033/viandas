@@ -21,7 +21,7 @@
         <div *ngFor="let pedido of pedidosPendientes" class="order-card">
           <div class="order-header">
             <span class="order-id">#{{ pedido.id }}</span>
-            <span class="order-time">{{ pedido.fecha | date:'HH:mm' }}</span>
+            <span class="order-time">{{ pedido.fecha }}</span>
           </div>
           <div class="order-user">
             <strong>{{ pedido.usuario?.nombre }} {{ pedido.usuario?.apellido }}</strong>
@@ -52,7 +52,7 @@
         <div *ngFor="let pedido of pedidosEnPreparacion" class="order-card preparing">
           <div class="order-header">
             <span class="order-id">#{{ pedido.id }}</span>
-            <span class="order-time">{{ pedido.fecha | date:'HH:mm' }}</span>
+            <span class="order-time">{{ pedido.fecha }}</span>
           </div>
           <div class="order-user">
             <strong>{{ pedido.usuario?.nombre }} {{ pedido.usuario?.apellido }}</strong>
@@ -83,7 +83,7 @@
         <div *ngFor="let pedido of pedidosRealizados" class="order-card finished">
           <div class="order-header">
             <span class="order-id">#{{ pedido.id }}</span>
-            <span class="order-time">{{ pedido.fecha | date:'HH:mm' }}</span>
+            <span class="order-time">{{ pedido.fecha }}</span>
           </div>
           <div class="order-user">
             <strong>{{ pedido.usuario?.nombre }} {{ pedido.usuario?.apellido }}</strong>

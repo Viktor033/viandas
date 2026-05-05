@@ -1,5 +1,5 @@
-import { Component, inject, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, HostListener, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
@@ -16,6 +16,7 @@ export class NavbarComponent {
     private authService = inject(AuthService);
     public cartService = inject(CartService);
     private router = inject(Router); // Injected Router
+    private platformId = inject(PLATFORM_ID);
 
     userName: string = 'Usuario';
     isAdmin: boolean = false;
@@ -32,10 +33,12 @@ export class NavbarComponent {
             this.isCocinero = user?.rol === 'COCINERO';
         });
 
-        // Escuchar evento de cierre desde el componente hijo
-        document.addEventListener('closeCart', () => {
-            this.showCart = false;
-        });
+        if (isPlatformBrowser(this.platformId)) {
+            // Escuchar evento de cierre desde el componente hijo
+            document.addEventListener('closeCart', () => {
+                this.showCart = false;
+            });
+        }
 
         // Cerrar menú móvil, de usuario y carrito al cambiar de ruta
         this.router.events.subscribe(() => {
