@@ -4,21 +4,31 @@
     <div class="header-section">
       <h1>Gestión de Personal</h1>
       <button class="btn-add" (click)="abrirModalNuevo()">
-        <i class="fas fa-plus"></i> {{ activeTab === 'staff' ? 'Nuevo Personal' : 'Nuevo Cadete' }}
+        <i class="fas fa-plus"></i> Nuevo {{ 
+            activeTab === 'admin' ? 'Administrador' : 
+            activeTab === 'cocineros' ? 'Cocinero' : 
+            activeTab === 'secretarios' ? 'Secretario' : 'Cadete' 
+        }}
       </button>
     </div>
 
     <div class="tabs-container">
-        <button class="tab-btn" [class.active]="activeTab === 'staff'" (click)="switchTab('staff')">
-            Personal Interno
+        <button class="tab-btn" [class.active]="activeTab === 'admin'" (click)="switchTab('admin')">
+            Administradores
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'cocineros'" (click)="switchTab('cocineros')">
+            Cocineros
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'secretarios'" (click)="switchTab('secretarios')">
+            Secretarios
         </button>
         <button class="tab-btn" [class.active]="activeTab === 'cadetes'" (click)="switchTab('cadetes')">
-            Cadetes / Repartidores
+            Cadetes
         </button>
     </div>
   
-    <!-- TAB PERSONAL -->
-    <div class="table-container" *ngIf="activeTab === 'staff'">
+    <!-- TAB STAFF (Admins, Cocineros, Secretarios) -->
+    <div class="table-container" *ngIf="activeTab !== 'cadetes'">
       <table class="staff-table">
         <thead>
           <tr>
@@ -30,14 +40,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of staffList">
+          <tr *ngFor="let user of filteredStaff">
             <td>
               <strong>{{ user.nombre }} {{ user.apellido }}</strong>
               <div class="vehicle-info" *ngIf="user.telefono">{{ user.telefono }}</div>
             </td>
             <td>{{ user.email }}</td>
             <td>
-              <span class="role-badge" [class.admin]="user.rol === 'ADMIN'" [class.cocina]="user.rol === 'COCINERO'" [class.secretario]="user.rol === 'SECRETARIO'">
+              <span class="role-badge" 
+                [class.admin]="user.rol === 'ADMIN'" 
+                [class.cocina]="user.rol === 'COCINERO'" 
+                [class.secretario]="user.rol === 'SECRETARIO'">
                 {{ user.rol }}
               </span>
             </td>
@@ -56,6 +69,11 @@
               <button class="btn-delete" (click)="eliminarUsuario(user)" title="Eliminar">
                 <i class="fas fa-trash"></i>
               </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredStaff.length === 0">
+            <td colspan="5" style="text-align: center; padding: 2rem; color: #a0aec0;">
+                No hay personal registrado en esta categoría.
             </td>
           </tr>
         </tbody>
@@ -105,7 +123,7 @@
       </div>
   
     <!-- Modal Personal -->
-    <div class="modal-overlay" *ngIf="showModal && activeTab === 'staff'">
+    <div class="modal-overlay" *ngIf="showModal && activeTab !== 'cadetes'">
       <div class="modal-content">
         <div class="modal-header">
           <h2>{{ isEditing ? 'Editar Personal' : 'Nuevo Personal' }}</h2>
@@ -133,8 +151,8 @@
             <div class="form-group">
                 <label>Rol</label>
                 <select [(ngModel)]="editingUser.rol" name="rol" required>
-                  <option value="COCINERO">COCINERO</option>
                   <option value="ADMIN">ADMIN</option>
+                  <option value="COCINERO">COCINERO</option>
                   <option value="SECRETARIO">SECRETARIO</option>
                 </select>
             </div>

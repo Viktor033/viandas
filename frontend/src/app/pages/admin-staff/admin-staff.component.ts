@@ -17,7 +17,7 @@ export class AdminStaffComponent implements OnInit {
   private cadeteService = inject(CadeteService);
   private platformId = inject(PLATFORM_ID);
   
-  activeTab: 'staff' | 'cadetes' = 'staff';
+  activeTab: 'admin' | 'cocineros' | 'secretarios' | 'cadetes' = 'admin';
   staffList: Cliente[] = [];
   cadetesList: Cadete[] = [];
   
@@ -74,16 +74,27 @@ export class AdminStaffComponent implements OnInit {
     });
   }
 
-  switchTab(tab: 'staff' | 'cadetes'): void {
+  get filteredStaff(): Cliente[] {
+    if (this.activeTab === 'admin') return this.staffList.filter(u => u.rol === 'ADMIN');
+    if (this.activeTab === 'cocineros') return this.staffList.filter(u => u.rol === 'COCINERO');
+    if (this.activeTab === 'secretarios') return this.staffList.filter(u => u.rol === 'SECRETARIO');
+    return [];
+  }
+
+  switchTab(tab: 'admin' | 'cocineros' | 'secretarios' | 'cadetes'): void {
     this.activeTab = tab;
   }
 
   abrirModalNuevo(): void {
-    if (this.activeTab === 'staff') {
-      this.editingUser = this.getEmptyUser();
-      this.passwordTemp = '';
-    } else {
+    if (this.activeTab === 'cadetes') {
       this.editingCadete = this.getEmptyCadete();
+    } else {
+      this.editingUser = this.getEmptyUser();
+      // Set default role based on current tab
+      if (this.activeTab === 'admin') this.editingUser.rol = 'ADMIN';
+      if (this.activeTab === 'cocineros') this.editingUser.rol = 'COCINERO';
+      if (this.activeTab === 'secretarios') this.editingUser.rol = 'SECRETARIO';
+      this.passwordTemp = '';
     }
     this.isEditing = false;
     this.showModal = true;
@@ -107,10 +118,10 @@ export class AdminStaffComponent implements OnInit {
   }
 
   guardar(): void {
-    if (this.activeTab === 'staff') {
-      this.guardarUsuario();
-    } else {
+    if (this.activeTab === 'cadetes') {
       this.guardarCadete();
+    } else {
+      this.guardarUsuario();
     }
   }
 
