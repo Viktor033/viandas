@@ -1,98 +1,76 @@
 <div class="admin-staff-container">
-    <div class="header-section">
-        <h1>👥 Gestión de Personal</h1>
-        <button class="btn-add" (click)="abrirModalNuevo()">
-            <i class="fas fa-plus"></i> Nuevo Personal
-        </button>
+    <div class="header">
+      <h1>Gestión de Personal</h1>
+      <button class="btn-add" (click)="abrirModalNuevo()">
+        <i class="fas fa-plus"></i> Nuevo Personal
+      </button>
     </div>
-
-    <div class="table-container">
-        <table class="staff-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre Completo</th>
-                    <th>Teléfono</th>
-                    <th>Rol</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of staff">
-                    <td>#{{ user.id }}</td>
-                    <td>
-                        <div class="user-info">
-                            <span class="user-name">{{ user.nombre }} {{ user.apellido }}</span>
-                        </div>
-                    </td>
-                    <td>{{ user.telefono }}</td>
-                    <td>
-                        <span class="role-badge" [class.admin]="user.rol === 'ADMIN'" [class.cocina]="user.rol === 'COCINERO'">
-                            {{ user.rol }}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="status-badge" [class.active]="user.activo" [class.inactive]="!user.activo">
-                            {{ user.activo ? 'Activo' : 'Inactivo' }}
-                        </span>
-                    </td>
-                    <td class="actions">
-                        <button class="btn-edit" (click)="editarUsuario(user)" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-delete" (click)="eliminarUsuario(user.id!)" title="Eliminar">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr *ngIf="staff.length === 0">
-                    <td colspan="6" class="empty-table">No hay personal registrado</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Modal para crear/editar -->
-    <div class="modal-overlay" *ngIf="editingUser">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>{{ isNewUser ? 'Crear Nuevo Personal' : 'Editar Personal' }}</h2>
-                <button class="close-btn" (click)="cerrarModal()">&times;</button>
-            </div>
-            <form (ngSubmit)="guardarUsuario()" #staffForm="ngForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Nombre</label>
-                        <input type="text" name="nombre" [(ngModel)]="editingUser!.nombre" required placeholder="Ej: Juan">
-                    </div>
-                    <div class="form-group">
-                        <label>Apellido</label>
-                        <input type="text" name="apellido" [(ngModel)]="editingUser!.apellido" required placeholder="Ej: Pérez">
-                    </div>
-                    <div class="form-group">
-                        <label>Teléfono (Usuario para Login)</label>
-                        <input type="text" name="telefono" [(ngModel)]="editingUser!.telefono" required placeholder="Ej: 1122334455">
-                    </div>
-                    <div class="form-group">
-                        <label>Rol</label>
-                        <select name="rol" [(ngModel)]="editingUser!.rol" required>
-                            <option value="COCINERO">Cocina</option>
-                            <option value="ADMIN">Administrador</option>
-                        </select>
-                    </div>
-                    <div class="form-group toggle-group">
-                        <label>Estado Activo</label>
-                        <input type="checkbox" name="activo" [(ngModel)]="editingUser!.activo">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
-                    <button type="submit" class="btn-save" [disabled]="!staffForm.form.valid">
-                        {{ isNewUser ? 'Crear' : 'Guardar Cambios' }}
-                    </button>
-                </div>
-            </form>
+  
+    <div class="staff-grid">
+      <div *ngFor="let user of staffList" class="staff-card">
+        <div class="user-info">
+          <div class="avatar">{{ user.nombre.charAt(0) }}{{ user.apellido.charAt(0) }}</div>
+          <div class="details">
+            <h3>{{ user.nombre }} {{ user.apellido }}</h3>
+            <span class="role-badge" [class.admin]="user.rol === 'ADMIN'">{{ user.rol }}</span>
+            <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+          </div>
         </div>
+        <div class="actions">
+          <button class="btn-edit" (click)="editarUsuario(user)">
+            <i class="fas fa-edit"></i> Editar
+          </button>
+          <button class="btn-delete" (click)="eliminarUsuario(user)">
+            <i class="fas fa-trash"></i> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal -->
+    <div class="modal-overlay" *ngIf="showModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>{{ isEditing ? 'Editar Personal' : 'Nuevo Personal' }}</h2>
+          <button class="close-btn" (click)="cerrarModal()">&times;</button>
+        </div>
+        
+        <form (ngSubmit)="guardarUsuario()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" [(ngModel)]="editingUser.nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+              <label>Apellido</label>
+              <input type="text" [(ngModel)]="editingUser.apellido" name="apellido" required>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" [(ngModel)]="editingUser.email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input type="text" [(ngModel)]="editingUser.telefono" name="telefono">
+            </div>
+            <div class="form-group">
+                <label>Rol</label>
+                <select [(ngModel)]="editingUser.rol" name="rol" required>
+                  <option value="COCINERO">COCINERO</option>
+                  <option value="ADMIN">ADMIN</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Contraseña (Clave General)</label>
+                <input type="password" [(ngModel)]="passwordTemp" name="password" [placeholder]="isEditing ? 'Dejar en blanco para no cambiar' : 'Clave de acceso'">
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn-save">Guardar</button>
+          </div>
+        </form>
+      </div>
     </div>
 </div>

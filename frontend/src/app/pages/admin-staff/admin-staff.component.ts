@@ -1,8 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClienteService, Cliente } from '../../services/cliente.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-staff',
@@ -12,92 +11,92 @@ import Swal from 'sweetalert2';
   styleUrls: ['./admin-staff.component.scss']
 })
 export class AdminStaffComponent implements OnInit {
-  private usuarioService = inject(ClienteService);
+  private clienteService = inject(ClienteService);
+  private platformId = inject(PLATFORM_ID);
   
-  usuarios: Cliente[] = [];
-  staff: Cliente[] = [];
-  
-  editingUser: Cliente | null = null;
+  staffList: Cliente[] = [];
+  showModal: boolean = false;
+  isEditing: boolean = false;
+  editingUser: Cliente = this.getEmptyUser();
+  passwordTemp: string = ''; // Para la clave general
   isNewUser = false;
 
   ngOnInit(): void {
     this.cargarUsuarios();
   }
 
-  cargarUsuarios(): void {
-    this.usuarioService.getClientes().subscribe({
-      next: (data) => {
-        this.usuarios = data;
-        // Filtrar solo Staff (Admin y Cocinero)
-        this.staff = data.filter(u => u.rol === 'ADMIN' || u.rol === 'COCINERO');
-      },
-      error: (err) => console.error('Error al cargar staff', err)
-    });
-  }
-
-  abrirModalNuevo(): void {
-    this.editingUser = {
+  getEmptyUser(): Cliente {
+    return {
       nombre: '',
       apellido: '',
       telefono: '',
       rol: 'COCINERO',
       activo: true
     };
-    this.isNewUser = true;
+  }
+
+  cargarUsuarios(): void {
+    this.clienteService.getClientes().subscribe({
+      next: (data) => {
+        this.staffList = data.filter(u => u.rol === 'ADMIN' || u.rol === 'COCINERO');
+      },
+      error: (err) => console.error('Error al cargar staff', err)
+    });
+  }
+
+  cargarStaff(): void {
+    this.cargarUsuarios();
+  }
+
+  abrirModalNuevo(): void {
+    this.editingUser = this.getEmptyUser();
+    this.passwordTemp = '';
+    this.isEditing = false;
+    this.showModal = true;
   }
 
   editarUsuario(user: Cliente): void {
     this.editingUser = { ...user };
-    this.isNewUser = false;
+    this.passwordTemp = '';
+    this.isEditing = true;
+    this.showModal = true;
   }
 
   cerrarModal(): void {
-    this.editingUser = null;
+    this.showModal = false;
+    this.editingUser = this.getEmptyUser();
   }
 
   guardarUsuario(): void {
     if (!this.editingUser) return;
-
-    if (this.isNewUser) {
-      this.usuarioService.createCliente(this.editingUser as Cliente).subscribe({
-        next: () => {
-          Swal.fire('Éxito', 'Personal creado correctamente', 'success');
-          this.cargarUsuarios();
-          this.cerrarModal();
-        },
-        error: (err) => Swal.fire('Error', err.error?.message || 'Error al crear', 'error')
-      });
-    } else {
-      this.usuarioService.updateCliente(this.editingUser.id!, this.editingUser as Cliente).subscribe({
-        next: () => {
-          Swal.fire('Éxito', 'Personal actualizado', 'success');
-          this.cargarUsuarios();
-          this.cerrarModal();
-        },
-        error: (err) => Swal.fire('Error', 'Error al actualizar', 'error')
-      });
+    
+    if (this.passwordTemp) {
+      this.editingUser.password = this.passwordTemp;
     }
+
+    const obs = this.isEditing 
+      ? this.clienteService.updateCliente(this.editingUser.id!, this.editingUser)
+      : this.clienteService.createCliente(this.editingUser);
+
+    obs.subscribe({
+      next: () => {
+        this.cargarStaff();
+        this.cerrarModal();
+        alert(this.isEditing ? 'Usuario actualizado' : 'Usuario creado con éxito');
+      },
+      error: () => alert('Error al procesar la solicitud')
+    });
   }
 
-  eliminarUsuario(id: number): void {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: "Esta acción no se puede deshacer",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.usuarioService.deleteCliente(id).subscribe({
-          next: () => {
-            Swal.fire('Eliminado', 'El usuario ha sido eliminado', 'success');
-            this.cargarUsuarios();
-          }
-        });
-      }
-    });
+  eliminarUsuario(user: Cliente): void {
+    if (confirm(`¿Estás seguro de que deseas eliminar a ${user.nombre}?`)) {
+      this.clienteService.deleteCliente(user.id!).subscribe({
+        next: () => {
+          this.cargarStaff();
+          alert('Usuario eliminado correctamente');
+        },
+        error: () => alert('Error al eliminar usuario')
+      });
+    }
   }
 }

@@ -18,6 +18,7 @@ export interface Cliente {
     departamento?: string;
     observaciones?: string;
     cadete?: Cadete;
+    password?: string; // Para gestión de personal
 }
 
 @Injectable({
