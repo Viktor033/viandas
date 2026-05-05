@@ -56,6 +56,11 @@ public class PedidoController {
         return pedidoService.getAllPedidos();
     }
 
+    @GetMapping("/cocina")
+    public List<Pedido> getPedidosCocina() {
+        return pedidoService.getPedidosCocina();
+    }
+
     @PutMapping("/{id}/estado")
     public ResponseEntity<Pedido> actualizarEstado(@PathVariable Long id, @RequestBody String estado) {
         // El body vendrá como string simple o JSON value, aquí asumimos string simple

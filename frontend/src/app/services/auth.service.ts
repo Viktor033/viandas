@@ -57,6 +57,14 @@ export class AuthService {
         return localStorage.getItem('user_role');
     }
 
+    isAdmin(): boolean {
+        return this.getUserRole() === 'ADMIN';
+    }
+
+    isCocinero(): boolean {
+        return this.getUserRole() === 'COCINERO';
+    }
+
     getCurrentUser(): string {
         const user = this.currentUserSubject.value;
         return user ? (user.nombre || 'Usuario') : 'Usuario';

@@ -19,6 +19,7 @@ export class NavbarComponent {
 
     userName: string = 'Usuario';
     isAdmin: boolean = false;
+    isCocinero: boolean = false;
     showCart: boolean = false;
     showUserMenu = false; // Moved declaration here
     isMobileMenuOpen = false; // Added new property
@@ -28,6 +29,7 @@ export class NavbarComponent {
         this.authService.currentUser$.subscribe(user => {
             this.userName = user ? user.nombre : 'Usuario';
             this.isAdmin = user?.rol === 'ADMIN';
+            this.isCocinero = user?.rol === 'COCINERO';
         });
 
         // Escuchar evento de cierre desde el componente hijo

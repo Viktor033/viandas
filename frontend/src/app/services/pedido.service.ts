@@ -88,6 +88,10 @@ export class PedidoService {
         return this.http.get<Pedido[]>(`${this.apiUrl}/admin/todos`);
     }
 
+    getPedidosCocina(): Observable<Pedido[]> {
+        return this.http.get<Pedido[]>(`${this.apiUrl}/cocina`);
+    }
+
     updateEstado(id: number, estado: string): Observable<Pedido> {
         return this.http.put<Pedido>(`${this.apiUrl}/${id}/estado`, JSON.stringify(estado), {
             headers: { 'Content-Type': 'application/json' }

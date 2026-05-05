@@ -19,6 +19,9 @@
             <a routerLink="/admin/clientes" routerLinkActive="active" (click)="isMobileMenuOpen = false">Clientes</a>
             <a routerLink="/admin/pedidos" routerLinkActive="active" (click)="isMobileMenuOpen = false">Pedidos</a>
           </li>
+          <li *ngIf="isCocinero || isAdmin" class="admin-links">
+            <a routerLink="/cocina" routerLinkActive="active" (click)="isMobileMenuOpen = false">Cocina Dashboard</a>
+          </li>
         </ul>
     
         <div class="user-section">

@@ -127,6 +127,12 @@ public class PedidoService {
         all.sort((a, b) -> b.getFecha().compareTo(a.getFecha()));
         return all;
     }
+    
+    public List<Pedido> getPedidosCocina() {
+        return pedidoRepository.findByEstadoInOrderByFechaDesc(
+            java.util.Arrays.asList(EstadoPedido.PENDIENTE, EstadoPedido.EN_PREPARACION, EstadoPedido.EN_CAMINO)
+        );
+    }
 
     @Transactional
     public Pedido actualizarEstadoPedido(Long id, String estado) {

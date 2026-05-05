@@ -38,6 +38,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
         List<Pedido> findByEstado(com.manoplas.viandas.model.EstadoPedido estado);
 
+        List<Pedido> findByEstadoInOrderByFechaDesc(java.util.List<com.manoplas.viandas.model.EstadoPedido> estados);
+
         // Para listar en el panel admin (excluyendo archivados si se desea)
         // Pero por defecto findAll trae todo. Podemos filtrar en service o frontend.
 
