@@ -24,7 +24,7 @@
             <span class="order-time">{{ pedido.fecha | date:'HH:mm' }}</span>
           </div>
           <div class="order-user">
-            <strong>{{ pedido.usuario.nombre }} {{ pedido.usuario.apellido }}</strong>
+            <strong>{{ pedido.usuario?.nombre }} {{ pedido.usuario?.apellido }}</strong>
           </div>
           <div class="order-details">
             <ul>
@@ -55,7 +55,7 @@
             <span class="order-time">{{ pedido.fecha | date:'HH:mm' }}</span>
           </div>
           <div class="order-user">
-            <strong>{{ pedido.usuario.nombre }} {{ pedido.usuario.apellido }}</strong>
+            <strong>{{ pedido.usuario?.nombre }} {{ pedido.usuario?.apellido }}</strong>
           </div>
           <div class="order-details">
             <ul>
@@ -86,7 +86,7 @@
             <span class="order-time">{{ pedido.fecha | date:'HH:mm' }}</span>
           </div>
           <div class="order-user">
-            <strong>{{ pedido.usuario.nombre }} {{ pedido.usuario.apellido }}</strong>
+            <strong>{{ pedido.usuario?.nombre }} {{ pedido.usuario?.apellido }}</strong>
           </div>
           <div class="order-details">
             <ul>
