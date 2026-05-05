@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PedidoService, Pedido } from '../../services/pedido.service';
 import { interval, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class CocinaDashboardComponent implements OnInit, OnDestroy {
   private pedidoService = inject(PedidoService);
+  private platformId = inject(PLATFORM_ID);
   
   pedidosPendientes: Pedido[] = [];
   pedidosEnPreparacion: Pedido[] = [];
@@ -23,9 +24,11 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarPedidos();
     // Auto-refresh cada 30 segundos para el "tiempo real"
-    this.refreshSubscription = interval(30000).subscribe(() => {
-      this.cargarPedidos();
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.refreshSubscription = interval(30000).subscribe(() => {
+        this.cargarPedidos();
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -53,8 +56,10 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
   }
 
   private reproducirAlerta(): void {
-    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-    audio.play().catch(err => console.log('Error al reproducir sonido (posible bloqueo del navegador):', err));
+    if (isPlatformBrowser(this.platformId)) {
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+      audio.play().catch(err => console.log('Error al reproducir sonido (posible bloqueo del navegador):', err));
+    }
   }
 
   pasarAPreparacion(pedido: Pedido): void {
