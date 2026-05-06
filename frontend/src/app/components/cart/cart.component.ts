@@ -23,11 +23,6 @@ export class CartComponent {
     isProcessing: boolean = false;
     selectedPaymentMethod: string = 'EFECTIVO';
 
-    readonly DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-    diasPedido: { [dia: string]: boolean } = {
-        Lunes: false, Martes: false, Miércoles: false, Jueves: false, Viernes: false
-    };
-    esMensual = false;
 
     ngOnInit() {
         this.cartItems$.subscribe(items => {
@@ -40,16 +35,6 @@ export class CartComponent {
         // Por simplicidad, usaremos un output o controlaremos la visibilidad desde Navbar
     }
 
-    toggleTodoElMes() {
-        this.esMensual = !this.esMensual;
-        if (this.esMensual) {
-            this.DIAS.forEach(d => this.diasPedido[d] = true);
-        }
-    }
-
-    get diasSeleccionadosList(): string[] {
-        return this.DIAS.filter(d => this.diasPedido[d]);
-    }
 
     removeItem(item: CartItem) {
         if (item.cantidad > 1) {
@@ -101,10 +86,6 @@ export class CartComponent {
     confirmOrder(items: CartItem[]) {
         if (items.length === 0) return;
 
-        if (this.diasSeleccionadosList.length === 0 && !this.esMensual) {
-            Swal.fire('Sin días', 'Seleccioná al menos un día para el pedido.', 'warning');
-            return;
-        }
 
         this.isProcessing = true;
         const payload = {
@@ -114,8 +95,8 @@ export class CartComponent {
                 precioUnitario: i.producto.precio,
                 observaciones: i.observaciones || 'Común'
             })),
-            diasSeleccionados: this.diasSeleccionadosList.join(','),
-            esMensual: this.esMensual,
+            diasSeleccionados: '',
+            esMensual: false,
             metodoPago: this.selectedPaymentMethod
         };
 
@@ -172,8 +153,6 @@ export class CartComponent {
                         }
                     }).then((result) => {
                         this.cartService.clearCart();
-                        this.DIAS.forEach(d => this.diasPedido[d] = false);
-                        this.esMensual = false;
                         this.isProcessing = false;
                         this.closeModal();
 
@@ -186,7 +165,7 @@ export class CartComponent {
                 } else {
                     Swal.fire({
                         title: '¡Pedido Confirmado!',
-                        text: this.esMensual ? 'Tu pedido mensual fue registrado.' : `Tu pedido para ${this.diasSeleccionadosList.join(', ')} fue registrado.`,
+                        text: 'Tu pedido ha sido registrado con éxito.',
                         icon: 'success',
                         background: '#1a1a1a',
                         color: '#f8edda',
@@ -197,8 +176,6 @@ export class CartComponent {
                         }
                     }).then(() => {
                         this.cartService.clearCart();
-                        this.DIAS.forEach(d => this.diasPedido[d] = false);
-                        this.esMensual = false;
                         this.isProcessing = false;
                         this.closeModal();
                         this.router.navigate(['/mis-pedidos']);
