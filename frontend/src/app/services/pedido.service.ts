@@ -8,6 +8,7 @@ export interface DetallePedido {
     producto: { nombre: string; precio: number };
     cantidad: number;
     precioUnitario: number;
+    observaciones?: string;
 }
 
 export interface Pedido {
