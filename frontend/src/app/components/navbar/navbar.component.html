@@ -17,7 +17,6 @@
           
           <!-- Links de Administración (Solo Admin) -->
           <ng-container *ngIf="isAdmin">
-            <li><a routerLink="/menu" routerLinkActive="active" (click)="isMobileMenuOpen = false">Gestionar Platos</a></li>
             <li><a routerLink="/admin/clientes" routerLinkActive="active" (click)="isMobileMenuOpen = false">Clientes</a></li>
             <li><a routerLink="/admin/pedidos" routerLinkActive="active" (click)="isMobileMenuOpen = false">Pedidos</a></li>
             <li><a routerLink="/admin/personal" routerLinkActive="active" (click)="isMobileMenuOpen = false">Personal</a></li>
