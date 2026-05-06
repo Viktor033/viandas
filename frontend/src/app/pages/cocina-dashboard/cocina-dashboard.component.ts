@@ -69,7 +69,10 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
 
   cargarPedidos(): void {
     this.pedidoService.getPedidosCocina().subscribe({
-      next: (pedidos) => {
+      next: (pedidosRaw) => {
+        // Asegurar que no haya duplicados por ID (por si el backend devuelve repetidos)
+        const pedidos = Array.from(new Map(pedidosRaw.map(p => [p.id, p])).values());
+
         const nuevosPendientes = pedidos.filter(p => p.estado === 'PENDIENTE');
         
         // Si hay más pedidos pendientes que antes, sonar la alerta
@@ -110,12 +113,24 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
   finalizarPedido(pedido: Pedido): void {
     this.pedidoService.updateEstado(pedido.id, 'EN_CAMINO').subscribe({
       next: () => {
-        alert('¡Pedido Finalizado! El pedido ha pasado a la lista de repartos.');
         this.cargarPedidos();
       },
       error: (err) => {
         alert('No se pudo finalizar el pedido');
       }
     });
+  }
+
+  limpiarPedidosListos(): void {
+    if (this.pedidosRealizados.length === 0) return;
+
+    if (confirm(`¿Deseas quitar los ${this.pedidosRealizados.length} pedidos listos de la pantalla?`)) {
+      // Marcamos todos los "En Camino" como "Entregado" para que desaparezcan de la vista de cocina
+      this.pedidosRealizados.forEach(p => {
+        this.pedidoService.updateEstado(p.id, 'ENTREGADO').subscribe({
+          next: () => this.cargarPedidos()
+        });
+      });
+    }
   }
 }

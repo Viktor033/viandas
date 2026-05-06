@@ -2,9 +2,22 @@
   <header class="dashboard-header">
     <h1>👨‍🍳 Cocina</h1>
     <div class="status-indicators">
-      <span class="badge pending">Pendientes: {{ pedidosPendientes.length }}</span>
-      <span class="badge in-progress">En Preparación: {{ pedidosEnPreparacion.length }}</span>
-      <span class="badge finished">Realizados: {{ pedidosRealizados.length }}</span>
+      <div class="badge pending">
+        <span>Pendientes</span>
+        {{ pedidosPendientes.length }}
+      </div>
+      <div class="badge in-progress">
+        <span>Cocinando</span>
+        {{ pedidosEnPreparacion.length }}
+      </div>
+      <button 
+        class="btn-clear" 
+        *ngIf="pedidosRealizados.length > 0" 
+        (click)="limpiarPedidosListos()"
+        title="Quitar pedidos entregados de la vista">
+        <i class="fas fa-broom"></i>
+        Limpiar {{ pedidosRealizados.length }} Listos
+      </button>
     </div>
   </header>
 

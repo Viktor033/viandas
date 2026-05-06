@@ -58,6 +58,36 @@
           border: 1px solid #fed7d7;
         }
       }
+
+      .btn-clear {
+        background: #1a202c;
+        color: #edb110;
+        border: 1px solid #edb110;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+        i {
+          font-size: 1.1rem;
+        }
+
+        &:hover {
+          background: #edb110;
+          color: #1a202c;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 15px rgba(237, 177, 16, 0.3);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
     }
   }
 
