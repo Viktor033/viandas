@@ -22,9 +22,9 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cargarPedidos();
-    // Auto-refresh cada 30 segundos para el "tiempo real"
+    // Auto-refresh cada 3 segundos para el "tiempo real"
     if (isPlatformBrowser(this.platformId)) {
-      this.refreshSubscription = interval(30000).subscribe(() => {
+      this.refreshSubscription = interval(3000).subscribe(() => {
         this.cargarPedidos();
       });
     }
