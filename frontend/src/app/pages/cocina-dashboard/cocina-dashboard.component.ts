@@ -18,6 +18,9 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
   pedidosEnPreparacion: Pedido[] = [];
   pedidosRealizados: Pedido[] = [];
   
+  resumenProductos: any[] = [];
+  totalGeneralViandas: number = 0;
+  
   private refreshSubscription?: Subscription;
 
   ngOnInit(): void {
@@ -34,6 +37,36 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
     this.refreshSubscription?.unsubscribe();
   }
 
+  calcularResumen(): void {
+    const mapa = new Map<string, { nombre: string, total: number, sinSal: number }>();
+    let totalViandas = 0;
+
+    // Solo contamos Pendientes y En Preparación para la cocina
+    const pedidosActivos = [...this.pedidosPendientes, ...this.pedidosEnPreparacion];
+
+    pedidosActivos.forEach(pedido => {
+      pedido.detalles.forEach(detalle => {
+        const nombre = detalle.producto.nombre;
+        const cantidad = detalle.cantidad;
+        const esSinSal = detalle.observaciones?.toLowerCase().includes('sin sal') || 
+                         detalle.observaciones?.toLowerCase().includes('s/s');
+
+        if (!mapa.has(nombre)) {
+          mapa.set(nombre, { nombre, total: 0, sinSal: 0 });
+        }
+
+        const stats = mapa.get(nombre)!;
+        stats.total += cantidad;
+        if (esSinSal) stats.sinSal += cantidad;
+        
+        totalViandas += cantidad;
+      });
+    });
+
+    this.resumenProductos = Array.from(mapa.values());
+    this.totalGeneralViandas = totalViandas;
+  }
+
   cargarPedidos(): void {
     this.pedidoService.getPedidosCocina().subscribe({
       next: (pedidos) => {
@@ -47,6 +80,8 @@ export class CocinaDashboardComponent implements OnInit, OnDestroy {
         this.pedidosPendientes = nuevosPendientes;
         this.pedidosEnPreparacion = pedidos.filter(p => p.estado === 'EN_PREPARACION');
         this.pedidosRealizados = pedidos.filter(p => p.estado === 'EN_CAMINO');
+        
+        this.calcularResumen();
       },
       error: (err) => {
         console.error('Error al cargar pedidos de cocina', err);
