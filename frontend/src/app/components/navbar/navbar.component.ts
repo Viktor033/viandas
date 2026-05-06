@@ -1,6 +1,7 @@
 import { Component, inject, HostListener, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
+import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { CartComponent } from '../cart/cart.component';
@@ -17,6 +18,9 @@ export class NavbarComponent {
     public cartService = inject(CartService);
     private router = inject(Router); // Injected Router
     private platformId = inject(PLATFORM_ID);
+    private location = inject(Location);
+
+    showBackButton: boolean = false;
 
     userName: string = 'Usuario';
     isAdmin: boolean = false;
@@ -41,11 +45,26 @@ export class NavbarComponent {
         }
 
         // Cerrar menú móvil, de usuario y carrito al cambiar de ruta
-        this.router.events.subscribe(() => {
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+        ).subscribe((event: any) => {
             this.isMobileMenuOpen = false;
             this.showUserMenu = false;
             this.showCart = false;
+            this.checkBackButton(event.urlAfterRedirects);
         });
+
+        // Initial check
+        this.checkBackButton(this.router.url);
+    }
+
+    checkBackButton(url: string) {
+        // No mostrar en la pantalla principal (home) ni en login (aunque login no tiene navbar)
+        this.showBackButton = !url.includes('/home') && url !== '/';
+    }
+
+    goBack() {
+        this.location.back();
     }
 
     toggleCart() {
