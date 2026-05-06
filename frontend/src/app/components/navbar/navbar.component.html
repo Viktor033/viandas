@@ -29,7 +29,7 @@
         </ul>
     
         <div class="user-section">
-          <div class="cart-trigger" *ngIf="!isAdmin" (click)="toggleCart()">
+          <div class="cart-trigger" *ngIf="!isAdmin && !isCocinero" (click)="toggleCart()">
             <i class="fas fa-shopping-cart"></i>
             <span class="badge" *ngIf="(cartService.cart$ | async)?.length as count">{{ count }}</span>
             <span class="mobile-label">Ver Carrito</span>
@@ -46,10 +46,10 @@
             </div>
     
             <div class="dropdown-menu" [class.show]="showUserMenu">
-                <a *ngIf="!isAdmin" routerLink="/perfil" class="dropdown-item">
+                <a *ngIf="!isAdmin && !isCocinero" routerLink="/perfil" class="dropdown-item">
                     <i class="fas fa-user-cog"></i> Mi Perfil
                 </a>
-                <a *ngIf="!isAdmin" routerLink="/mis-pedidos" class="dropdown-item">
+                <a *ngIf="!isAdmin && !isCocinero" routerLink="/mis-pedidos" class="dropdown-item">
                     <i class="fas fa-receipt"></i> Mis Pedidos
                 </a>
                 <div class="dropdown-divider"></div>
