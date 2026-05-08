@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ClienteService, Cliente } from '../../services/cliente.service';
 import { CadeteService, Cadete } from '../../services/cadete.service';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-staff',
@@ -131,19 +132,25 @@ export class AdminStaffComponent implements OnInit {
       next: () => {
         this.cargarStaff();
         this.cerrarModal();
+        Swal.fire({
+          icon: 'success',
+          title: this.isEditing ? '✅ Personal actualizado' : '✅ Personal agregado',
+          text: this.isEditing ? 'Los datos fueron guardados.' : 'El nuevo integrante fue registrado correctamente.',
+          toast: true,
+          position: 'top-end',
+          timer: 2500,
+          showConfirmButton: false,
+          timerProgressBar: true,
+        });
       },
       error: (err) => {
-        // Intentar extraer el mensaje del backend
-        let msg = 'Error al guardar. Verificá que el teléfono no esté ya registrado.';
+        let msg = 'Verificá que el teléfono no esté ya registrado.';
         if (err?.error?.message) {
           msg = err.error.message;
         } else if (typeof err?.error === 'string') {
-          try {
-            const parsed = JSON.parse(err.error);
-            msg = parsed.message || msg;
-          } catch { msg = err.error; }
+          try { const p = JSON.parse(err.error); msg = p.message || msg; } catch { msg = err.error; }
         }
-        alert('\u274C Error: ' + msg);
+        Swal.fire({ icon: 'error', title: '❌ Error al guardar', text: msg, confirmButtonColor: '#3182ce' });
       }
     });
   }
@@ -157,8 +164,18 @@ export class AdminStaffComponent implements OnInit {
       next: () => {
         this.cargarCadetes();
         this.cerrarModal();
+        Swal.fire({
+          icon: 'success',
+          title: this.isEditing ? '✅ Cadete actualizado' : '✅ Cadete agregado',
+          text: this.isEditing ? 'Los datos fueron guardados.' : 'El cadete fue registrado correctamente.',
+          toast: true,
+          position: 'top-end',
+          timer: 2500,
+          showConfirmButton: false,
+          timerProgressBar: true,
+        });
       },
-      error: () => alert('Error al procesar la solicitud')
+      error: () => Swal.fire({ icon: 'error', title: '❌ Error', text: 'No se pudo procesar la solicitud.', confirmButtonColor: '#3182ce' })
     });
   }
 
@@ -169,20 +186,46 @@ export class AdminStaffComponent implements OnInit {
   }
 
   eliminarUsuario(user: Cliente): void {
-    if (confirm(`¿Estás seguro de que deseas eliminar a ${user.nombre}?`)) {
-      this.clienteService.deleteCliente(user.id!).subscribe({
-        next: () => this.cargarStaff(),
-        error: () => alert('Error al eliminar usuario')
-      });
-    }
+    Swal.fire({
+      title: `¿Eliminar a ${user.nombre}?`,
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e53e3e',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Sí, eliminar'
+    }).then(r => {
+      if (r.isConfirmed) {
+        this.clienteService.deleteCliente(user.id!).subscribe({
+          next: () => {
+            this.cargarStaff();
+            Swal.fire({ icon: 'success', title: 'Eliminado', toast: true, position: 'top-end', timer: 2000, showConfirmButton: false });
+          },
+          error: () => Swal.fire({ icon: 'error', title: 'Error al eliminar', confirmButtonColor: '#3182ce' })
+        });
+      }
+    });
   }
 
   eliminarCadete(cadete: Cadete): void {
-    if (confirm(`¿Estás seguro de que deseas eliminar al cadete ${cadete.nombre}?`)) {
-      this.cadeteService.deleteCadete(cadete.id!).subscribe({
-        next: () => this.cargarCadetes(),
-        error: () => alert('Error al eliminar cadete')
-      });
-    }
+    Swal.fire({
+      title: `¿Eliminar cadete ${cadete.nombre}?`,
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e53e3e',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Sí, eliminar'
+    }).then(r => {
+      if (r.isConfirmed) {
+        this.cadeteService.deleteCadete(cadete.id!).subscribe({
+          next: () => {
+            this.cargarCadetes();
+            Swal.fire({ icon: 'success', title: 'Cadete eliminado', toast: true, position: 'top-end', timer: 2000, showConfirmButton: false });
+          },
+          error: () => Swal.fire({ icon: 'error', title: 'Error al eliminar', confirmButtonColor: '#3182ce' })
+        });
+      }
+    });
   }
 }
