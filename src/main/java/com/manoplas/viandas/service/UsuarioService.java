@@ -34,36 +34,10 @@ public class UsuarioService {
     }
 
     public Usuario save(Usuario usuario) {
-        // Verificar si existe por teléfono
-        Optional<Usuario> existingUser = usuarioRepository.findByTelefono(usuario.getTelefono());
-
-        if (existingUser.isPresent()) {
-            Usuario existing = existingUser.get();
-            // Permitir edición del mismo usuario
-            if (usuario.getId() != null && usuario.getId().equals(existing.getId())) {
-                // Continuar normal
-            } else if (Boolean.TRUE.equals(existing.getActivo())) {
-                // Existe y esta ACTIVO -> Error
-                throw new RuntimeException("El teléfono " + usuario.getTelefono() + " ya está en uso.");
-            } else {
-                // Existe y esta INACTIVO -> Reactivar
-                System.out.println("REACTIVANDO USUARIO: " + existing.getNombre());
-                existing.setActivo(true);
-                existing.setNombre(usuario.getNombre());
-                existing.setApellido(usuario.getApellido());
-                existing.setDireccion(usuario.getDireccion());
-                existing.setEmail(usuario.getEmail());
-                existing.setZona(usuario.getZona());
-                // Actualizar otros campos necesarios
-                return usuarioRepository.save(existing);
-            }
-        }
-
         if (usuario.getId() == null) {
             usuario.setFechaRegistro(LocalDate.now());
             if (usuario.getActivo() == null)
                 usuario.setActivo(true);
-            // Default role if not set
             if (usuario.getRol() == null)
                 usuario.setRol("USUARIO");
         }
