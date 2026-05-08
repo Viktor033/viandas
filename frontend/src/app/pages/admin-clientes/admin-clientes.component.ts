@@ -64,7 +64,7 @@ export class AdminClientesComponent implements OnInit {
   loadClientes() {
     this.clienteService.getClientes().subscribe({
       next: (res) => {
-        this.clientes = res.filter(u => u.rol !== 'ADMIN' && u.activo !== false);
+        this.clientes = res.filter(u => u.rol === 'USUARIO' && u.activo !== false);
         this.isLoading = false;
       },
       error: (err) => {

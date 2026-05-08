@@ -10,14 +10,14 @@
         <span>Cocinando</span>
         {{ pedidosEnPreparacion.length }}
       </div>
-      <button 
-        class="btn-clear" 
-        *ngIf="pedidosRealizados.length > 0" 
-        (click)="limpiarPedidosListos()"
-        title="Quitar pedidos entregados de la vista">
-        <i class="fa-solid fa-broom"></i>
-        Limpiar {{ pedidosRealizados.length }} Listos
-      </button>
+      <div class="summary-actions">
+            <button class="btn-clean" (click)="limpiarPedidosListos()" [disabled]="pedidosRealizados.length === 0">
+                <i class="fas fa-broom"></i> Limpiar Listos
+            </button>
+            <button class="btn-resumen" routerLink="/cocina/resumen">
+                <i class="fas fa-table"></i> Ver Totales Semanales
+            </button>
+        </div>
     </div>
   </header>
 

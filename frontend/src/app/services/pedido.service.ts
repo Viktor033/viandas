@@ -46,6 +46,18 @@ export interface ReporteDiarioCompleto {
     cantidadPedidos: number;
 }
 
+export interface DiaCounts {
+    normal: number;
+    sinSal: number;
+}
+
+export interface ResumenSemanal {
+    totalesSemanales: { [key: string]: { [key: string]: DiaCounts } };
+    totalesDiarios: { [key: string]: number };
+    totalesDiariosConEspeciales: { [key: string]: number };
+    totalesFinSemana: { [key: string]: { [key: string]: number } };
+}
+
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -127,5 +139,9 @@ export class PedidoService {
 
     deleteAllPedidosByCliente(clienteId: number): Observable<number> {
         return this.http.delete<number>(`${this.apiUrl}/admin/cliente/${clienteId}/todos`);
+    }
+
+    getResumenSemanal(): Observable<ResumenSemanal> {
+        return this.http.get<ResumenSemanal>(`${this.apiUrl}/cocina/resumen-semanal`);
     }
 }

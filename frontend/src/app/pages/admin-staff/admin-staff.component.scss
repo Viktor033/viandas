@@ -1,5 +1,6 @@
 .admin-staff-container {
-    padding: 100px 2rem 2rem 2rem; /* Espacio para la navbar fija */
+    padding: 100px 2rem 2rem 2rem;
+    /* Espacio para la navbar fija */
     max-width: 1200px;
     margin: 0 auto;
     font-family: 'Inter', sans-serif;
@@ -68,6 +69,7 @@
 
             &.active {
                 color: #3182ce;
+
                 &::after {
                     transform: scaleX(1);
                 }
@@ -113,9 +115,20 @@
                     font-size: 0.75rem;
                     font-weight: 700;
 
-                    &.admin { background: #e3f2fd; color: #1976d2; }
-                    &.cocina { background: #fbe9e7; color: #d84315; }
-                    &.secretario { background: #f3e5f5; color: #7b1fa2; }
+                    &.admin {
+                        background: #e3f2fd;
+                        color: #1976d2;
+                    }
+
+                    &.cocina {
+                        background: #fbe9e7;
+                        color: #d84315;
+                    }
+
+                    &.secretario {
+                        background: #f3e5f5;
+                        color: #7b1fa2;
+                    }
                 }
 
                 .status-badge {
@@ -123,9 +136,16 @@
                     border-radius: 20px;
                     font-size: 0.75rem;
                     font-weight: 700;
-                    
-                    &.active { background: #f0fff4; color: #38a169; }
-                    &.inactive { background: #fff5f5; color: #e53e3e; }
+
+                    &.active {
+                        background: #f0fff4;
+                        color: #38a169;
+                    }
+
+                    &.inactive {
+                        background: #fff5f5;
+                        color: #e53e3e;
+                    }
                 }
 
                 .vehicle-info {
@@ -158,19 +178,28 @@
                     &.btn-edit {
                         background: #ebf8ff;
                         color: #3182ce;
-                        &:hover { background: #bee3f8; }
+
+                        &:hover {
+                            background: #bee3f8;
+                        }
                     }
 
                     &.btn-email {
                         background: #f0fff4;
                         color: #38a169;
-                        &:hover { background: #c6f6d5; }
+
+                        &:hover {
+                            background: #c6f6d5;
+                        }
                     }
 
                     &.btn-delete {
                         background: #fff5f5;
                         color: #e53e3e;
-                        &:hover { background: #fed7d7; }
+
+                        &:hover {
+                            background: #fed7d7;
+                        }
                     }
                 }
             }
@@ -219,7 +248,10 @@
                 font-size: 1.5rem;
                 color: #a0aec0;
                 cursor: pointer;
-                &:hover { color: #4a5568; }
+
+                &:hover {
+                    color: #4a5568;
+                }
             }
         }
 
@@ -239,7 +271,8 @@
                 color: #4a5568;
             }
 
-            input, select {
+            input,
+            select {
                 padding: 0.75rem 1rem;
                 border: 1px solid #e2e8f0;
                 border-radius: 12px;
@@ -271,14 +304,20 @@
                     background: #f7fafc;
                     border: 1px solid #e2e8f0;
                     color: #4a5568;
-                    &:hover { background: #edf2f7; }
+
+                    &:hover {
+                        background: #edf2f7;
+                    }
                 }
 
                 &.btn-save {
                     background: #3182ce;
                     border: none;
                     color: white;
-                    &:hover { background: #2b6cb0; }
+
+                    &:hover {
+                        background: #2b6cb0;
+                    }
                 }
             }
         }
@@ -286,6 +325,11 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

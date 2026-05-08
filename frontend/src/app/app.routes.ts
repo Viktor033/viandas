@@ -13,6 +13,7 @@ export const routes: Routes = [
     { path: 'admin/pedidos', loadComponent: () => import('./pages/admin-pedidos/admin-pedidos.component').then(m => m.AdminPedidosComponent) },
     { path: 'admin/personal', loadComponent: () => import('./pages/admin-staff/admin-staff.component').then(m => m.AdminStaffComponent) },
     { path: 'cocina', loadComponent: () => import('./pages/cocina-dashboard/cocina-dashboard.component').then(m => m.CocinaDashboardComponent) },
+    { path: 'cocina/resumen', loadComponent: () => import('./pages/cocina-resumen/cocina-resumen.component').then(m => m.CocinaResumenComponent) },
     { path: 'pago-exitoso', loadComponent: () => import('./pages/payment-result/payment-result.component').then(m => m.PaymentResultComponent), data: { status: 'success' } },
     { path: 'pago-fallido', loadComponent: () => import('./pages/payment-result/payment-result.component').then(m => m.PaymentResultComponent), data: { status: 'failure' } },
     { path: 'pago-pendiente', loadComponent: () => import('./pages/payment-result/payment-result.component').then(m => m.PaymentResultComponent), data: { status: 'pending' } },

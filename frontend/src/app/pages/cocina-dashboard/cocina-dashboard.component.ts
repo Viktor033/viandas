@@ -3,10 +3,12 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PedidoService, Pedido } from '../../services/pedido.service';
 import { interval, Subscription } from 'rxjs';
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-cocina-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './cocina-dashboard.component.html',
   styleUrls: ['./cocina-dashboard.component.scss']
 })

@@ -157,6 +157,12 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.obtenerReporteDiario());
     }
 
+    @GetMapping("/cocina/resumen-semanal")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'COCINERO')")
+    public ResponseEntity<com.manoplas.viandas.dto.ResumenSemanalDTO> getResumenSemanal() {
+        return ResponseEntity.ok(pedidoService.obtenerResumenSemanal());
+    }
+
     @GetMapping("/admin/cliente/{clienteId}")
     public ResponseEntity<List<Pedido>> getPedidosByCliente(@PathVariable Long clienteId) {
         return ResponseEntity.ok(pedidoService.getPedidosByCliente(clienteId));
