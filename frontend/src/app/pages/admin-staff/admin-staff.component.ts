@@ -26,7 +26,6 @@ export class AdminStaffComponent implements OnInit {
   
   editingUser: Cliente = this.getEmptyUser();
   editingCadete: Cadete = this.getEmptyCadete();
-  passwordTemp: string = '';
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -94,7 +93,6 @@ export class AdminStaffComponent implements OnInit {
       if (this.activeTab === 'admin') this.editingUser.rol = 'ADMIN';
       if (this.activeTab === 'cocineros') this.editingUser.rol = 'COCINERO';
       if (this.activeTab === 'secretarios') this.editingUser.rol = 'SECRETARIO';
-      this.passwordTemp = '';
     }
     this.isEditing = false;
     this.showModal = true;
@@ -102,7 +100,6 @@ export class AdminStaffComponent implements OnInit {
 
   editarUsuario(user: Cliente): void {
     this.editingUser = { ...user };
-    this.passwordTemp = '';
     this.isEditing = true;
     this.showModal = true;
   }
@@ -126,10 +123,6 @@ export class AdminStaffComponent implements OnInit {
   }
 
   private guardarUsuario(): void {
-    if (this.passwordTemp) {
-      this.editingUser.password = this.passwordTemp;
-    }
-
     const obs = this.isEditing 
       ? this.clienteService.updateCliente(this.editingUser.id!, this.editingUser)
       : this.clienteService.createCliente(this.editingUser);
