@@ -297,4 +297,8 @@ public class PedidoService {
     public long deleteAllPedidosByCliente(Long clienteId) {
         return pedidoRepository.deleteByUsuarioId(clienteId);
     }
+
+    public List<Pedido> getPedidosByCliente(Long clienteId) {
+        return pedidoRepository.findByUsuarioIdOrderByFechaDesc(clienteId);
+    }
 }
