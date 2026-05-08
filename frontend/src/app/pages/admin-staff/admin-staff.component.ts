@@ -132,7 +132,19 @@ export class AdminStaffComponent implements OnInit {
         this.cargarStaff();
         this.cerrarModal();
       },
-      error: () => alert('Error al procesar la solicitud')
+      error: (err) => {
+        // Intentar extraer el mensaje del backend
+        let msg = 'Error al guardar. Verificá que el teléfono no esté ya registrado.';
+        if (err?.error?.message) {
+          msg = err.error.message;
+        } else if (typeof err?.error === 'string') {
+          try {
+            const parsed = JSON.parse(err.error);
+            msg = parsed.message || msg;
+          } catch { msg = err.error; }
+        }
+        alert('\u274C Error: ' + msg);
+      }
     });
   }
 
