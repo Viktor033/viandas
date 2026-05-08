@@ -32,9 +32,23 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Usuario usuario) {
-        if (usuarioService.findByTelefono(usuario.getTelefono()).isPresent()) {
-            return ResponseEntity.badRequest().body("{\"message\": \"El teléfono ya está registrado\"}");
+        java.util.Optional<Usuario> existing = usuarioService.findByTelefono(usuario.getTelefono());
+
+        if (existing.isPresent()) {
+            Usuario found = existing.get();
+            // Si el rol nuevo es de staff, actualizar el usuario existente
+            String rol = usuario.getRol();
+            if ("ADMIN".equals(rol) || "COCINERO".equals(rol) || "SECRETARIO".equals(rol)) {
+                found.setNombre(usuario.getNombre());
+                found.setApellido(usuario.getApellido());
+                found.setEmail(usuario.getEmail());
+                found.setRol(rol);
+                found.setActivo(true);
+                return ResponseEntity.ok(usuarioService.save(found));
+            }
+            return ResponseEntity.badRequest().body("{\"message\": \"El tel\u00e9fono ya est\u00e1 registrado\"}");
         }
+
         return ResponseEntity.ok(usuarioService.save(usuario));
     }
 
