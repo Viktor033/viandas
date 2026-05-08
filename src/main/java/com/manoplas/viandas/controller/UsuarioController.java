@@ -44,11 +44,12 @@ public class UsuarioController {
                 .map(user -> {
                     user.setNombre(userDetails.getNombre());
                     user.setApellido(userDetails.getApellido());
+                    user.setEmail(userDetails.getEmail());
                     user.setTelefono(userDetails.getTelefono());
                     user.setRol(userDetails.getRol());
                     user.setActivo(userDetails.getActivo());
 
-                    // Campos nuevos de Cliente
+                    // Campos de Cliente
                     user.setZona(userDetails.getZona());
                     user.setDireccion(userDetails.getDireccion());
                     user.setPiso(userDetails.getPiso());
