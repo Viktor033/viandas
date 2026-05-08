@@ -196,8 +196,24 @@ export class MenuComponent implements OnInit {
                 this.loadProductos();
                 this.showForm = false;
                 this.newProduct = { nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos', calorias: undefined };
+                Swal.fire({
+                    icon: 'success',
+                    title: '✅ ¡Vianda agregada!',
+                    text: 'El producto fue guardado correctamente.',
+                    timer: 2500,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true,
+                    background: 'var(--bg-card)',
+                    color: 'var(--text-color)',
+                    iconColor: '#edb110',
+                });
             },
-            error: err => console.error(err)
+            error: err => {
+                console.error(err);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo guardar el producto.', timer: 2500, showConfirmButton: false });
+            }
         });
     }
 }
