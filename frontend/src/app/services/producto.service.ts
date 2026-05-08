@@ -9,7 +9,8 @@ export interface Producto {
     precio: number;
     imagenUrl: string;
     activo: boolean;
-    dia?: string; // 'Lunes' | 'Martes' | 'Miércoles' | 'Jueves' | 'Viernes' | 'Todos'
+    dia?: string;
+    calorias?: number; // Solo visible y editable por admin
 }
 
 @Injectable({

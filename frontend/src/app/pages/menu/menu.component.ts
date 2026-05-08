@@ -36,12 +36,12 @@ export class MenuComponent implements OnInit {
 
     // Formulario nuevo producto
     newProduct: Partial<Producto> = {
-        nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos'
+        nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos', calorias: undefined
     };
 
     // Formulario editar producto
     editProduct: Producto = {
-        nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos'
+        nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos', calorias: undefined
     };
 
     // UI state para la opción de vianda en cada producto
@@ -195,7 +195,7 @@ export class MenuComponent implements OnInit {
             next: () => {
                 this.loadProductos();
                 this.showForm = false;
-                this.newProduct = { nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos' };
+                this.newProduct = { nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos', calorias: undefined };
             },
             error: err => console.error(err)
         });

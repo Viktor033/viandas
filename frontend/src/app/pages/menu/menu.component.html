@@ -35,12 +35,17 @@
             <input type="number" [(ngModel)]="newProduct.precio" name="precio" required>
           </div>
           <div class="form-group half">
-            <label>Día</label>
-            <select [(ngModel)]="newProduct.dia" name="dia">
-              <option value="Todos">Todos los días</option>
-              <option *ngFor="let d of DIAS" [value]="d">{{ d }}</option>
-            </select>
+            <label>Calorías (kcal)</label>
+            <input type="number" [(ngModel)]="newProduct.calorias" name="calorias" placeholder="Ej: 350">
           </div>
+        </div>
+
+        <div class="form-group half">
+          <label>Día</label>
+          <select [(ngModel)]="newProduct.dia" name="dia">
+            <option value="Todos">Todos los días</option>
+            <option *ngFor="let d of DIAS" [value]="d">{{ d }}</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -82,12 +87,17 @@
             <input type="number" [(ngModel)]="editProduct.precio" name="edit-precio" required>
           </div>
           <div class="form-group half">
-            <label>Día</label>
-            <select [(ngModel)]="editProduct.dia" name="edit-dia">
-              <option value="Todos">Todos los días</option>
-              <option *ngFor="let d of DIAS" [value]="d">{{ d }}</option>
-            </select>
+            <label>Calorías (kcal)</label>
+            <input type="number" [(ngModel)]="editProduct.calorias" name="edit-calorias" placeholder="Ej: 350">
           </div>
+        </div>
+
+        <div class="form-group">
+          <label>Día</label>
+          <select [(ngModel)]="editProduct.dia" name="edit-dia">
+            <option value="Todos">Todos los días</option>
+            <option *ngFor="let d of DIAS" [value]="d">{{ d }}</option>
+          </select>
         </div>
 
         <div class="form-group">

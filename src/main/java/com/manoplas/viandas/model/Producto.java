@@ -37,4 +37,10 @@ public class Producto {
      */
     @Column
     private String dia = "Todos";
+
+    /**
+     * Cantidad de calorías del producto (solo visible para admin/cocina).
+     */
+    @Column
+    private Integer calorias;
 }
