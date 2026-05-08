@@ -77,8 +77,10 @@
 <!-- Modal Form -->
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-        <button class="close-btn" (click)="closeModal()">&times;</button>
-        <h2>{{ isEditing ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
+        <div class="modal-header">
+            <h2>{{ isEditing ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
+            <button class="close-btn" (click)="closeModal()">&times;</button>
+        </div>
         
         <form [formGroup]="clienteForm" (ngSubmit)="saveCliente()">
             <div class="form-row">
@@ -93,13 +95,13 @@
             </div>
 
             <div class="form-group">
-                <label>Email (Para notificaciones)</label>
-                <input formControlName="email" placeholder="email@ejemplo.com">
+                <label>Teléfono (WhatsApp) *</label>
+                <input formControlName="telefono" placeholder="Ej: 3415555555">
             </div>
 
             <div class="form-group">
-                <label>Teléfono (WhatsApp) *</label>
-                <input formControlName="telefono" placeholder="Ej: 3415555555">
+                <label>Email (Para notificaciones)</label>
+                <input formControlName="email" placeholder="email@ejemplo.com">
             </div>
 
             <div class="form-group">
@@ -118,7 +120,15 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit" [disabled]="clienteForm.invalid">Guardar Cliente</button>
+            <div class="form-group">
+                <label>Observaciones</label>
+                <input formControlName="observaciones" placeholder="Alergias, preferencias...">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+                <button type="submit" class="btn-save" [disabled]="clienteForm.invalid">Guardar Cliente</button>
+            </div>
         </form>
     </div>
 </div>
