@@ -14,6 +14,7 @@
         <ul class="nav-links">
           <li><a routerLink="/home" routerLinkActive="active" (click)="isMobileMenuOpen = false">Inicio</a></li>
           <li><a routerLink="/menu" routerLinkActive="active" (click)="isMobileMenuOpen = false">Menú</a></li>
+          <li *ngIf="isMakro || isAdmin"><a routerLink="/menu-makro" routerLinkActive="active" (click)="isMobileMenuOpen = false">Menú Makro</a></li>
           
           <!-- Links de Administración (Solo Admin) -->
           <ng-container *ngIf="isAdmin">

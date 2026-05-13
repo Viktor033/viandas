@@ -48,7 +48,8 @@ export class AdminClientesComponent implements OnInit {
       departamento: [''],
       zona: [''],
       observaciones: [''],
-      cadete: [null]
+      cadete: [null],
+      esMakro: [false]
     });
   }
 
@@ -107,7 +108,8 @@ export class AdminClientesComponent implements OnInit {
         piso: cliente.piso,
         departamento: cliente.departamento,
         zona: cliente.zona,
-        observaciones: cliente.observaciones
+        observaciones: cliente.observaciones,
+        esMakro: cliente.esMakro || false
       });
       
       if (cliente.cadete) {
@@ -120,7 +122,7 @@ export class AdminClientesComponent implements OnInit {
     } else {
       this.isEditing = false;
       this.editingId = null;
-      this.clienteForm.reset({ cadete: null });
+      this.clienteForm.reset({ cadete: null, esMakro: false });
     }
     this.showModal = true;
   }

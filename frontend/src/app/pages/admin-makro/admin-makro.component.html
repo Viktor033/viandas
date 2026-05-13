@@ -6,9 +6,14 @@
             <h1>Módulo MAKRO</h1>
             <p>Gestión de producción y menú de Fin de Semana</p>
         </div>
-        <button class="btn-add" (click)="agregarMakro()">
-            <i class="fas fa-plus"></i> Nueva Opción Makro
-        </button>
+        <div class="actions-group">
+            <button class="btn-secondary" routerLink="/menu-makro">
+                <i class="fas fa-eye"></i> Vista Cliente
+            </button>
+            <button class="btn-add" (click)="agregarMakro()">
+                <i class="fas fa-plus"></i> Nueva Opción Makro
+            </button>
+        </div>
     </div>
 
     <div class="grid-layout">

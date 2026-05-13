@@ -21,6 +21,7 @@ export class NavbarComponent {
     userName: string = 'Usuario';
     isAdmin: boolean = false;
     isCocinero: boolean = false;
+    isMakro: boolean = false;
     showCart: boolean = false;
     showUserMenu = false; // Moved declaration here
     isMobileMenuOpen = false; // Added new property
@@ -31,6 +32,7 @@ export class NavbarComponent {
             this.userName = user ? user.nombre : 'Usuario';
             this.isAdmin = user?.rol === 'ADMIN';
             this.isCocinero = user?.rol === 'COCINERO';
+            this.isMakro = user?.esMakro === true;
         });
 
         if (isPlatformBrowser(this.platformId)) {

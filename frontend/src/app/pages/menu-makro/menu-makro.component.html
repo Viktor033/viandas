@@ -1,0 +1,71 @@
+<app-navbar></app-navbar>
+
+<div class="menu-makro-container">
+    <div class="header-section">
+        <div class="title-group">
+            <a *ngIf="isAdmin" routerLink="/admin/makro" class="back-to-admin">
+                <i class="fas fa-arrow-left"></i> Volver a Admin
+            </a>
+            <span class="badge-makro">CLIENTE MAKRO</span>
+            <h1>Menú Mayorista</h1>
+            <p>Seleccione sus viandas para el fin de semana</p>
+        </div>
+        
+        <div class="weekend-tabs">
+            <button 
+                *ngFor="let dia of diasWeekend" 
+                (click)="tabActivo = dia"
+                [class.active]="tabActivo === dia">
+                {{ dia }}
+            </button>
+        </div>
+    </div>
+
+    <div class="menu-grid" *ngIf="!loading; else loader">
+        <div class="product-card glass" *ngFor="let p of productosDia">
+            <div class="card-img" [style.background-image]="p.imagenUrl ? 'url(' + p.imagenUrl + ')' : 'url(/assets/images/placeholder-food.jpg)'">
+                <div class="price-tag">${{ p.precio }}</div>
+            </div>
+            
+            <div class="card-body">
+                <h3>{{ p.nombre }}</h3>
+                <p>{{ p.descripcion }}</p>
+                
+                <div class="card-footer">
+                    <div class="quantity-controls" *ngIf="getCantidad(p.id!) > 0; else addButton">
+                        <button (click)="quitarDelCarrito(p.id!)"><i class="fas fa-minus"></i></button>
+                        <span class="count">{{ getCantidad(p.id!) }}</span>
+                        <button (click)="agregarAlCarrito(p)"><i class="fas fa-plus"></i></button>
+                    </div>
+                    
+                    <ng-template #addButton>
+                        <button class="btn-add-cart" (click)="agregarAlCarrito(p)">
+                            <i class="fas fa-cart-plus"></i> Agregar
+                        </button>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="productosDia.length === 0">
+            <i class="fas fa-utensils"></i>
+            <p>No hay opciones disponibles para el {{ tabActivo }} aún.</p>
+        </div>
+    </div>
+
+    <ng-template #loader>
+        <div class="loader-container">
+            <div class="spinner"></div>
+            <p>Cargando menú...</p>
+        </div>
+    </ng-template>
+
+    <!-- Floating Summary -->
+    <div class="floating-cart" *ngIf="totalCarrito > 0" routerLink="/mis-pedidos">
+        <div class="cart-info">
+            <i class="fas fa-shopping-basket"></i>
+            <span>Subtotal Makro: <strong>${{ totalCarrito }}</strong></span>
+        </div>
+        <button class="btn-checkout">Continuar <i class="fas fa-arrow-right"></i></button>
+    </div>
+</div>

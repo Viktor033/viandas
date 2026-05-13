@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ProductoService, Producto } from '../../services/producto.service';
 import { PedidoService, ResumenSemanal } from '../../services/pedido.service';
@@ -9,7 +10,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-admin-makro',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FormsModule],
+  imports: [CommonModule, NavbarComponent, FormsModule, RouterLink],
   templateUrl: './admin-makro.component.html',
   styleUrls: ['./admin-makro.component.scss']
 })

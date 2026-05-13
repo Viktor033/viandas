@@ -32,6 +32,7 @@ public class Usuario {
 	private String piso;
 	private String departamento;
 	private String observaciones;
+	private Boolean esMakro = false;
 
 	// Getters y setters
 	public Long getId() {
@@ -152,5 +153,13 @@ public class Usuario {
 
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
+	}
+
+	public Boolean getEsMakro() {
+		return esMakro;
+	}
+
+	public void setEsMakro(Boolean esMakro) {
+		this.esMakro = esMakro;
 	}
 }

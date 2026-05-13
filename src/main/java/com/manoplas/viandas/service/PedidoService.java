@@ -246,21 +246,33 @@ public class PedidoService {
                             }
                         }
                     }
-                } else {
-                    // Check for weekend options
-                    String opcionFS = "";
-                    if (nombreProd.contains("OPC 1")) opcionFS = "OPC 1";
-                    else if (nombreProd.contains("OPC 2")) opcionFS = "OPC 2";
-                    else if (nombreProd.contains("OPC 3")) opcionFS = "OPC 3";
-                    else if (nombreProd.contains("EXTRA")) opcionFS = "EXTRA";
-                    
-                    if (!opcionFS.isEmpty()) {
-                        for (String dPedido : diasPedido) {
-                            String dLimpio = normalizarDia(dPedido);
-                            if (dLimpio.equals("Sabado") || dLimpio.equals("Domingo")) {
-                                Map<String, Integer> fsMap = resumen.getTotalesFinSemana().get(opcionFS);
-                                fsMap.put(dLimpio, fsMap.get(dLimpio) + dp.getCantidad());
-                            }
+                // Determinar si es un pedido para el cuadro MAKRO (Fin de semana o Cliente Makro)
+                boolean esClienteMakro = p.getUsuario() != null && Boolean.TRUE.equals(p.getUsuario().getEsMakro());
+                boolean esFinDeSemana = false;
+                for (String d : diasPedido) {
+                    String dL = normalizarDia(d);
+                    if (dL.equals("Sabado") || dL.equals("Domingo")) {
+                        esFinDeSemana = true;
+                        break;
+                    }
+                }
+
+                if (esFinDeSemana || esClienteMakro) {
+                    // CATEGORIZACIÓN MAKRO
+                    String opcionFS = "EXTRA";
+                    String nUpper = nombreProd.toUpperCase();
+                    if (nUpper.contains("OPC 1")) opcionFS = "OPC 1";
+                    else if (nUpper.contains("OPC 2")) opcionFS = "OPC 2";
+                    else if (nUpper.contains("OPC 3")) opcionFS = "OPC 3";
+
+                    for (String dPedido : diasPedido) {
+                        String dLimpio = normalizarDia(dPedido);
+                        // Si es cliente Makro pero el día no es de fin de semana, lo volcamos a Sabado para el reporte
+                        String diaReporte = (dLimpio.equals("Sabado") || dLimpio.equals("Domingo")) ? dLimpio : "Sabado";
+                        
+                        Map<String, Integer> fsMap = resumen.getTotalesFinSemana().get(opcionFS);
+                        if (fsMap != null) {
+                            fsMap.put(diaReporte, fsMap.getOrDefault(diaReporte, 0) + dp.getCantidad());
                         }
                     }
                 }
