@@ -125,6 +125,16 @@
                 <input formControlName="observaciones" placeholder="Alergias, preferencias...">
             </div>
 
+            <div class="form-group">
+                <label>Cadete Asignado</label>
+                <select formControlName="cadete">
+                    <option [ngValue]="null">Sin asignar</option>
+                    <option *ngFor="let c of cadetes" [ngValue]="c">
+                        {{ c.nombre }} {{ c.apellido }} ({{ c.vehiculo }})
+                    </option>
+                </select>
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
                 <button type="submit" class="btn-save" [disabled]="clienteForm.invalid">Guardar Cliente</button>
