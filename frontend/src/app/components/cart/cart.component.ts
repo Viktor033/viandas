@@ -86,6 +86,20 @@ export class CartComponent {
     confirmOrder(items: CartItem[]) {
         if (items.length === 0) return;
 
+        // Calculamos los días involucrados en el pedido basándonos en los productos
+        const uniqueDays = new Set<string>();
+        items.forEach(item => {
+            const dia = item.producto.dia;
+            if (dia) {
+                if (dia === 'Todos') {
+                    ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'].forEach(d => uniqueDays.add(d));
+                } else {
+                    // Normalizar el nombre del día para el backend (ej: Miércoles -> Miercoles)
+                    let dNorm = dia.replace('é', 'e');
+                    uniqueDays.add(dNorm);
+                }
+            }
+        });
 
         this.isProcessing = true;
         const payload = {
@@ -93,9 +107,9 @@ export class CartComponent {
                 productoId: i.producto.id!,
                 cantidad: i.cantidad,
                 precioUnitario: i.producto.precio,
-                observaciones: i.observaciones || 'Común'
+                observaciones: i.observaciones || 'Standard'
             })),
-            diasSeleccionados: '',
+            diasSeleccionados: Array.from(uniqueDays).join(','),
             esMensual: false,
             metodoPago: this.selectedPaymentMethod
         };
