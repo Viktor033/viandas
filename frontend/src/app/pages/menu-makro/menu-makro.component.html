@@ -3,9 +3,14 @@
 <div class="menu-makro-container">
     <div class="header-section">
         <div class="title-group">
-            <a *ngIf="isAdmin" routerLink="/admin/makro" class="back-to-admin">
-                <i class="fas fa-arrow-left"></i> Volver a Admin
-            </a>
+            <div class="admin-controls" *ngIf="isAdmin">
+                <a routerLink="/admin/makro" class="back-to-admin">
+                    <i class="fas fa-arrow-left"></i> Volver a Admin
+                </a>
+                <button class="btn-quick-add" (click)="quickAdd()">
+                    <i class="fas fa-plus"></i> Agregar Opción
+                </button>
+            </div>
             <span class="badge-makro">CLIENTE MAKRO</span>
             <h1>Menú Mayorista</h1>
             <p>Seleccione sus viandas para el fin de semana</p>

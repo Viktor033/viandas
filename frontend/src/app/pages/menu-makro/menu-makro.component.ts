@@ -83,4 +83,44 @@ export class MenuMakroComponent implements OnInit {
       .filter(i => i.observaciones === 'Makro Wholesale')
       .reduce((sum, i) => sum + i.cantidad * i.producto.precio, 0);
   }
+
+  async quickAdd() {
+    const { value: formValues } = await Swal.fire({
+      title: 'Nueva Opción Makro',
+      html:
+        '<input id="swal-input1" class="swal2-input" placeholder="Nombre (ej: OPC 1 - Lasaña)">' +
+        '<select id="swal-input2" class="swal2-input">' +
+        '  <option value="Sabado">Sábado</option>' +
+        '  <option value="Domingo">Domingo</option>' +
+        '</select>' +
+        '<input id="swal-input3" type="number" class="swal2-input" placeholder="Precio">',
+      focusConfirm: false,
+      background: '#1a1a1a',
+      color: '#f8edda',
+      confirmButtonColor: '#edb110',
+      preConfirm: () => {
+        return [
+          (document.getElementById('swal-input1') as HTMLInputElement).value,
+          (document.getElementById('swal-input2') as HTMLSelectElement).value,
+          (document.getElementById('swal-input3') as HTMLInputElement).value
+        ]
+      }
+    });
+
+    if (formValues) {
+      const [nombre, dia, precio] = formValues;
+      const nuevo: Producto = {
+        nombre,
+        dia,
+        precio: Number(precio),
+        activo: true,
+        descripcion: 'Menú Fin de Semana Makro'
+      };
+
+      this.productoService.createProducto(nuevo).subscribe(() => {
+        Swal.fire('Creado', 'Producto Makro agregado con éxito', 'success');
+        this.loadProductos();
+      });
+    }
+  }
 }

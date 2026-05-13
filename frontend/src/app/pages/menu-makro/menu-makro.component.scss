@@ -17,19 +17,45 @@
         }
 
         .title-group {
-            .back-to-admin {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                color: #edb110;
-                text-decoration: none;
-                font-size: 0.9rem;
-                font-weight: 600;
+            .admin-controls {
+                display: flex;
+                gap: 1rem;
                 margin-bottom: 1rem;
-                transition: transform 0.2s;
+                align-items: center;
 
-                &:hover {
-                    transform: translateX(-5px);
+                .back-to-admin {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #edb110;
+                    text-decoration: none;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    transition: transform 0.2s;
+
+                    &:hover {
+                        transform: translateX(-5px);
+                    }
+                }
+
+                .btn-quick-add {
+                    background: rgba(237, 177, 16, 0.1);
+                    border: 1px solid #edb110;
+                    color: #edb110;
+                    padding: 6px 15px;
+                    border-radius: 8px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.2s;
+
+                    &:hover {
+                        background: #edb110;
+                        color: #000;
+                    }
                 }
             }
 
