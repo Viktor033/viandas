@@ -314,7 +314,22 @@
     to   { transform: translateY(0); opacity: 1; }
 }
 
-/* ESTILOS PARA FILAS MAKRO */
+/* ESTILOS PARA FILAS NORMALES (AZUL) */
+tr:not(.row-makro):not(.empty-message-row) {
+    background: rgba(66, 153, 225, 0.01);
+    
+    td {
+        &:first-child {
+            border-left: 6px solid #4299e1 !important; // Borde azul a la izquierda
+        }
+    }
+
+    &:hover td {
+        background: rgba(66, 153, 225, 0.05);
+    }
+}
+
+/* ESTILOS PARA FILAS MAKRO (ROJO) */
 .row-makro {
     background: rgba(229, 62, 62, 0.05) !important;
     
@@ -324,7 +339,7 @@
         color: #c53030 !important;
 
         &:first-child {
-            border-left: 6px solid #e53e3e !important;
+            border-left: 6px solid #e53e3e !important; // Borde rojo a la izquierda
         }
         &:last-child {
             border-right: 2px solid #e53e3e !important;
