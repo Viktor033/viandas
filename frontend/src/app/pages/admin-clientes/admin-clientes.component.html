@@ -36,8 +36,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let cliente of filteredClientes">
-                    <td><strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong></td>
+                <tr *ngFor="let cliente of filteredClientes" [class.row-makro]="cliente.esMakro">
+                    <td>
+                        <strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong>
+                        <span class="badge-makro" *ngIf="cliente.esMakro">MAKRO</span>
+                    </td>
                     <td>{{ cliente.telefono }}</td>
                     <td>
                         {{ cliente.direccion }}
@@ -133,6 +136,13 @@
                         {{ c.nombre }} {{ c.apellido }} ({{ c.vehiculo }})
                     </option>
                 </select>
+            </div>
+
+            <div class="form-group check-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" formControlName="esMakro">
+                    <span>Cliente MAKRO (Venta Mayorista)</span>
+                </label>
             </div>
 
             <div class="modal-footer">
