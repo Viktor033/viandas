@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 export interface Producto {
     id?: number;
     nombre: string;
-    descripcion: string;
+    descripcion?: string;
     precio: number;
-    imagenUrl: string;
+    imagenUrl?: string;
     activo: boolean;
     dia?: string;
     calorias?: number; // Solo visible y editable por admin

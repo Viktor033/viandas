@@ -43,7 +43,7 @@ export class AdminMakroComponent implements OnInit {
   }
 
   getFinSemanaCount(op: string, dia: string) {
-    return this.resumen?.totalesFinSemana[op]?.[dia] || 0;
+    return (this.resumen?.totalesFinSemana as any)?.[op]?.[dia] || 0;
   }
 
   // Lógica para crear/editar productos Makro simplificada
