@@ -1,11 +1,11 @@
-
-import { Component, ChangeDetectorRef, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ChangeDetectorRef, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PedidoService, Pedido, ReporteVentas, ReporteDiario, ReporteDiarioCompleto, ResumenSemanal } from '../../services/pedido.service';
 import { CadeteService, Cadete } from '../../services/cadete.service';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import Swal from 'sweetalert2';
+import { interval, Subscription } from 'rxjs';
 
 // Interfaz para agrupar pedidos por cadete
 interface InformeCadete {
@@ -20,10 +20,11 @@ interface InformeCadete {
   templateUrl: './admin-pedidos.component.html',
   styleUrl: './admin-pedidos.component.scss'
 })
-export class AdminPedidosComponent {
+export class AdminPedidosComponent implements OnDestroy {
   private pedidoService = inject(PedidoService);
   private cadeteService = inject(CadeteService);
   private cd = inject(ChangeDetectorRef);
+  private platformId = inject(PLATFORM_ID);
 
   pedidos: Pedido[] = [];
   cadetes: Cadete[] = [];
@@ -39,11 +40,25 @@ export class AdminPedidosComponent {
   modoImpresion = false;
   informesCadetes: InformeCadete[] = [];
   fechaImpresion = new Date();
+  
+  private pollingSubscription?: Subscription;
 
   ngOnInit() {
     this.loadPedidos();
     this.loadCadetes();
     this.loadResumen();
+
+    // Polling cada 3 segundos
+    if (isPlatformBrowser(this.platformId)) {
+      this.pollingSubscription = interval(3000).subscribe(() => {
+        this.loadPedidos();
+        this.loadResumen();
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.pollingSubscription?.unsubscribe();
   }
 
   loadResumen() {

@@ -26,7 +26,7 @@ export class CocinaResumenComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarResumen();
     if (isPlatformBrowser(this.platformId)) {
-      this.refreshSubscription = interval(10000).subscribe(() => {
+      this.refreshSubscription = interval(3000).subscribe(() => {
         this.cargarResumen();
       });
     }
