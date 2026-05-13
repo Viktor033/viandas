@@ -70,6 +70,7 @@ public class UsuarioController {
                     user.setDepartamento(userDetails.getDepartamento());
                     user.setObservaciones(userDetails.getObservaciones());
                     user.setCadete(userDetails.getCadete());
+                    user.setEsMakro(userDetails.getEsMakro());
 
                     return ResponseEntity.ok(usuarioService.save(user));
                 })

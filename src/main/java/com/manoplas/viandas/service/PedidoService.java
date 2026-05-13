@@ -246,6 +246,8 @@ public class PedidoService {
                             }
                         }
                     }
+                }
+                
                 // Determinar si es un pedido para el cuadro MAKRO (Fin de semana o Cliente Makro)
                 boolean esClienteMakro = p.getUsuario() != null && Boolean.TRUE.equals(p.getUsuario().getEsMakro());
                 boolean esFinDeSemana = false;
@@ -273,10 +275,10 @@ public class PedidoService {
                         Map<String, Integer> fsMap = resumen.getTotalesFinSemana().get(opcionFS);
                         if (fsMap != null) {
                             fsMap.put(diaReporte, fsMap.getOrDefault(diaReporte, 0) + dp.getCantidad());
-                        }
                     }
                 }
             }
+        }
         }
 
         // Calcular totales diarios
