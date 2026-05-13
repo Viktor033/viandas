@@ -16,8 +16,9 @@
         .actions {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
 
-            .btn-primary, .btn-danger {
+            .btn-primary, .btn-danger, .btn-makro {
                 padding: 0.75rem 1.25rem;
                 border-radius: 12px;
                 font-weight: 600;
@@ -31,12 +32,24 @@
 
             .btn-primary {
                 background: #ebf8ff; color: #3182ce;
-                &:hover { background: #bee3f8; }
+                &:hover { background: #bee3f8; transform: translateY(-2px); }
+            }
+
+            .btn-makro {
+                background: linear-gradient(135deg, #edb110 0%, #b88a0d 100%);
+                color: #1a1a1a;
+                box-shadow: 0 4px 15px rgba(237, 177, 16, 0.2);
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(237, 177, 16, 0.4);
+                    filter: brightness(1.1);
+                }
             }
 
             .btn-danger {
                 background: #fff5f5; color: #e53e3e;
-                &:hover { background: #fed7d7; }
+                &:hover { background: #fed7d7; transform: translateY(-2px); }
             }
         }
     }

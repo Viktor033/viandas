@@ -14,14 +14,12 @@
         <ul class="nav-links">
           <li><a routerLink="/home" routerLinkActive="active" (click)="isMobileMenuOpen = false">Inicio</a></li>
           <li><a routerLink="/menu" routerLinkActive="active" (click)="isMobileMenuOpen = false">Menú</a></li>
-          <li *ngIf="isMakro || isAdmin"><a routerLink="/menu-makro" routerLinkActive="active" (click)="isMobileMenuOpen = false">Menú Makro</a></li>
           
           <!-- Links de Administración (Solo Admin) -->
           <ng-container *ngIf="isAdmin">
             <li><a routerLink="/admin/clientes" routerLinkActive="active" (click)="isMobileMenuOpen = false">Clientes</a></li>
             <li><a routerLink="/admin/pedidos" routerLinkActive="active" (click)="isMobileMenuOpen = false">Pedidos</a></li>
             <li><a routerLink="/admin/personal" routerLinkActive="active" (click)="isMobileMenuOpen = false">Personal</a></li>
-            <li><a routerLink="/admin/makro" routerLinkActive="active" (click)="isMobileMenuOpen = false">Makro</a></li>
           </ng-container>
 
           <!-- Link de Cocina (Admin y Cocinero) -->

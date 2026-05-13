@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ProductoService, Producto } from '../../services/producto.service';
 import { CartService, CartItem } from '../../services/cart.service';
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, FormsModule, NavbarComponent],
+    imports: [CommonModule, FormsModule, NavbarComponent, RouterLink],
     templateUrl: './menu.component.html',
     styleUrls: ['./menu.component.scss']
 })
@@ -27,6 +28,7 @@ export class MenuComponent implements OnInit {
 
     productos: Producto[] = [];
     isAdmin = false;
+    isMakro = false;
     isUploading = false;
     showForm = false;
     showEditForm = false;
@@ -53,7 +55,9 @@ export class MenuComponent implements OnInit {
 
     ngOnInit() {
         this.loadProductos();
-        this.isAdmin = this.authService.getUserRole() === 'ADMIN';
+        const userData = this.authService.getUserData();
+        this.isAdmin = userData?.rol === 'ADMIN';
+        this.isMakro = !!userData?.esMakro;
 
         // Escuchar el carrito
         this.cartService.cart$.subscribe(items => {

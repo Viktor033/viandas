@@ -6,9 +6,14 @@
       <h1>Menú de la Semana</h1>
       <p>Elegí tus viandas y armá tu pedido.</p>
     </div>
-    <button *ngIf="isAdmin" class="btn-create" (click)="showForm = !showForm">
-      <i class="fas fa-plus"></i> {{ showForm ? 'Cancelar' : 'Nuevo Producto' }}
-    </button>
+    <div class="header-actions">
+      <button *ngIf="isMakro || isAdmin" class="btn-makro-view" routerLink="/menu-makro">
+        <i class="fas fa-boxes"></i> Ver Menú Mayorista (Makro)
+      </button>
+      <button *ngIf="isAdmin" class="btn-create" (click)="showForm = !showForm">
+        <i class="fas fa-plus"></i> {{ showForm ? 'Cancelar' : 'Nuevo Producto' }}
+      </button>
+    </div>
   </div>
 
   <!-- ===== MODAL ADMIN NUEVO PRODUCTO ===== -->

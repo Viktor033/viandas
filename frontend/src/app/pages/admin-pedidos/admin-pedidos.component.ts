@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { PedidoService, Pedido, ReporteVentas, ReporteDiario, ReporteDiarioCompleto, ResumenSemanal } from '../../services/pedido.service';
 import { CadeteService, Cadete } from '../../services/cadete.service';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
@@ -16,7 +17,7 @@ interface InformeCadete {
 @Component({
   selector: 'app-admin-pedidos',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FormsModule],
+  imports: [CommonModule, NavbarComponent, FormsModule, RouterLink],
   templateUrl: './admin-pedidos.component.html',
   styleUrl: './admin-pedidos.component.scss'
 })
