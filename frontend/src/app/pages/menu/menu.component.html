@@ -160,22 +160,34 @@
         <p class="card-desc">{{ prod.descripcion }}</p>
         <p class="card-price">$ {{ prod.precio | number }}</p>
 
-        <!-- Tipo de vianda: Común / Sin sal -->
-        <div class="card-options">
-          <label class="radio-option">
-            <input type="radio" [name]="'tipo-' + prod.id" value="Común" [(ngModel)]="opcionSeleccionada[prod.id || 0]">
-            <span>Común</span>
-          </label>
-          <label class="radio-option">
-            <input type="radio" [name]="'tipo-' + prod.id" value="Sin sal" [(ngModel)]="opcionSeleccionada[prod.id || 0]">
-            <span>Sin sal</span>
+        <!-- Tipo de vianda: Premium Card Selector -->
+        <div class="menu-type-selector">
+          <button type="button" class="type-card" [class.active]="opcionTipo[prod.id!] === 'Standard'" (click)="opcionTipo[prod.id!] = 'Standard'">
+            <i class="fas fa-utensils"></i>
+            <span>Standard</span>
+          </button>
+          <button type="button" class="type-card" [class.active]="opcionTipo[prod.id!] === 'Calorias'" (click)="opcionTipo[prod.id!] = 'Calorias'">
+            <i class="fas fa-fire"></i>
+            <span>Calorías</span>
+          </button>
+          <button type="button" class="type-card" [class.active]="opcionTipo[prod.id!] === 'Salad'" (click)="opcionTipo[prod.id!] = 'Salad'">
+            <i class="fas fa-leaf"></i>
+            <span>Salad</span>
+          </button>
+        </div>
+
+        <div class="ss-container">
+          <span class="ss-label">¿Sin Sal?</span>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="opcionSinSal[prod.id!]">
+            <span class="slider round"></span>
           </label>
         </div>
 
         <!-- Cantidad -->
         <div class="card-qty">
-          <button class="qty-btn" (click)="decrementar(prod)" [disabled]="getCantidad(prod.id || 0, opcionSeleccionada[prod.id || 0]) === 0">−</button>
-          <span class="qty-value">{{ getCantidad(prod.id || 0, opcionSeleccionada[prod.id || 0]) }}</span>
+          <button class="qty-btn" (click)="decrementar(prod)" [disabled]="getCantidad(prod.id!, getOpcionActual(prod.id!)) === 0">−</button>
+          <span class="qty-value">{{ getCantidad(prod.id!, getOpcionActual(prod.id!)) }}</span>
           <button class="qty-btn" (click)="incrementar(prod)">+</button>
         </div>
       </div>

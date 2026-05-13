@@ -218,13 +218,21 @@ public class PedidoService {
             
             for (DetallePedido dp : p.getDetalles()) {
                 String nombreProd = dp.getProducto().getNombre().toUpperCase();
-                String obs = dp.getObservaciones() != null ? dp.getObservaciones().toLowerCase() : "";
-                boolean esSinSal = obs.contains("sin sal") || obs.contains("s/s") || obs.contains("no sal");
+                String obs = dp.getObservaciones() != null ? dp.getObservaciones().toUpperCase() : "";
+                boolean esSinSal = obs.contains("SIN SAL") || obs.contains("S/S") || obs.contains("NO SAL");
                 
                 String categoria = "";
+                // Prioridad 1: Nombre del producto
                 if (nombreProd.contains("STANDARD")) categoria = "STANDARD";
                 else if (nombreProd.contains("CALORIAS") || nombreProd.contains("CALORICO")) categoria = "CALORIAS";
                 else if (nombreProd.contains("SALAD") || nombreProd.contains("ENSALADA")) categoria = "SALAD";
+                
+                // Prioridad 2: Observaciones (donde el frontend ahora manda el tipo)
+                if (categoria.isEmpty()) {
+                    if (obs.contains("STANDARD")) categoria = "STANDARD";
+                    else if (obs.contains("CALORIAS")) categoria = "CALORIAS";
+                    else if (obs.contains("SALAD")) categoria = "SALAD";
+                }
                 
                 if (!categoria.isEmpty()) {
                     for (String dPedido : diasPedido) {

@@ -44,8 +44,9 @@ export class MenuComponent implements OnInit {
         nombre: '', descripcion: '', precio: 0, imagenUrl: '', activo: true, dia: 'Todos', calorias: undefined
     };
 
-    // UI state para la opción de vianda en cada producto
-    opcionSeleccionada: { [id: number]: string } = {};
+    // UI state para la selección de tipo de vianda y sin sal
+    opcionTipo: { [id: number]: string } = {};
+    opcionSinSal: { [id: number]: boolean } = {};
 
     // Espejo del carrito global
     itemsCarrito: CartItem[] = [];
@@ -64,10 +65,11 @@ export class MenuComponent implements OnInit {
         this.productoService.getProductos().subscribe({
             next: data => {
                 this.productos = data;
-                // Inicializar las opciones seleccionadas a "Común"
+                // Inicializar las opciones seleccionadas a "Standard"
                 this.productos.forEach(p => {
                     if (p.id) {
-                        this.opcionSeleccionada[p.id] = this.opcionSeleccionada[p.id] || 'Común';
+                        this.opcionTipo[p.id] = this.opcionTipo[p.id] || 'Standard';
+                        this.opcionSinSal[p.id] = this.opcionSinSal[p.id] || false;
                     }
                 });
             },
@@ -89,7 +91,9 @@ export class MenuComponent implements OnInit {
     }
 
     incrementar(producto: Producto) {
-        const opcion = this.opcionSeleccionada[producto.id!] || 'Común';
+        const tipo = this.opcionTipo[producto.id!] || 'Standard';
+        const ss = this.opcionSinSal[producto.id!] ? ' Sin Sal' : '';
+        const opcion = tipo + ss;
         const wasZero = this.getCantidad(producto.id!, opcion) === 0;
 
         // Llamar al servicio global
@@ -113,7 +117,9 @@ export class MenuComponent implements OnInit {
     }
 
     decrementar(producto: Producto) {
-        const opcion = this.opcionSeleccionada[producto.id!] || 'Común';
+        const tipo = this.opcionTipo[producto.id!] || 'Standard';
+        const ss = this.opcionSinSal[producto.id!] ? ' Sin Sal' : '';
+        const opcion = tipo + ss;
         if (this.getCantidad(producto.id!, opcion) > 0) {
             this.cartService.decreaseQuantity(producto.id!, opcion);
         }
@@ -215,5 +221,11 @@ export class MenuComponent implements OnInit {
                 Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo guardar el producto.', timer: 2500, showConfirmButton: false });
             }
         });
+    }
+
+    getOpcionActual(productoId: number): string {
+        const tipo = this.opcionTipo[productoId] || 'Standard';
+        const ss = this.opcionSinSal[productoId] ? ' Sin Sal' : '';
+        return tipo + ss;
     }
 }
