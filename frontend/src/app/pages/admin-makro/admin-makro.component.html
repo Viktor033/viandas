@@ -1,0 +1,72 @@
+<app-navbar></app-navbar>
+
+<div class="makro-container">
+    <div class="header-section">
+        <div>
+            <h1>Módulo MAKRO</h1>
+            <p>Gestión de producción y menú de Fin de Semana</p>
+        </div>
+        <button class="btn-add" (click)="agregarMakro()">
+            <i class="fas fa-plus"></i> Nueva Opción Makro
+        </button>
+    </div>
+
+    <div class="grid-layout">
+        <!-- SECCIÓN IZQUIERDA: TOTALES DE PRODUCCIÓN -->
+        <div class="stats-section">
+            <div class="card glass">
+                <div class="card-header">
+                    <h2><i class="fas fa-chart-pie"></i> Totales de Producción Makro</h2>
+                    <button class="btn-refresh-mini" (click)="loadData()">
+                        <i class="fas fa-sync-alt" [class.spinning]="loading"></i>
+                    </button>
+                </div>
+                
+                <div class="weekend-totals">
+                    <div class="day-col" *ngFor="let dia of diasWeekend">
+                        <h3>{{ dia }}</h3>
+                        <div class="op-list">
+                            <div class="op-item" *ngFor="let op of opcionesMakro">
+                                <span class="op-label">{{ op }}</span>
+                                <span class="op-count">{{ getFinSemanaCount(op, dia) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DERECHA: GESTIÓN DE PRODUCTOS -->
+        <div class="products-section">
+            <div class="card glass">
+                <div class="card-header">
+                    <h2><i class="fas fa-utensils"></i> Menú Configurado</h2>
+                </div>
+
+                <div class="makro-list">
+                    <div *ngIf="makroProducts.length === 0" class="empty-state">
+                        <p>No hay productos configurados para el fin de semana.</p>
+                    </div>
+
+                    <div class="makro-item" *ngFor="let p of makroProducts">
+                        <div class="item-info">
+                            <span class="item-day" [class]="p.dia?.toLowerCase()">{{ p.dia }}</span>
+                            <div class="item-details">
+                                <span class="item-name">{{ p.nombre }}</span>
+                                <span class="item-price">$ {{ p.precio }}</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-icon" [class.inactive]="!p.activo" (click)="toggleActivo(p)" [title]="p.activo ? 'Desactivar' : 'Activar'">
+                                <i class="fas" [class.fa-eye]="p.activo" [class.fa-eye-slash]="!p.activo"></i>
+                            </button>
+                            <button class="btn-icon delete" (click)="eliminar(p.id!)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
