@@ -297,98 +297,53 @@
         </div>
 
         <div class="lista-entregas">
-            <h3>Entregas del Día</h3>
+            <h3>Hoja de Ruta - Lista de Pedidos</h3>
             
-            <div *ngFor="let pedido of informe.pedidos; let i = index" class="entrega-item">
-                <div class="entrega-header">
-                    <span class="numero-entrega">Entrega #{{ i + 1 }}</span>
-                    <span class="pedido-id">Pedido #{{ pedido.id }}</span>
-                    <span class="estado-badge" [class]="pedido.estado.toLowerCase()">{{ pedido.estado }}</span>
-                </div>
-
-                <div class="cliente-info" *ngIf="pedido.usuario">
-                    <h4>📍 Datos del Cliente</h4>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <strong>Nombre:</strong>
-                            <span>{{ pedido.usuario.nombre }} {{ pedido.usuario.apellido }}</span>
-                        </div>
-                        <div class="info-item">
-                            <strong>Teléfono:</strong>
-                            <span class="destacado">{{ pedido.usuario.telefono }}</span>
-                        </div>
-                        <div class="info-item full-width">
-                            <strong>Dirección:</strong>
-                            <span class="destacado">{{ pedido.usuario.direccion || 'No especificada' }}</span>
-                        </div>
-                        <div class="info-item" *ngIf="pedido.usuario.piso">
-                            <strong>Piso:</strong>
-                            <span>{{ pedido.usuario.piso }}</span>
-                        </div>
-                        <div class="info-item" *ngIf="pedido.usuario.departamento">
-                            <strong>Depto:</strong>
-                            <span>{{ pedido.usuario.departamento }}</span>
-                        </div>
-                        <div class="info-item" *ngIf="pedido.usuario.zona">
-                            <strong>Zona:</strong>
-                            <span>{{ pedido.usuario.zona }}</span>
-                        </div>
-                        <div class="info-item full-width" *ngIf="pedido.usuario.observaciones">
-                            <strong>⚠️ Observaciones:</strong>
-                            <span class="observaciones">{{ pedido.usuario.observaciones }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="productos-info">
-                    <h4>📦 Productos a Entregar</h4>
-                    <table class="productos-table">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unit.</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let detalle of pedido.detalles">
-                                <td>{{ detalle.producto?.nombre || 'Producto' }}</td>
-                                <td class="text-center">{{ detalle.cantidad }}</td>
-                                <td class="text-right">${{ detalle.precioUnitario }}</td>
-                                <td class="text-right">${{ detalle.precioUnitario * detalle.cantidad }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="pago-info">
-                    <div class="pago-item">
-                        <strong>💰 Total a Cobrar:</strong>
-                        <span class="total-destacado">${{ pedido.total }}</span>
-                    </div>
-                    <div class="pago-item">
-                        <strong>💳 Método de Pago:</strong>
-                        <span class="metodo-pago">{{ pedido.metodoPago || 'Efectivo' }}</span>
-                    </div>
-                </div>
-
-                <div class="firma-section">
-                    <div class="firma-box">
-                        <p>Firma del Cliente:</p>
-                        <div class="firma-linea"></div>
-                    </div>
-                    <div class="firma-box">
-                        <p>Hora de Entrega:</p>
-                        <div class="firma-linea"></div>
-                    </div>
-                </div>
-            </div>
+            <table class="tabla-ruta-simple">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Cliente / Dirección</th>
+                        <th>Productos / Notas</th>
+                        <th>Cobrar</th>
+                        <th>Pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pedido of informe.pedidos; let i = index">
+                        <td class="text-center">{{ i + 1 }}</td>
+                        <td>
+                            <div class="nombre-cliente">{{ pedido.usuario?.nombre }} {{ pedido.usuario?.apellido }}</div>
+                            <div class="dir-cliente">
+                                <strong>{{ pedido.usuario?.direccion }}</strong>
+                                <span *ngIf="pedido.usuario?.piso">, Piso {{ pedido.usuario.piso }}</span>
+                                <span *ngIf="pedido.usuario?.departamento"> {{ pedido.usuario.departamento }}</span>
+                            </div>
+                            <div class="tel-cliente">{{ pedido.usuario?.telefono }}</div>
+                            <div class="zona-cliente" *ngIf="pedido.usuario?.zona">Zona: {{ pedido.usuario.zona }}</div>
+                        </td>
+                        <td>
+                            <div *ngFor="let det of pedido.detalles" class="item-det">
+                                {{ det.cantidad }}x {{ det.producto?.nombre }}
+                                <small *ngIf="det.observaciones">({{ det.observaciones }})</small>
+                            </div>
+                            <div class="obs-pedido" *ngIf="pedido.usuario?.observaciones">
+                                <strong>Obs:</strong> {{ pedido.usuario.observaciones }}
+                            </div>
+                        </td>
+                        <td class="text-right">
+                            <strong style="font-size: 1.1rem;">${{ pedido.total }}</strong>
+                        </td>
+                        <td>
+                            <span class="metodo-badge">{{ pedido.metodoPago || 'Efectivo' }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="footer-informe">
-            <p>Este informe fue generado automáticamente por el Sistema Manoplas</p>
-            <p>Para consultas: contacto&#64;manoplas.com</p>
+            <p>Total de entregas: {{ informe.pedidos.length }} | Manoplas Viandas</p>
         </div>
 
         <!-- Salto de página entre cadetes -->

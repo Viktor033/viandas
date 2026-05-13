@@ -235,6 +235,85 @@
     }
 }
 
+// ===== SIMPLIFIED CADET REPORT STYLES =====
+.tabla-ruta-simple {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+
+    th {
+        background: #f8f9fa;
+        color: #333;
+        text-align: left;
+        padding: 10px;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: top;
+        color: #000;
+    }
+
+    .nombre-cliente {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 2px;
+    }
+
+    .dir-cliente {
+        font-size: 1rem;
+        line-height: 1.2;
+        strong { color: #d32f2f; } // Resaltar dirección en rojo para impresión
+    }
+
+    .tel-cliente {
+        color: #1976d2;
+        font-weight: 600;
+        margin-top: 2px;
+    }
+
+    .item-det {
+        margin-bottom: 3px;
+        font-weight: 500;
+        small { color: #666; font-style: italic; }
+    }
+
+    .obs-pedido {
+        margin-top: 5px;
+        background: #fff3e0;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        border-left: 3px solid #ff9800;
+    }
+
+    .metodo-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: #eee;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+}
+
+@media print {
+    .tabla-ruta-simple {
+        td { border-bottom: 1px solid #000 !important; }
+        .dir-cliente strong { color: #000 !important; text-decoration: underline; }
+        .obs-pedido { border: 1px solid #000 !important; background: none !important; }
+    }
+}
+
 .modal-overlay {
     position: fixed;
     top: 0; left: 0;
