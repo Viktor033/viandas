@@ -1,24 +1,66 @@
 <div class="dashboard-container">
-    <div class="header-section">
-        <div>
-            <h1>Gestión de Pedidos</h1>
-            <p>Administración y seguimiento de pedidos</p>
-        </div>
-        <div class="actions">
-            <button class="btn-primary" (click)="generarInformes()">
-                <i class="fas fa-print"></i> Generar Informes
-            </button>
-            <button class="btn-primary" (click)="verReporteVentas()">
-                <i class="fas fa-chart-line"></i> Reporte Ventas
-            </button>
-            <button class="btn-primary" (click)="verReporteDiario()">
-                <i class="fas fa-cash-register"></i> Cerrar Caja
-            </button>
-            <button class="btn-danger" (click)="limpiarEntregados()">
-                <i class="fas fa-archive"></i> Limpiar Entregados
-            </button>
-        </div>
+  <div class="header-section">
+    <div>
+      <h1>Gestión de Pedidos</h1>
+      <p>Administración y seguimiento de pedidos</p>
     </div>
+    <div class="actions">
+      <button class="btn-primary" (click)="generarInformes()">
+        <i class="fas fa-print"></i> Generar Informes
+      </button>
+      <button class="btn-primary" (click)="verReporteVentas()">
+        <i class="fas fa-chart-line"></i> Reporte Ventas
+      </button>
+      <button class="btn-primary" (click)="verReporteDiario()">
+        <i class="fas fa-cash-register"></i> Cerrar Caja
+      </button>
+      <button class="btn-danger" (click)="limpiarEntregados()">
+        <i class="fas fa-archive"></i> Limpiar Entregados
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== CUADRO DE PRODUCCIÓN SEMANAL ===== -->
+  <div class="summary-section" *ngIf="resumen">
+    <div class="summary-card">
+      <div class="card-header">
+        <h2><i class="fas fa-calendar-check"></i> Cuadro de Producción Semanal</h2>
+        <button class="btn-refresh-mini" (click)="loadResumen()">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+      <div class="table-container">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th class="sticky-col">CATEGORÍA</th>
+              <ng-container *ngFor="let dia of diasSemana">
+                <th class="day-col">{{ dia }}</th>
+                <th class="ss-col">S/S</th>
+              </ng-container>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let linea of lineasMenu">
+              <td class="line-name sticky-col" [attr.data-line]="linea">{{ linea }}</td>
+              <ng-container *ngFor="let dia of diasSemana">
+                <td class="count-val">{{ resumen.totalesSemanales[linea]?.[dia]?.normal || 0 }}</td>
+                <td class="ss-val">{{ resumen.totalesSemanales[linea]?.[dia]?.sinSal || 0 }}</td>
+              </ng-container>
+            </tr>
+            <tr class="row-subtotal">
+              <td class="sticky-col">SUBTOTAL</td>
+              <ng-container *ngFor="let dia of diasSemana">
+                <td colspan="2" class="total-day">
+                  {{ resumen.totalesDiarios[dia] || 0 }}
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
     <div class="table-responsive">
         <table class="pedidos-table">

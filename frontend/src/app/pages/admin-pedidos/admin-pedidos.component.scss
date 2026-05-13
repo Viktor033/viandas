@@ -81,14 +81,156 @@
                 }
 
                 .status-select {
-                    padding: 6px 12px;
-                    border-radius: 10px;
-                    border: 1px solid #e2e8f0;
+                    background: #1a1a1a;
+                    color: #f8edda;
+                    border: 1px solid rgba(237, 177, 16, 0.3);
+                    padding: 0.4rem 0.8rem;
+                    border-radius: 8px;
                     font-size: 0.85rem;
-                    font-weight: 600;
-                    background: #fdfdfd;
+                    cursor: pointer;
+                    outline: none;
+
+                    &:focus {
+                        border-color: #edb110;
+                    }
                 }
             }
+        }
+    }
+}
+
+// ===== SUMMARY SECTION (PRODUCTION TABLE) =====
+.summary-section {
+    margin-bottom: 2.5rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.summary-card {
+    background: rgba(26, 32, 44, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(237, 177, 16, 0.15);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+
+        h2 {
+            font-size: 1.1rem;
+            color: #edb110;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+    }
+}
+
+.btn-refresh-mini {
+    background: rgba(237, 177, 16, 0.1);
+    border: 1px solid rgba(237, 177, 16, 0.2);
+    color: #edb110;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #edb110;
+        color: #1a1a1a;
+        transform: rotate(180deg);
+    }
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(237, 177, 16, 0.2);
+        border-radius: 10px;
+    }
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 800px;
+
+    th, td {
+        padding: 0.75rem 0.5rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    thead th {
+        background: rgba(0, 0, 0, 0.2);
+        color: #edb110;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .sticky-col {
+        position: sticky;
+        left: 0;
+        background: #1a202c;
+        z-index: 2;
+        text-align: left;
+        padding-left: 1rem;
+        font-weight: bold;
+        width: 140px;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    }
+
+    .line-name {
+        color: #fff;
+        font-weight: 600;
+        
+        &[data-line="STANDARD"] { border-left: 4px solid #4299e1; }
+        &[data-line="CALORIAS"] { border-left: 4px solid #ed8936; }
+        &[data-line="SALAD"] { border-left: 4px solid #48bb78; }
+    }
+
+    .day-col { border-left: 1px solid rgba(255, 255, 255, 0.05); }
+    .ss-col { color: #a0aec0; font-style: italic; }
+
+    .count-val { font-weight: 700; color: #fff; }
+    .ss-val { color: #f56565; font-weight: 600; }
+
+    .row-subtotal {
+        background: rgba(237, 177, 16, 0.05);
+        
+        td {
+            color: #edb110;
+            font-weight: 800;
+            border-top: 2px solid rgba(237, 177, 16, 0.2);
+        }
+
+        .total-day {
+            font-size: 1rem;
         }
     }
 }

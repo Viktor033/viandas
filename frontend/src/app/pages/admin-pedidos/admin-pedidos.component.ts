@@ -2,7 +2,7 @@
 import { Component, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PedidoService, Pedido, ReporteVentas, ReporteDiario, ReporteDiarioCompleto } from '../../services/pedido.service';
+import { PedidoService, Pedido, ReporteVentas, ReporteDiario, ReporteDiarioCompleto, ResumenSemanal } from '../../services/pedido.service';
 import { CadeteService, Cadete } from '../../services/cadete.service';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import Swal from 'sweetalert2';
@@ -30,6 +30,11 @@ export class AdminPedidosComponent {
   estadosPosibles = ['PENDIENTE', 'EN_PREPARACION', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO'];
   selectedPedido: Pedido | null = null;
 
+  // Resumen Semanal para el "cuadro de producción"
+  resumen?: ResumenSemanal;
+  diasSemana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
+  lineasMenu = ['STANDARD', 'CALORIAS', 'SALAD'];
+
   // Variables para impresión
   modoImpresion = false;
   informesCadetes: InformeCadete[] = [];
@@ -38,11 +43,19 @@ export class AdminPedidosComponent {
   ngOnInit() {
     this.loadPedidos();
     this.loadCadetes();
+    this.loadResumen();
+  }
+
+  loadResumen() {
+    this.pedidoService.getResumenSemanal().subscribe(data => {
+      this.resumen = data;
+    });
   }
 
   loadPedidos() {
     this.pedidoService.getAllPedidos().subscribe(data => {
       this.pedidos = data;
+      this.loadResumen(); // Recargar el resumen al cargar pedidos
     });
   }
 
