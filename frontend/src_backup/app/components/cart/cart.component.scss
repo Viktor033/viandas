@@ -1,0 +1,299 @@
+// Variables (match project theme)
+$primary-gold: var(--primary-color);
+$bg-dark: var(--bg-color);
+$text-light: var(--text-color);
+$danger: #ff6b6b;
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end; // Slide from right
+    // Or center: justify-content: center; align-items: center;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: var(--modal-bg);
+    border-left: 1px solid rgba($primary-gold, 0.3);
+    width: 100%;
+    max-width: 450px;
+    height: 100%;
+    padding: 2rem;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    animation: slideIn 0.3s forwards;
+    position: relative;
+    color: $text-light;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateX(0);
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: rgba($text-light, 0.6);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+        color: $primary-gold;
+    }
+}
+
+h2 {
+    color: $primary-gold;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba($primary-gold, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+.cart-items {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+
+    // Scrollbar styling
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba($primary-gold, 0.3);
+        border-radius: 3px;
+    }
+}
+
+.cart-item {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba($primary-gold, 0.2);
+    }
+
+    .item-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+
+        .item-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: $text-light;
+        }
+
+        .item-price {
+            color: $primary-gold;
+            font-size: 0.95rem;
+        }
+    }
+
+    .item-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
+
+        .qty {
+            background: rgba($primary-gold, 0.2);
+            color: $primary-gold;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: darken($danger, 10%);
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.2s;
+
+            &:hover {
+                color: $danger;
+            }
+
+            i {
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+.cart-footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: inherit; // Ensure it stays on top of scroll if needed, though flex handles it
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+
+        span:first-child {
+            font-size: 1.2rem;
+            color: rgba($text-light, 0.8);
+        }
+
+        .total-amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: $primary-gold;
+        }
+    }
+
+    .payment-methods {
+        margin-bottom: 1.5rem;
+
+        h3 {
+            color: $text-light;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .method-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+
+            input {
+                position: absolute;
+                opacity: 0;
+            }
+
+            i {
+                font-size: 1.2rem;
+                color: rgba($text-light, 0.6);
+                transition: color 0.2s;
+            }
+
+            span {
+                font-size: 0.8rem;
+                color: rgba($text-light, 0.8);
+            }
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            &.selected {
+                border-color: $primary-gold;
+                background: rgba($primary-gold, 0.1);
+
+                i {
+                    color: $primary-gold;
+                }
+
+                span {
+                    color: $primary-gold;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+
+    .btn-confirm {
+        width: 100%;
+        padding: 1rem;
+        // background: linear-gradient(45deg, var(--primary-color), color-mix(in srgb, var(--primary-color), white 20%)); // Modern CSS
+        background: var(--primary-color); // Fallback safe
+        background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); // Use established variables
+        color: var(--bg-color); // Contrast
+        border: none;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba($primary-gold, 0.3);
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba($primary-gold, 0.4);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    }
+}
+
+.empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: rgba($text-light, 0.4);
+
+    i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+}

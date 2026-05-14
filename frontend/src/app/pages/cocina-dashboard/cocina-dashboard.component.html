@@ -1,0 +1,68 @@
+<div class="cocina-container">
+  <header class="dashboard-header">
+    <h1>👨‍🍳 Cocina</h1>
+    <div class="status-indicators">
+      <div class="badge pending">
+        <span>Pendientes</span>
+        {{ pedidosPendientes.length }}
+      </div>
+      <div class="badge in-progress">
+        <span>Cocinando</span>
+        {{ pedidosEnPreparacion.length }}
+      </div>
+      <div class="summary-actions">
+            <button class="btn-clean" (click)="limpiarPedidosListos()" [disabled]="pedidosRealizados.length === 0">
+                <i class="fas fa-broom"></i> Limpiar Listos
+            </button>
+            <button class="btn-resumen" routerLink="/cocina/resumen">
+                <i class="fas fa-table"></i> Ver Totales Semanales
+            </button>
+        </div>
+    </div>
+  </header>
+
+  <div class="summary-container fade-in">
+    <div class="summary-card">
+      <div class="summary-header">
+        <div class="title-group">
+          <i class="fas fa-clipboard-list"></i>
+          <h2>Resumen de Producción</h2>
+        </div>
+        <div class="total-badge">
+          <span>Total Viandas:</span>
+          <strong>{{ totalGeneralViandas }}</strong>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Plato / Vianda</th>
+              <th class="text-center">Total</th>
+              <th class="text-center">Comunes</th>
+              <th class="text-center">Sin Sal (S/S)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let prod of resumenProductos" [class.highlight]="prod.sinSal > 0">
+              <td class="product-name">
+                <div class="dot"></div>
+                {{ prod.nombre }}
+              </td>
+              <td class="text-center count-total">{{ prod.total }}</td>
+              <td class="text-center count-normal">{{ prod.total - prod.sinSal }}</td>
+              <td class="text-center count-ss">
+                <span *ngIf="prod.sinSal > 0" class="ss-badge">{{ prod.sinSal }}</span>
+                <span *ngIf="prod.sinSal === 0" class="muted">-</span>
+              </td>
+            </tr>
+            <tr *ngIf="resumenProductos.length === 0" class="empty-row">
+              <td colspan="4">No hay pedidos pendientes en este momento.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

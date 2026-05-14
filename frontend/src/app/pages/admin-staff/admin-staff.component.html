@@ -1,0 +1,208 @@
+<div class="admin-staff-container">
+    <div class="header-section">
+      <div class="header-info">
+          <h1>Gestión de Personal</h1>
+          <p>Administra administradores, cocineros, secretarios y cadetes.</p>
+      </div>
+      <!-- Botón de Agregar SIEMPRE VISIBLE -->
+      <button class="btn-add" (click)="abrirModalNuevo()">
+        <i class="fas fa-plus"></i> 
+        <span>Nuevo {{ 
+            activeTab === 'admin' ? 'Administrador' : 
+            activeTab === 'cocineros' ? 'Cocinero' : 
+            activeTab === 'secretarios' ? 'Secretario' : 'Cadete' 
+        }}</span>
+      </button>
+    </div>
+
+    <div class="tabs-container">
+        <button class="tab-btn" [class.active]="activeTab === 'admin'" (click)="switchTab('admin')">
+            Administradores
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'cocineros'" (click)="switchTab('cocineros')">
+            Cocineros
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'secretarios'" (click)="switchTab('secretarios')">
+            Secretarios
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'cadetes'" (click)="switchTab('cadetes')">
+            Cadetes
+        </button>
+    </div>
+  
+    <!-- TAB STAFF (Admins, Cocineros, Secretarios) -->
+    <div class="table-container" *ngIf="activeTab !== 'cadetes'">
+      <table class="staff-table">
+        <thead>
+          <tr>
+            <th>Nombre y Apellido</th>
+            <th>Email / Contacto</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredStaff">
+            <td>
+              <strong>{{ user.nombre }} {{ user.apellido }}</strong>
+              <div class="vehicle-info" *ngIf="user.telefono">{{ user.telefono }}</div>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="role-badge" 
+                [class.admin]="user.rol === 'ADMIN'" 
+                [class.cocina]="user.rol === 'COCINERO'" 
+                [class.secretario]="user.rol === 'SECRETARIO'">
+                {{ user.rol }}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" [class.active]="user.activo" [class.inactive]="!user.activo">
+                {{ user.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn-email" (click)="enviarEmail(user)" title="Enviar Correo">
+                <i class="fas fa-envelope"></i>
+              </button>
+              <button class="btn-edit" (click)="editarUsuario(user)" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-delete" (click)="eliminarUsuario(user)" title="Eliminar">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredStaff.length === 0">
+            <td colspan="5" class="empty-message">No hay personal registrado en esta categoría.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TAB CADETES -->
+    <div class="table-container" *ngIf="activeTab === 'cadetes'">
+        <table class="staff-table">
+          <thead>
+            <tr>
+              <th>Nombre y Apellido</th>
+              <th>Vehículo</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cadete of cadetesList">
+              <td>
+                <strong>{{ cadete.nombre }} {{ cadete.apellido }}</strong>
+              </td>
+              <td>{{ cadete.vehiculo }}</td>
+              <td>{{ cadete.telefono }}</td>
+              <td>
+                <span class="status-badge" [class.active]="cadete.activo" [class.inactive]="!cadete.activo">
+                  {{ cadete.activo ? 'Disponible' : 'No disponible' }}
+                </span>
+              </td>
+              <td class="actions">
+                <button class="btn-edit" (click)="editarCadete(cadete)" title="Editar">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-delete" (click)="eliminarCadete(cadete)" title="Eliminar">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="cadetesList.length === 0">
+                <td colspan="5" class="empty-message">No hay cadetes registrados.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+    <!-- Modal Personal -->
+    <div class="modal-overlay" *ngIf="showModal && activeTab !== 'cadetes'">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>{{ isEditing ? 'Editar Personal' : 'Nuevo Personal' }}</h2>
+          <button class="close-btn" (click)="cerrarModal()">&times;</button>
+        </div>
+        
+        <form (ngSubmit)="guardar()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" [(ngModel)]="editingUser.nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+              <label>Apellido</label>
+              <input type="text" [(ngModel)]="editingUser.apellido" name="apellido" required>
+            </div>
+            <div class="form-group">
+              <label>Email (opcional)</label>
+              <input type="email" [(ngModel)]="editingUser.email" name="email">
+            </div>
+            <div class="form-group">
+                <label>Teléfono (acceso al sistema) *</label>
+                <input type="text" [(ngModel)]="editingUser.telefono" name="telefono" required placeholder="Ej: 3415555555">
+            </div>
+            <div class="form-group">
+                <label>Rol</label>
+                <select [(ngModel)]="editingUser.rol" name="rol" required>
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="COCINERO">COCINERO</option>
+                  <option value="SECRETARIO">SECRETARIO</option>
+                </select>
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn-save">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Cadete -->
+    <div class="modal-overlay" *ngIf="showModal && activeTab === 'cadetes'">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>{{ isEditing ? 'Editar Cadete' : 'Nuevo Cadete' }}</h2>
+            <button class="close-btn" (click)="cerrarModal()">&times;</button>
+          </div>
+          
+          <form (ngSubmit)="guardar()">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" [(ngModel)]="editingCadete.nombre" name="nombre" required>
+              </div>
+              <div class="form-group">
+                <label>Apellido</label>
+                <input type="text" [(ngModel)]="editingCadete.apellido" name="apellido" required>
+              </div>
+              <div class="form-group">
+                <label>Vehículo</label>
+                <input type="text" [(ngModel)]="editingCadete.vehiculo" name="vehiculo" placeholder="Ej: Moto Honda 150cc" required>
+              </div>
+              <div class="form-group">
+                  <label>Teléfono</label>
+                  <input type="text" [(ngModel)]="editingCadete.telefono" name="telefono" required>
+              </div>
+              <div class="form-group">
+                  <label>
+                      <input type="checkbox" [(ngModel)]="editingCadete.activo" name="activo"> Activo
+                  </label>
+              </div>
+            </div>
+    
+            <div class="modal-footer">
+              <button type="button" class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+              <button type="submit" class="btn-save">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+</div>

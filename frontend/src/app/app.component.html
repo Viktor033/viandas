@@ -1,0 +1,14 @@
+<div class="app-wrapper">
+    <app-navbar *ngIf="showNavbar"></app-navbar>
+    <div class="content-wrapper">
+        <router-outlet></router-outlet>
+    </div>
+
+    <!-- Botón de Atrás Global -->
+    <button *ngIf="showBackButton" class="global-back-btn" (click)="goBack()" title="Volver">
+        <i class="fas fa-chevron-left"></i>
+        <span>Atrás</span>
+    </button>
+
+    <app-footer></app-footer>
+</div>

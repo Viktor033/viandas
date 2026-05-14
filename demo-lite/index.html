@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manoplas Viandas Gourmet — Pedí tus viandas caseras favoritas. Menú semanal con los mejores platos.">
+    <title>Manoplas Viandas Gourmet</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <div class="logo-section" onclick="navigateTo('home')">
+                <div class="logo-text">
+                    <span class="logo-main">Manoplas</span>
+                    <span class="logo-sub">Viandas Gourmet</span>
+                </div>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars" id="mobileMenuIcon"></i>
+            </button>
+
+            <!-- Nav Content -->
+            <div class="nav-content" id="navContent">
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link active" data-page="home" onclick="navigateTo('home'); return false;">Inicio</a></li>
+                    <li><a href="#" class="nav-link" data-page="menu" onclick="navigateTo('menu'); return false;">Menú de la semana</a></li>
+                </ul>
+
+                <div class="user-section">
+                    <!-- Cart Trigger -->
+                    <div class="cart-trigger" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge" id="cartBadge" style="display:none;">0</span>
+                        <span class="mobile-label">Ver Carrito</span>
+                    </div>
+
+                    <!-- User Dropdown -->
+                    <div class="user-dropdown-container" id="userDropdown">
+                        <div class="user-info-trigger" onclick="toggleUserMenu()">
+                            <div class="user-info">
+                                <span class="greeting">Hola,</span>
+                                <span class="username">Visitante</span>
+                            </div>
+                            <div class="avatar-circle">V</div>
+                            <i class="fas fa-chevron-down arrow-icon" id="arrowIcon"></i>
+                        </div>
+
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="#" class="dropdown-item" onclick="navigateTo('menu'); return false;">
+                                <i class="fas fa-utensils"></i> Ver Menú
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item info-item" onclick="showAbout(); return false;">
+                                <i class="fas fa-info-circle"></i> Acerca de
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== HOME PAGE ========== -->
+    <section class="page-section" id="page-home">
+        <div class="home-container">
+            <div class="main-content">
+                <div class="logo-hero">
+                    <i class="fas fa-concierge-bell hero-icon"></i>
+                </div>
+                <h1>Hola, <span class="highlight">Visitante</span></h1>
+
+                <main>
+                    <div class="welcome-card">
+                        <h2>Bienvenido a Manoplas</h2>
+                        <p>Descubrí nuestras viandas gourmet caseras. Frescas, sabrosas y listas para disfrutar.</p>
+                        <button class="btn-cta" onclick="navigateTo('menu')">
+                            <i class="fas fa-utensils"></i> Ver el Menú
+                        </button>
+                    </div>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-fire feature-icon"></i>
+                            <h3>Cocina Casera</h3>
+                            <p>Platos elaborados con recetas tradicionales y los mejores ingredientes.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-truck feature-icon"></i>
+                            <h3>Delivery</h3>
+                            <p>Te llevamos tu vianda a la puerta de tu casa u oficina.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-heart feature-icon"></i>
+                            <h3>Con Amor</h3>
+                            <p>Cada plato es preparado con dedicación y cariño.</p>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MENU PAGE ========== -->
+    <section class="page-section hidden" id="page-menu">
+        <div class="menu-container">
+            <div class="header-section">
+                <h1>Menú de la Semana</h1>
+                <p>Elegí tus viandas favoritas y armá tu pedido.</p>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Products rendered by JS -->
+            </div>
+
+            <div class="no-products hidden" id="noProducts">
+                <p>No hay productos disponibles en este momento.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CART MODAL ========== -->
+    <div class="cart-overlay hidden" id="cartOverlay" onclick="toggleCart()">
+        <div class="cart-modal" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="toggleCart()">&times;</button>
+            <h2>Tu Carrito</h2>
+
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items rendered by JS -->
+            </div>
+
+            <div class="empty-cart" id="emptyCart">
+                <i class="fas fa-shopping-basket"></i>
+                <p>No tienes productos en el carrito.</p>
+            </div>
+
+            <div class="cart-footer hidden" id="cartFooter">
+                <div class="total-row">
+                    <span>Total:</span>
+                    <span class="total-amount" id="cartTotal">$ 0</span>
+                </div>
+
+                <div class="payment-methods">
+                    <h3>Método de Pago</h3>
+                    <div class="methods-grid">
+                        <label class="method-option selected" data-method="EFECTIVO">
+                            <input type="radio" name="payment" value="EFECTIVO" checked>
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Efectivo</span>
+                        </label>
+                        <label class="method-option" data-method="TRANSFERENCIA">
+                            <input type="radio" name="payment" value="TRANSFERENCIA">
+                            <i class="fas fa-university"></i>
+                            <span>Transf.</span>
+                        </label>
+                        <label class="method-option" data-method="TARJETA">
+                            <input type="radio" name="payment" value="TARJETA">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Tarjeta</span>
+                        </label>
+                        <label class="method-option" data-method="MERCADOPAGO">
+                            <input type="radio" name="payment" value="MERCADOPAGO">
+                            <i class="fas fa-handshake"></i>
+                            <span>MP</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="btn-confirm" id="btnConfirm" onclick="confirmOrder()">
+                    Confirmar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="copyright">
+                &copy; 2026 <strong>Manoplas Viandas Gourmet</strong>. Todos los derechos reservados.
+            </p>
+            <p class="developer">
+                Desarrollado por <span class="brand">VK-Web-Dev</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ========== TOAST NOTIFICATION ========== -->
+    <div class="toast hidden" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Producto agregado</span>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

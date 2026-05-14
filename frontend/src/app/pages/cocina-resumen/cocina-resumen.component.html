@@ -1,0 +1,92 @@
+<div class="resumen-container">
+    <div class="header">
+        <div class="title-section">
+            <h1>Totales de Producción Semanal</h1>
+            <p>Monitoreo en tiempo real de viandas solicitadas</p>
+        </div>
+        <div class="actions">
+            <button class="btn-back" routerLink="/cocina">
+                <i class="fas fa-arrow-left"></i> Volver al Dashboard
+            </button>
+            <button class="btn-refresh" (click)="cargarResumen()">
+                <i class="fas fa-sync-alt" [class.spinning]="loading"></i> Actualizar
+            </button>
+        </div>
+    </div>
+
+    <div class="content" *ngIf="!loading && resumen">
+        <!-- Tabla Semanal Principal -->
+        <div class="card glass">
+            <div class="table-responsive">
+                <table class="weekly-table">
+                    <thead>
+                        <tr>
+                            <th class="sticky-col">TOTALES</th>
+                            <ng-container *ngFor="let dia of dias">
+                                <th class="day-header">{{ dia }}</th>
+                                <th class="ss-header">S/S</th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let prod of productosSemanales">
+                            <td class="product-name sticky-col" [ngClass]="prod.toLowerCase()">
+                                {{ prod }}
+                            </td>
+                            <ng-container *ngFor="let dia of dias">
+                                <td class="count-cell">{{ getCounts(prod, dia).normal }}</td>
+                                <td class="ss-cell">{{ getCounts(prod, dia).sinSal }}</td>
+                            </ng-container>
+                        </tr>
+                        <tr class="daily-subtotal">
+                            <td class="sticky-col">SUBTOTAL</td>
+                            <ng-container *ngFor="let dia of dias">
+                                <td colspan="2" class="total-day-cell">
+                                    {{ resumen.totalesDiarios[dia] }}
+                                </td>
+                            </ng-container>
+                        </tr>
+                        <tr class="daily-total">
+                            <td class="sticky-col">TOTAL FINAL</td>
+                            <ng-container *ngFor="let dia of dias">
+                                <td colspan="2" class="final-day-cell">
+                                    {{ resumen.totalesDiariosConEspeciales[dia] }}
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tabla Fin de Semana -->
+        <div class="card glass mini-table-card">
+            <h2>Producción Fin de Semana (MAKRO)</h2>
+            <div class="table-responsive">
+                <table class="weekend-table">
+                    <thead>
+                        <tr>
+                            <th>MAKRO</th>
+                            <th>Sábado</th>
+                            <th>Domingo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let op of opcionesFinSemana">
+                            <td class="product-name" [ngClass]="op.replace(' ', '').toLowerCase()">
+                                {{ op }}
+                            </td>
+                            <td>{{ getFinSemanaCount(op, 'Sabado') }}</td>
+                            <td>{{ getFinSemanaCount(op, 'Domingo') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="loader-container" *ngIf="loading">
+        <div class="loader"></div>
+        <p>Cargando datos de producción...</p>
+    </div>
+</div>

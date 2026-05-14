@@ -1,0 +1,202 @@
+<div class="menu-container">
+
+  <!-- ===== HEADER ===== -->
+  <div class="header-section">
+    <div>
+      <h1>Menú de la Semana</h1>
+      <p>Elegí tus viandas y armá tu pedido.</p>
+    </div>
+    <div class="header-actions">
+      <button *ngIf="isMakro || isAdmin" class="btn-makro-view" routerLink="/menu-makro">
+        <i class="fas fa-boxes"></i> Ver Menú Mayorista (Makro)
+      </button>
+      <button *ngIf="isAdmin" class="btn-create" (click)="showForm = !showForm">
+        <i class="fas fa-plus"></i> {{ showForm ? 'Cancelar' : 'Nuevo Producto' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL ADMIN NUEVO PRODUCTO ===== -->
+  <div class="modal-overlay" *ngIf="showForm && isAdmin" (click)="showForm = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2><i class="fas fa-plus-circle"></i> Nueva Vianda</h2>
+        <button class="close-btn" (click)="showForm = false">&times;</button>
+      </div>
+      <form (ngSubmit)="onSubmitProduct()" class="product-form">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input [(ngModel)]="newProduct.nombre" name="nombre" required placeholder="Ej: Milanesa con puré">
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="newProduct.descripcion" name="descripcion" placeholder="Ingredientes, calorías..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Precio ($)</label>
+            <input type="number" [(ngModel)]="newProduct.precio" name="precio" required>
+          </div>
+        </div>
+
+        <div class="form-group half">
+          <label>Día</label>
+          <select [(ngModel)]="newProduct.dia" name="dia">
+            <option value="Todos">Todos los días</option>
+            <option *ngFor="let d of DIAS" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Foto del Producto</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*">
+          <div *ngIf="isUploading" class="upload-hint"><i class="fas fa-spinner fa-spin"></i> Subiendo imagen...</div>
+          <img *ngIf="newProduct.imagenUrl" [src]="newProduct.imagenUrl" alt="Preview" class="img-preview">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="showForm = false">Cancelar</button>
+          <button type="submit" class="btn-save">Guardar Producto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL EDITAR PRODUCTO (ADMIN) ===== -->
+  <div class="modal-overlay" *ngIf="showEditForm && isAdmin" (click)="showEditForm = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2><i class="fas fa-pencil-alt"></i> Editar Vianda</h2>
+        <button class="close-btn" (click)="showEditForm = false">&times;</button>
+      </div>
+      <form (ngSubmit)="onSubmitEdit()" class="product-form">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input [(ngModel)]="editProduct.nombre" name="edit-nombre" required placeholder="Nombre del producto">
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="editProduct.descripcion" name="edit-descripcion" placeholder="Ingredientes, calorías..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full">
+            <label>Precio ($)</label>
+            <input type="number" [(ngModel)]="editProduct.precio" name="edit-precio" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Día</label>
+          <select [(ngModel)]="editProduct.dia" name="edit-dia">
+            <option value="Todos">Todos los días</option>
+            <option *ngFor="let d of DIAS" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Foto del Producto</label>
+          <input type="file" (change)="onFileSelectedEdit($event)" accept="image/*">
+          <div *ngIf="isUploading" class="upload-hint"><i class="fas fa-spinner fa-spin"></i> Subiendo imagen...</div>
+          <img *ngIf="editProduct.imagenUrl" [src]="editProduct.imagenUrl" alt="Preview" class="img-preview">
+        </div>
+
+        <div class="form-group check-group">
+          <label>
+            <input type="checkbox" [(ngModel)]="editProduct.activo" name="edit-activo">
+            <span>Producto activo</span>
+          </label>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="showEditForm = false">Cancelar</button>
+          <button type="submit" class="btn-save">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TABS POR DÍA ===== -->
+  <div class="tabs-container">
+    <button
+      *ngFor="let dia of DIAS"
+      class="tab-btn"
+      [class.active]="tabActivo === dia"
+      (click)="tabActivo = dia">
+      {{ dia }}
+    </button>
+  </div>
+
+  <!-- ===== GRILLA DE PRODUCTOS DEL DÍA ===== -->
+  <div class="products-grid" *ngIf="productosDia.length > 0; else noProductos">
+
+    <div class="product-card" *ngFor="let prod of productosDia">
+
+      <!-- Botones admin (eliminar + editar) -->
+      <div *ngIf="isAdmin" class="admin-actions">
+        <button class="btn-admin-icon edit" (click)="openEdit(prod)" title="Editar">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button class="btn-admin-icon del" (click)="deleteProduct(prod.id!)" title="Eliminar">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+
+      <!-- Imagen -->
+      <div class="card-image">
+        <img *ngIf="prod.imagenUrl" [src]="prod.imagenUrl" [alt]="prod.nombre">
+        <div *ngIf="!prod.imagenUrl" class="img-placeholder"><i class="fas fa-utensils"></i></div>
+      </div>
+
+      <!-- Info -->
+      <div class="card-body">
+        <h3 class="card-title">{{ prod.nombre }}</h3>
+        <p class="card-desc">{{ prod.descripcion }}</p>
+        <p class="card-price">$ {{ prod.precio | number }}</p>
+
+        <!-- Tipo de vianda: Premium Card Selector -->
+        <div class="menu-type-selector">
+          <button type="button" class="type-card" [class.active]="opcionTipo[prod.id!] === 'Standard'" (click)="opcionTipo[prod.id!] = 'Standard'">
+            <i class="fas fa-utensils"></i>
+            <span>Standard</span>
+          </button>
+          <button type="button" class="type-card" [class.active]="opcionTipo[prod.id!] === 'Calorias'" (click)="opcionTipo[prod.id!] = 'Calorias'">
+            <i class="fas fa-fire"></i>
+            <span>Calorías</span>
+          </button>
+          <button type="button" class="type-card" [class.active]="opcionTipo[prod.id!] === 'Salad'" (click)="opcionTipo[prod.id!] = 'Salad'">
+            <i class="fas fa-leaf"></i>
+            <span>Salad</span>
+          </button>
+        </div>
+
+        <div class="ss-container">
+          <span class="ss-label">¿Sin Sal?</span>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="opcionSinSal[prod.id!]">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="card-qty">
+          <button class="qty-btn" (click)="decrementar(prod)" [disabled]="getCantidad(prod.id!, getOpcionActual(prod.id!)) === 0">−</button>
+          <span class="qty-value">{{ getCantidad(prod.id!, getOpcionActual(prod.id!)) }}</span>
+          <button class="qty-btn" (click)="incrementar(prod)">+</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #noProductos>
+    <div class="no-products">
+      <i class="fas fa-bowl-food"></i>
+      <p>No hay productos para este día todavía.</p>
+    </div>
+  </ng-template>
+
+</div>

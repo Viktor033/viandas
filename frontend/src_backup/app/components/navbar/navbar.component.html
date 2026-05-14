@@ -1,0 +1,59 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="logo-section">
+      <img src="/assets/images/logonew.png" alt="Manoplas Logo" class="nav-logo">
+      <span class="brand-name">MANOPLAS</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a routerLink="/menu" routerLinkActive="active">Menú de la semana</a></li>
+      <li *ngIf="isAdmin">
+        <a routerLink="/admin/cadetes" routerLinkActive="active">Cadetes</a>
+        <a routerLink="/admin/clientes" routerLinkActive="active" style="margin-left: 15px;">Clientes</a>
+        <a routerLink="/admin/pedidos" routerLinkActive="active" style="margin-left: 15px;">Pedidos</a>
+      </li>
+      <li *ngIf="!isAdmin"><a routerLink="/mis-pedidos" routerLinkActive="active">Mis pedidos</a></li>
+    </ul>
+
+    <div class="user-section">
+      <!-- Theme Switcher -->
+      <button class="theme-btn" (click)="toggleTheme()" title="Cambiar Tema">
+          <i class="fas" [ngClass]="isDesignTheme ? 'fa-paint-roller' : 'fa-palette'"></i>
+      </button>
+
+      <!-- Cart Trigger (User only) -->
+      <div class="cart-trigger" *ngIf="!isAdmin" (click)="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="badge" *ngIf="(cartService.cart$ | async)?.length as count">{{ count }}</span>
+      </div>
+
+      <!-- User Dropdown -->
+      <div class="user-dropdown-container">
+        <div class="user-info-trigger" (click)="toggleUserMenu()">
+            <div class="user-info">
+                <span class="greeting">Hola,</span>
+                <span class="username">{{ userName }}</span>
+            </div>
+            <div class="avatar-circle">
+                {{ userName.charAt(0) }}
+            </div>
+            <i class="fas fa-chevron-down arrow-icon" [class.rotated]="showUserMenu"></i>
+        </div>
+
+        <!-- Dropdown Menu -->
+        <div class="dropdown-menu" [class.show]="showUserMenu">
+            <a *ngIf="!isAdmin" routerLink="/perfil" class="dropdown-item">
+                <i class="fas fa-user-cog"></i> Mi Perfil
+            </a>
+            <div class="dropdown-divider"></div>
+            <a (click)="logout()" class="dropdown-item logout">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Cart Modal -->
+<app-cart *ngIf="showCart"></app-cart>

@@ -1,0 +1,66 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="logo-section">
+      <img src="/assets/images/logo-manoplas-new.png" alt="Manoplas Viandas Gourmet" class="nav-logo" routerLink="/home">
+    </div>
+
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-menu-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+        <i class="fas" [class.fa-bars]="!isMobileMenuOpen" [class.fa-times]="isMobileMenuOpen"></i>
+    </button>
+
+    <!-- Nav Links -->
+    <div class="nav-content" [class.mobile-open]="isMobileMenuOpen">
+        <ul class="nav-links">
+          <li><a routerLink="/home" routerLinkActive="active" (click)="isMobileMenuOpen = false">Inicio</a></li>
+          <li><a routerLink="/menu" routerLinkActive="active" (click)="isMobileMenuOpen = false">Menú</a></li>
+          
+          <!-- Links de Administración (Solo Admin) -->
+          <ng-container *ngIf="isAdmin">
+            <li><a routerLink="/admin/clientes" routerLinkActive="active" (click)="isMobileMenuOpen = false">Clientes</a></li>
+            <li><a routerLink="/admin/pedidos" routerLinkActive="active" (click)="isMobileMenuOpen = false">Pedidos</a></li>
+            <li><a routerLink="/admin/personal" routerLinkActive="active" (click)="isMobileMenuOpen = false">Personal</a></li>
+          </ng-container>
+
+          <!-- Link de Cocina (Admin y Cocinero) -->
+          <li *ngIf="isCocinero || isAdmin">
+            <a routerLink="/cocina" routerLinkActive="active" (click)="isMobileMenuOpen = false">Cocina</a>
+          </li>
+        </ul>
+    
+        <div class="user-section">
+          <div class="cart-trigger" *ngIf="!isAdmin && !isCocinero" (click)="toggleCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge" *ngIf="(cartService.cart$ | async)?.length as count">{{ count }}</span>
+            <span class="mobile-label">Ver Carrito</span>
+          </div>
+    
+          <div class="user-dropdown-container">
+            <div class="user-info-trigger" (click)="toggleUserMenu()">
+                <div class="user-info">
+                    <span class="greeting">Hola,</span>
+                    <span class="username">{{ userName }}</span>
+                </div>
+                <div class="avatar-circle">{{ userName.charAt(0) }}</div>
+                <i class="fas fa-chevron-down arrow-icon" [class.rotated]="showUserMenu"></i>
+            </div>
+    
+            <div class="dropdown-menu" [class.show]="showUserMenu">
+                <a *ngIf="!isAdmin && !isCocinero" routerLink="/perfil" class="dropdown-item">
+                    <i class="fas fa-user-cog"></i> Mi Perfil
+                </a>
+                <a *ngIf="!isAdmin && !isCocinero" routerLink="/mis-pedidos" class="dropdown-item">
+                    <i class="fas fa-receipt"></i> Mis Pedidos
+                </a>
+                <div class="dropdown-divider"></div>
+                <a (click)="logout()" class="dropdown-item logout">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+
+<app-cart *ngIf="showCart"></app-cart>
