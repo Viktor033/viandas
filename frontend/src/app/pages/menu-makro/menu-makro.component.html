@@ -28,6 +28,16 @@
 
     <div class="menu-grid" *ngIf="!loading; else loader">
         <div class="product-card glass" *ngFor="let p of productosDia">
+            <!-- Admin Actions -->
+            <div *ngIf="isAdmin" class="admin-actions">
+                <button class="btn-admin edit" (click)="openEdit(p)" title="Editar">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn-admin delete" (click)="eliminar(p.id!)" title="Eliminar">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+
             <div class="card-img" [style.background-image]="p.imagenUrl ? 'url(' + p.imagenUrl + ')' : 'url(/assets/images/placeholder-food.jpg)'">
                 <div class="price-tag">${{ p.precio }}</div>
             </div>
@@ -72,5 +82,57 @@
             <span>Subtotal Makro: <strong>${{ totalCarrito }}</strong></span>
         </div>
         <button class="btn-checkout">Continuar <i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <!-- Edit Modal (Admin) -->
+    <div class="modal-overlay" *ngIf="showEditForm && isAdmin" (click)="showEditForm = false">
+        <div class="modal-content glass" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Editar Opción Makro</h2>
+                <button class="close-btn" (click)="showEditForm = false">&times;</button>
+            </div>
+            
+            <form (ngSubmit)="onSubmitEdit()">
+                <div class="form-group">
+                    <label>Nombre del Plato</label>
+                    <input [(ngModel)]="editProduct.nombre" name="nombre" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Precio ($)</label>
+                        <input type="number" [(ngModel)]="editProduct.precio" name="precio" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Día</label>
+                        <select [(ngModel)]="editProduct.dia" name="dia">
+                            <option value="Sabado">Sábado</option>
+                            <option value="Domingo">Domingo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Foto del Producto</label>
+                    <div class="upload-box" (click)="fileInput.click()">
+                        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+                        <div *ngIf="!editProduct.imagenUrl && !isUploading" class="upload-placeholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Click para subir foto</span>
+                        </div>
+                        <div *ngIf="isUploading" class="uploading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Subiendo...</span>
+                        </div>
+                        <img *ngIf="editProduct.imagenUrl && !isUploading" [src]="editProduct.imagenUrl" class="preview-img">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" (click)="showEditForm = false">Cancelar</button>
+                    <button type="submit" class="btn-save" [disabled]="isUploading">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

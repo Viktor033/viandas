@@ -6,6 +6,7 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ProductoService, Producto } from '../../services/producto.service';
 import { CartService, CartItem } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
+import { UploadService } from '../../services/upload.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -19,11 +20,17 @@ export class MenuMakroComponent implements OnInit {
   private productoService = inject(ProductoService);
   private cartService = inject(CartService);
   private authService = inject(AuthService);
+  private uploadService = inject(UploadService);
 
   productos: Producto[] = [];
   loading = false;
   itemsCarrito: CartItem[] = [];
   isAdmin = false;
+  
+  // Edición
+  showEditForm = false;
+  isUploading = false;
+  editProduct: Producto = { nombre: '', descripcion: '', precio: 0, activo: true, dia: 'Sabado' };
 
   // Filtros de día
   diasWeekend = ['Sabado', 'Domingo'];
@@ -118,9 +125,68 @@ export class MenuMakroComponent implements OnInit {
       };
 
       this.productoService.createProducto(nuevo).subscribe(() => {
-        Swal.fire('Creado', 'Producto Makro agregado con éxito', 'success');
+        Swal.fire({ title: 'Creado', text: 'Producto Makro agregado con éxito', icon: 'success', background: '#1a1a1a', color: '#f8edda' });
         this.loadProductos();
       });
     }
+  }
+
+  // --- NUEVAS FUNCIONES DE GESTIÓN ---
+  
+  openEdit(prod: Producto) {
+    this.editProduct = { ...prod };
+    this.showEditForm = true;
+  }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.isUploading = true;
+      this.uploadService.uploadImage(file).subscribe({
+        next: res => { 
+          this.editProduct.imagenUrl = res.url; 
+          this.isUploading = false; 
+        },
+        error: () => { 
+          this.isUploading = false; 
+          Swal.fire('Error', 'No se pudo subir la imagen', 'error');
+        }
+      });
+    }
+  }
+
+  onSubmitEdit() {
+    if (!this.editProduct.id) return;
+    this.productoService.updateProducto(this.editProduct.id, this.editProduct).subscribe({
+      next: () => {
+        this.loadProductos();
+        this.showEditForm = false;
+        Swal.fire({ icon: 'success', title: 'Actualizado', background: '#1a1a1a', color: '#f8edda', timer: 1500, showConfirmButton: false });
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  eliminar(id: number) {
+    Swal.fire({
+      title: '¿Eliminar Opción?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ff6b6b',
+      confirmButtonText: 'Sí, eliminar',
+      background: '#1a1a1a',
+      color: '#f8edda'
+    }).then(r => {
+      if (r.isConfirmed) {
+        this.productoService.deleteProducto(id).subscribe({
+          next: () => {
+            this.loadProductos();
+            Swal.fire({ icon: 'success', title: 'Eliminado', background: '#1a1a1a', color: '#f8edda', timer: 1500, showConfirmButton: false });
+          },
+          error: err => console.error(err)
+        });
+      }
+    });
   }
 }
