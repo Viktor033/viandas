@@ -31,6 +31,7 @@ export class AdminPedidosComponent implements OnDestroy {
   cadetes: Cadete[] = [];
   estadosPosibles = ['PENDIENTE', 'EN_PREPARACION', 'EN_CAMINO', 'ENTREGADO', 'CANCELADO'];
   selectedPedido: Pedido | null = null;
+  lastPendingCount = 0;
 
   // Resumen Semanal para el "cuadro de producción"
   resumen?: ResumenSemanal;
@@ -70,9 +71,25 @@ export class AdminPedidosComponent implements OnDestroy {
 
   loadPedidos() {
     this.pedidoService.getAllPedidos().subscribe(data => {
+      const nuevosPendientes = data.filter(p => p.estado === 'PENDIENTE');
+      
+      // Si hay más pedidos pendientes que antes, sonar la alerta
+      if (nuevosPendientes.length > this.lastPendingCount) {
+        this.reproducirAlerta();
+      }
+      
+      this.lastPendingCount = nuevosPendientes.length;
       this.pedidos = data;
       this.loadResumen(); // Recargar el resumen al cargar pedidos
     });
+  }
+
+  private reproducirAlerta(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      // Usamos un sonido de notificación premium
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+      audio.play().catch(err => console.log('Bloqueo de audio por el navegador:', err));
+    }
   }
 
   loadCadetes() {

@@ -454,4 +454,44 @@
             }
         }
     }
+
+    // --- RESPONSIVE ADJUSTMENTS ---
+    @media (max-width: 768px) {
+        padding: 100px 1rem 6rem;
+
+        .header-section {
+            h1 { font-size: 1.8rem; }
+            
+            .weekend-tabs {
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+                
+                button { flex: 1; white-space: nowrap; padding: 10px 15px; }
+            }
+        }
+
+        .menu-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .modal-content {
+            padding: 1.5rem;
+            width: 95%;
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .floating-cart {
+            width: 90%;
+            padding: 12px 20px;
+            gap: 1rem;
+            
+            .cart-info { font-size: 0.9rem; }
+            .btn-checkout { padding: 6px 15px; font-size: 0.8rem; }
+        }
+    }
 }
