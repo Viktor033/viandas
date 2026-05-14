@@ -74,10 +74,8 @@
     display: flex;
     align-items: center;
     flex: 1;
-    justify-content: flex-end;
-    /* Push user section right */
-    position: static;
-    /* Prevent trapping absolute children on desktop */
+    justify-content: space-between; /* This allows centering nav-links */
+    padding-left: 2rem;
 }
 
 @media (max-width: 768px) {
@@ -108,19 +106,10 @@
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 2.5rem;
-    margin: 0;
+    gap: 2rem;
+    margin: 0 auto; /* Centers itself within the flex-grow parent */
     padding: 0;
-}
-
-@media (min-width: 769px) {
-    .nav-links {
-        position: absolute !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        top: 50%;
-        transform: translate(-50%, -50%) !important;
-    }
+    z-index: 1005;
 }
 
 @media (max-width: 768px) {
@@ -128,8 +117,7 @@
         flex-direction: column;
         gap: 1.5rem;
         text-align: center;
-        position: static !important;
-        transform: none !important;
+        margin: 0;
     }
 }
 
