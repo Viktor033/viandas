@@ -215,73 +215,78 @@ public class PedidoService {
             if (p.getDiasSeleccionados() == null || p.getDiasSeleccionados().isEmpty()) continue;
             
             String[] diasPedido = p.getDiasSeleccionados().split(",");
+            boolean esClienteMakro = p.getUsuario() != null && Boolean.TRUE.equals(p.getUsuario().getEsMakro());
             
             for (DetallePedido dp : p.getDetalles()) {
-                String nombreProd = dp.getProducto().getNombre().toUpperCase();
+                Producto prod = dp.getProducto();
+                String nombreProd = prod.getNombre().toUpperCase();
                 String obs = dp.getObservaciones() != null ? dp.getObservaciones().toUpperCase() : "";
                 boolean esSinSal = obs.contains("SIN SAL") || obs.contains("S/S") || obs.contains("NO SAL");
                 
-                String categoria = "";
-                // Prioridad 1: Nombre del producto
-                if (nombreProd.contains("STANDARD")) categoria = "STANDARD";
-                else if (nombreProd.contains("CALORIAS") || nombreProd.contains("CALORICO")) categoria = "CALORIAS";
-                else if (nombreProd.contains("SALAD") || nombreProd.contains("ENSALADA")) categoria = "SALAD";
-                
-                // Prioridad 2: Observaciones (donde el frontend ahora manda el tipo)
-                if (categoria.isEmpty()) {
-                    if (obs.contains("STANDARD")) categoria = "STANDARD";
-                    else if (obs.contains("CALORIAS")) categoria = "CALORIAS";
-                    else if (obs.contains("SALAD")) categoria = "SALAD";
+                // Determinar días a procesar para este detalle específico
+                List<String> diasAProcesar = new java.util.ArrayList<>();
+                if (prod.getDia() != null && "Todos".equalsIgnoreCase(prod.getDia())) {
+                    for (String d : diasPedido) diasAProcesar.add(normalizarDia(d));
+                } else if (prod.getDia() != null) {
+                    String dProdLimpio = normalizarDia(prod.getDia());
+                    // Solo procesar si el día del producto está entre los seleccionados del pedido
+                    for (String d : diasPedido) {
+                        if (normalizarDia(d).equalsIgnoreCase(dProdLimpio)) {
+                            diasAProcesar.add(dProdLimpio);
+                            break;
+                        }
+                    }
+                    // Si es cliente Makro y el producto es de fin de semana, pero el pedido no tiene el día marcado, forzarlo
+                    if (esClienteMakro && diasAProcesar.isEmpty() && (dProdLimpio.equals("Sabado") || dProdLimpio.equals("Domingo"))) {
+                        diasAProcesar.add(dProdLimpio);
+                    }
                 }
-                
+
+                // 1. CUADRO SEMANAL (STANDARD, CALORIAS, SALAD)
+                String categoria = "";
+                if (nombreProd.contains("STANDARD") || obs.contains("STANDARD")) categoria = "STANDARD";
+                else if (nombreProd.contains("CALORIAS") || nombreProd.contains("CALORICO") || obs.contains("CALORIAS")) categoria = "CALORIAS";
+                else if (nombreProd.contains("SALAD") || nombreProd.contains("ENSALADA") || obs.contains("SALAD")) categoria = "SALAD";
+
                 if (!categoria.isEmpty()) {
-                    for (String dPedido : diasPedido) {
-                        String dLimpio = normalizarDia(dPedido);
-                        if (resumen.getTotalesSemanales().containsKey(categoria) && resumen.getTotalesSemanales().get(categoria).containsKey(dLimpio)) {
-                            com.manoplas.viandas.dto.ResumenSemanalDTO.DiaCountsDTO counts = resumen.getTotalesSemanales().get(categoria).get(dLimpio);
-                            if (esSinSal) {
-                                counts.setSinSal(counts.getSinSal() + dp.getCantidad());
-                            } else {
-                                counts.setNormal(counts.getNormal() + dp.getCantidad());
-                            }
+                    for (String dia : diasAProcesar) {
+                        if (resumen.getTotalesSemanales().containsKey(categoria) && resumen.getTotalesSemanales().get(categoria).containsKey(dia)) {
+                            com.manoplas.viandas.dto.ResumenSemanalDTO.DiaCountsDTO counts = resumen.getTotalesSemanales().get(categoria).get(dia);
+                            if (esSinSal) counts.setSinSal(counts.getSinSal() + dp.getCantidad());
+                            else counts.setNormal(counts.getNormal() + dp.getCantidad());
+                            
+                            // Sumar al total diario (semanal)
+                            resumen.getTotalesDiarios().put(dia, resumen.getTotalesDiarios().getOrDefault(dia, 0) + dp.getCantidad());
                         }
                     }
                 }
+
+                // 2. CUADRO MAKRO (Fin de semana o Cliente Makro)
+                boolean esProdFinSemana = prod.getDia() != null && (prod.getDia().equalsIgnoreCase("Sabado") || prod.getDia().equalsIgnoreCase("Domingo"));
                 
-                // Determinar si es un pedido para el cuadro MAKRO (Fin de semana o Cliente Makro)
-                boolean esClienteMakro = p.getUsuario() != null && Boolean.TRUE.equals(p.getUsuario().getEsMakro());
-                boolean esFinDeSemana = false;
-                for (String d : diasPedido) {
-                    String dL = normalizarDia(d);
-                    if (dL.equals("Sabado") || dL.equals("Domingo")) {
-                        esFinDeSemana = true;
-                        break;
-                    }
-                }
-
-                if (esFinDeSemana || esClienteMakro) {
-                    // CATEGORIZACIÓN MAKRO
+                if (esProdFinSemana || esClienteMakro) {
                     String opcionFS = "EXTRA";
-                    String nUpper = nombreProd.toUpperCase();
-                    if (nUpper.contains("OPC 1")) opcionFS = "OPC 1";
-                    else if (nUpper.contains("OPC 2")) opcionFS = "OPC 2";
-                    else if (nUpper.contains("OPC 3")) opcionFS = "OPC 3";
+                    if (nombreProd.contains("OPC 1")) opcionFS = "OPC 1";
+                    else if (nombreProd.contains("OPC 2")) opcionFS = "OPC 2";
+                    else if (nombreProd.contains("OPC 3")) opcionFS = "OPC 3";
 
-                    for (String dPedido : diasPedido) {
-                        String dLimpio = normalizarDia(dPedido);
-                        // Si es cliente Makro pero el día no es de fin de semana, lo volcamos a Sabado para el reporte
-                        String diaReporte = (dLimpio.equals("Sabado") || dLimpio.equals("Domingo")) ? dLimpio : "Sabado";
-                        
+                    // Para el reporte Makro, si no tiene días de fin de semana pero es cliente Makro, lo mandamos a Sabado
+                    if (diasAProcesar.isEmpty() && esClienteMakro) {
+                        diasAProcesar.add("Sabado");
+                    }
+
+                    for (String dia : diasAProcesar) {
+                        String diaReporte = (dia.equals("Sabado") || dia.equals("Domingo")) ? dia : "Sabado";
                         Map<String, Integer> fsMap = resumen.getTotalesFinSemana().get(opcionFS);
                         if (fsMap != null) {
                             fsMap.put(diaReporte, fsMap.getOrDefault(diaReporte, 0) + dp.getCantidad());
+                        }
                     }
                 }
             }
         }
-        }
 
-        // Calcular totales diarios
+        // Calcular totales diarios finales (incluyendo especiales)
         for (String d : dias) {
             int totalNormal = 0;
             int totalEspecial = 0;
