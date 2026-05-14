@@ -114,6 +114,29 @@ export class CartComponent {
             metodoPago: this.selectedPaymentMethod
         };
 
+        // Alerta de confirmación previa para evitar pedidos accidentales
+        Swal.fire({
+            title: '¿Confirmar Pedido?',
+            text: `Vas a realizar un pedido por un total de $${this.total}. ¿Deseas continuar?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, confirmar',
+            cancelButtonText: 'Cancelar',
+            background: '#1a1a1a',
+            color: '#f8edda',
+            confirmButtonColor: '#edb110',
+            cancelButtonColor: '#6c757d'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.executeOrder(payload);
+            } else {
+                this.isProcessing = false;
+            }
+        });
+    }
+
+    private executeOrder(payload: any) {
+
         console.log('Confirmando orden. Método seleccionado:', this.selectedPaymentMethod);
 
         if (this.selectedPaymentMethod === 'MERCADOPAGO' || this.selectedPaymentMethod === 'TARJETA') {
