@@ -27,10 +27,12 @@ export class MenuMakroComponent implements OnInit {
   itemsCarrito: CartItem[] = [];
   isAdmin = false;
   
-  // Edición
+  // Edición y Creación
   showEditForm = false;
+  showAddForm = false;
   isUploading = false;
   editProduct: Producto = { nombre: '', descripcion: '', precio: 0, activo: true, dia: 'Sabado' };
+  newProduct: Producto = { nombre: '', descripcion: 'Menú Fin de Semana Makro', precio: 0, activo: true, dia: 'Sabado', imagenUrl: '' };
 
   // Filtros de día
   diasWeekend = ['Sabado', 'Domingo'];
@@ -91,47 +93,57 @@ export class MenuMakroComponent implements OnInit {
       .reduce((sum, i) => sum + i.cantidad * i.producto.precio, 0);
   }
 
-  async quickAdd() {
-    const { value: formValues } = await Swal.fire({
-      title: 'Nueva Opción Makro',
-      html:
-        '<input id="swal-input1" class="swal2-input" placeholder="Nombre (ej: OPC 1 - Lasaña)">' +
-        '<select id="swal-input2" class="swal2-input">' +
-        '  <option value="Sabado">Sábado</option>' +
-        '  <option value="Domingo">Domingo</option>' +
-        '</select>' +
-        '<input id="swal-input3" type="number" class="swal2-input" placeholder="Precio">',
-      focusConfirm: false,
-      background: '#1a1a1a',
-      color: '#f8edda',
-      confirmButtonColor: '#edb110',
-      preConfirm: () => {
-        return [
-          (document.getElementById('swal-input1') as HTMLInputElement).value,
-          (document.getElementById('swal-input2') as HTMLSelectElement).value,
-          (document.getElementById('swal-input3') as HTMLInputElement).value
-        ]
-      }
-    });
+  // --- CREACIÓN ---
+  
+  openAdd() {
+    this.newProduct = { 
+      nombre: '', 
+      descripcion: 'Menú Fin de Semana Makro', 
+      precio: 0, 
+      activo: true, 
+      dia: this.tabActivo, 
+      imagenUrl: '' 
+    };
+    this.showAddForm = true;
+  }
 
-    if (formValues) {
-      const [nombre, dia, precio] = formValues;
-      const nuevo: Producto = {
-        nombre,
-        dia,
-        precio: Number(precio),
-        activo: true,
-        descripcion: 'Menú Fin de Semana Makro'
-      };
-
-      this.productoService.createProducto(nuevo).subscribe(() => {
-        Swal.fire({ title: 'Creado', text: 'Producto Makro agregado con éxito', icon: 'success', background: '#1a1a1a', color: '#f8edda' });
-        this.loadProductos();
+  onFileSelectedAdd(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.isUploading = true;
+      this.uploadService.uploadImage(file).subscribe({
+        next: res => { 
+          this.newProduct.imagenUrl = res.url; 
+          this.isUploading = false; 
+        },
+        error: () => { 
+          this.isUploading = false; 
+          Swal.fire('Error', 'No se pudo subir la imagen', 'error');
+        }
       });
     }
   }
 
-  // --- NUEVAS FUNCIONES DE GESTIÓN ---
+  onSubmitAdd() {
+    this.productoService.createProducto(this.newProduct).subscribe({
+      next: () => {
+        this.loadProductos();
+        this.showAddForm = false;
+        Swal.fire({ 
+          icon: 'success', 
+          title: 'Opción Creada', 
+          text: 'El plato se agregó al menú Makro',
+          background: '#1a1a1a', 
+          color: '#f8edda', 
+          timer: 2000, 
+          showConfirmButton: false 
+        });
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  // --- EDICIÓN ---
   
   openEdit(prod: Producto) {
     this.editProduct = { ...prod };
